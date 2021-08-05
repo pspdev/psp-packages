@@ -26,7 +26,7 @@ jobs:
   build:
     needs: [prepare_jobs]
     runs-on: ubuntu-18.04
-    container: ghcr.io/sharkwouter/pspdev-library-build-container:latest
+    container: ghcr.io/sharkwouter/psp-package-builder:latest
     strategy:
       fail-fast: false
       matrix:
@@ -51,7 +51,7 @@ jobs:
   build_depends:
     needs: [prepare_jobs, build]
     runs-on: ubuntu-18.04
-    container: ghcr.io/sharkwouter/pspdev-library-build-container:latest
+    container: ghcr.io/sharkwouter/psp-package-builder:latest
     strategy:
       fail-fast: false
       matrix:
@@ -88,7 +88,7 @@ jobs:
     if: contains(github.ref,'refs/heads/master')
     needs: [prepare_jobs, build, build_depends]
     runs-on: ubuntu-18.04
-    container: ghcr.io/sharkwouter/pspdev-library-build-container:latest
+    container: ghcr.io/sharkwouter/psp-package-builder:latest
 
     steps:
     - uses: actions/checkout@v2
