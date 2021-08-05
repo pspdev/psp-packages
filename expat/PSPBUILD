@@ -1,0 +1,46 @@
+# Maintainer: Wouter Wijsman <wwijsman@live.nl>
+pkgname=expat
+pkgver=2.4.1
+pkgrel=1
+pkgdesc="XML parsing C library"
+arch=('mips')
+url="https://libexpat.github.io/"
+license=('MIT')
+depends=()
+makedepends=()
+optdepends=()
+source=(
+    "http://sourceforge.net/projects/expat/files/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.gz"
+    "config.sub"
+)
+sha256sums=(
+    'a00ae8a6b96b63a3910ddc1100b1a7ef50dc26dceb65ced18ded31ab392f132b'
+    'SKIP'
+)
+
+prepare() {
+    cd "$pkgname-$pkgver"
+    cp ../config.sub config.sub
+    cp ../config.sub conftools/config.sub
+}
+
+build() {
+    cd "$pkgname-$pkgver"
+    LDFLAGS="$LDFLAGS -L$(psp-config --pspsdk-path)/lib -L$(psp-config --psp-prefix)/lib -lc -lpspuser" \
+    LIBS="$LIBS -lc -lpspuser" \
+    ./configure --host=psp --prefix=/psp --without-docbook
+    make
+}
+
+package() {
+    cd "$pkgname-$pkgver"
+    make DESTDIR="$pkgdir/" install
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"
+
+    # Remove the binary we can't use
+    rm -rf "${pkgdir}/psp/share/man"
+    rm -rf "${pkgdir}/psp/bin"
+}
+

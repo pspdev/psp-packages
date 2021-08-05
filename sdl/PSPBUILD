@@ -1,0 +1,42 @@
+# Maintainer: Wouter Wijsman <wwijsman@live.nl>
+pkgname=sdl
+pkgver=1.2.15
+pkgrel=1
+pkgdesc="a library designed to provide low level access to audio, input, and graphics hardware"
+arch=('mips')
+url="http://www.libsdl.org/"
+license=('GPL2.1')
+depends=('pspirkeyb')
+makedepends=()
+optdepends=()
+source=(
+    "git+https://github.com/pspdev/SDL.git#commit=0df75b67465fc6a35916de80e6d9139799adee2e"
+    "sdl-config-fix.patch"
+)
+sha256sums=(
+    'SKIP'
+    'SKIP'
+)
+
+prepare() {
+    cd SDL
+    patch -p1 < ../sdl-config-fix.patch
+}
+
+build() {
+    cd "SDL"
+    ./autogen.sh
+    LDFLAGS="$LDFLAGS -L$(psp-config --pspsdk-path)/lib -L$(psp-config --psp-prefix)/lib -lc -lpspuser" \
+    LIBS="$LIBS -lc -lpspuser" \
+    ./configure --host=psp --prefix=/psp --enable-pspirkeyb
+    make
+}
+
+package() {
+    cd "SDL"
+    make DESTDIR="$pkgdir/" install
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"
+}
+
