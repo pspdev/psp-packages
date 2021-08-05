@@ -63,8 +63,8 @@ jobs:
     - name: Install packages
       run: |
         cd package
-        for f in *.pkg.tar.gz; do
-        sudo -u build PATH=${PATH} PSPDEV=${PSPDEV} ${PSPDEV}/bin/psp-pacman -U --noconfirm "$f"
+        for f in ${{ fromJson(needs.prepare_jobs.outputs.non_dependant) }}; do
+        sudo -u build PATH=${PATH} PSPDEV=${PSPDEV} ${PSPDEV}/bin/psp-pacman -U --noconfirm "$f-*.pkg.tar.gz"
         done
         cd ..
     - name: Build packages
