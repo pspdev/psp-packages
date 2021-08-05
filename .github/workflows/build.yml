@@ -63,8 +63,8 @@ jobs:
     - name: Install packages
       run: |
         cd package
-        for f in $(echo ${{ steps.set-matrix.outputs.non_dependant }}|jq|grep -v "\[\|\]"); do
-        sudo -u build PATH=${PATH} PSPDEV=${PSPDEV} ${PSPDEV}/bin/psp-pacman -U --noconfirm "$f-*.pkg.tar.gz"
+        for f in *.pkg.tar.gz; do
+        sudo -u build PATH=${PATH} PSPDEV=${PSPDEV} ${PSPDEV}/bin/psp-pacman -Udd --noconfirm "$f"
         done
         cd ..
     - name: Build packages
