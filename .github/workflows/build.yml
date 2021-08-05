@@ -1,0 +1,109 @@
+name: Packages
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: master
+  repository_dispatch:
+    types: [run_build]
+
+jobs:
+  prepare_jobs:
+    runs-on: ubuntu-18.04
+    container: node:lts
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        id: set-matrix
+        run: |
+          echo "::set-output name=dependant::$(node create-matrix.js dependant)"
+          echo "::set-output name=non_dependant::$(node create-matrix.js non_dependant)"
+    outputs:
+      dependant: ${{ steps.set-matrix.outputs.dependant }}
+      non_dependant: ${{ steps.set-matrix.outputs.non_dependant }}
+
+  build:
+    needs: [prepare_jobs]
+    runs-on: ubuntu-18.04
+    container: ghcr.io/sharkwouter/pspdev-library-build-container:latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJson(needs.prepare_jobs.outputs.non_dependant) }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build package
+      run: |
+        chown -R build:build ${{ matrix.package }}
+        cd ${{ matrix.package }}
+        sudo -u build PATH=${PATH} PSPDEV=${PSPDEV} ${PSPDEV}/bin/psp-makepkg -i --noconfirm
+        cd ..
+    - name: Store package
+      run: |
+        echo ${{ matrix.package }}
+    - uses: actions/upload-artifact@v2
+      with:
+        name: package
+        path: ${{ matrix.package }}/*.pkg.tar.gz
+
+  build_depends:
+    needs: [prepare_jobs, build]
+    runs-on: ubuntu-18.04
+    container: ghcr.io/sharkwouter/pspdev-library-build-container:latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJson(needs.prepare_jobs.outputs.dependant) }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/download-artifact@v2
+    - name: Install packages
+      run: |
+        cd package
+        for f in *.pkg.tar.gz; do
+        sudo -u build PATH=${PATH} PSPDEV=${PSPDEV} ${PSPDEV}/bin/psp-pacman -U --noconfirm "$f"
+        done
+        cd ..
+    - name: Build packages
+      run: |
+        for f in ${{ matrix.package }}; do
+        chown -R build:build $f
+        cd $f
+        sudo -u build PATH=${PATH} PSPDEV=${PSPDEV} ${PSPDEV}/bin/psp-makepkg -i --noconfirm
+        cd ..
+        done
+    - name: Store package
+      run: |
+        export PACKAGE=`echo ${{ matrix.package }} | awk '{print $NF}'`
+        echo "PACKAGE=$PACKAGE" >> $GITHUB_ENV
+    - uses: actions/upload-artifact@v2
+      with:
+        name: package
+        path: ${{ env.PACKAGE }}/*.pkg.tar.gz
+
+  create_release:
+    if: contains(github.ref,'refs/heads/master')
+    needs: [prepare_jobs, build, build_depends]
+    runs-on: ubuntu-18.04
+    container: ghcr.io/sharkwouter/pspdev-library-build-container:latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/download-artifact@v2
+    - name: Upload files
+      if: contains(github.ref,'refs/heads/master')
+      run: |
+        cd package
+        ${PSPDEV}/share/pacman/bin/repo-add pspdev.db.tar.gz *.pkg.tar.gz
+        cd ..
+    - uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: package/*
+        overwrite: true
+        file_glob: true
+        tag: ${{ github.ref }}-${{ github.run_id }}
+        release_name: ${{ github.ref }} (${{ github.run_id }})
