@@ -233,3 +233,14 @@ diff --color -Naur libmikmod-3.3.11.1/configure.ac libmikmod-3.3.11.1-psp/config
  # ================
  # Choose settings.
  # ================
+diff --color -Naur libmikmod-3.3.11.1/libmikmod-config.in libmikmod-3.3.11.1-psp/libmikmod-config.in
+--- libmikmod-3.3.11.1/libmikmod-config.in	2013-11-28 09:00:00.000000000 +0100
++++ libmikmod-3.3.11.1-psp/libmikmod-config.in	2021-08-06 23:45:55.920415178 +0200
+@@ -1,6 +1,6 @@
+ #! /bin/sh
+ 
+-prefix=@prefix@
++prefix=${PSPDEV}/@prefix@
+ exec_prefix=@exec_prefix@
+ exec_prefix_set=no
+ libdir=@libdir@
