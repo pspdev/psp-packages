@@ -22,6 +22,10 @@ package() {
     cd "psp-ports/$pkgname"
     make DESTDIR="${pkgdir}" install
 
+    rm "${pkgdir}/psp/lib/libvorbis.la"
+    rm "${pkgdir}/psp/lib/libvorbisenc.la"
+    rm "${pkgdir}/psp/lib/libvorbisfile.la"
+
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"
 }
