@@ -12,7 +12,7 @@ SigLevel = Optional TrustAll
 Server = https://github.com/pspdev/psp-packages/releases/latest/download/
 ```
 
-Then run: ``psp-pacman -Syu``
+Then run: ``psp-pacman -Sy``
 
 ## Installing libraries from the repo
 
@@ -33,7 +33,14 @@ psp-pacman -Q
 Installing all available libraries can be done with:
 
 ```
-psp-pacman -Sy $(psp-pacman -Qq)
+psp-pacman -Sy
+psp-pacman -S $(psp-pacman -Slq)
+```
+
+Updating libraries can be done with:
+
+```
+psp-pacman -Syu
 ```
 
 ## Building individual packages
