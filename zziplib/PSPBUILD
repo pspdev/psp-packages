@@ -24,6 +24,11 @@ package() {
     cd "psp-ports/$pkgname"
     make DESTDIR="${pkgdir}" install
 
+    rm "${pkgdir}/psp/lib/libzzip.la"
+    rm "${pkgdir}/psp/lib/libzzipfseeko.la"
+    rm "${pkgdir}/psp/lib/libzzipmmapped.la"
+    rm "${pkgdir}/psp/lib/libzzipwrap.la"
+
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 COPYING.LIB "$pkgdir/psp/share/licenses/$pkgname"
 }
