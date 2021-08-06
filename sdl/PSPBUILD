@@ -36,6 +36,9 @@ package() {
     cd "SDL"
     make DESTDIR="$pkgdir/" install
 
+    rm "${pkgdir}/psp/lib/libSDL.la"
+    rm "${pkgdir}/psp/lib/libSDLmain.la"
+
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"
 }
