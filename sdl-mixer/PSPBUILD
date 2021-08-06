@@ -16,7 +16,9 @@ build() {
     cd "SDL_mixer-$pkgver-psp"
     ./autogen.sh
     LDFLAGS="-L$(psp-config --pspsdk-path)/lib" LIBS="-lc -lpspuser" \
-    ./configure --host psp --prefix=/psp --with-sdl-prefix=$(psp-config --psp-prefix) --disable-music-cmd --disable-music-mp3
+    ./configure --host psp --with-sdl-prefix=$(psp-config --psp-prefix) \
+    --disable-music-mp3 --prefix=/psp \
+    --disable-music-libmikmod --enable-music-mod
     make
 }
 
