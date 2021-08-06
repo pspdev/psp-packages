@@ -527,3 +527,15 @@ diff -Naur libpng-1.5.7/screenshot/Makefile libpng-1.5.7-psp/screenshot/Makefile
 +
 +PSPSDK=$(shell psp-config --pspsdk-path)
 +include $(PSPSDK)/lib/build.mak
+diff -Naur libpng-1.5.7/libpng-config.in libpng-1.5.7-psp/libpng-config.in
+--- libpng-1.5.7/libpng-config.in	2011-12-15 16:45:32.000000000 +0100
++++ libpng-1.5.7-psp/libpng-config.in	2021-08-06 23:26:02.903519520 +0200
+@@ -12,7 +12,7 @@
+ # Modeled after libxml-config.
+ 
+ version="@PNGLIB_VERSION@"
+-prefix="@prefix@"
++prefix="${PSPDEV}/@prefix@"
+ exec_prefix="@exec_prefix@"
+ libdir="@libdir@"
+ includedir="@includedir@/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@"
