@@ -27,7 +27,7 @@ build() {
     cd "$pkgname-$pkgver"
     LDFLAGS="$LDFLAGS -L$(psp-config --pspsdk-path)/lib -L$(psp-config --psp-prefix)/lib -lc -lpspuser" \
     LIBS="$LIBS -lc -lpspuser" \
-    PNG_CFLAGS="-I$(psp-config --psp-prefix)/include" PNG_LIBS="-L$(psp-config --psp-prefix)/lib -lpng -lz" \
+    PNG_CFLAGS="-I$(psp-config --psp-prefix)/include/libpng15" PNG_LIBS="-L$(psp-config --psp-prefix)/lib -lpng -lz -lm" \
     ./configure --host=psp --prefix=/psp
     make
 }
