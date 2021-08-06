@@ -25,6 +25,8 @@ package() {
     cd "SDL_mixer-$pkgver-psp"
     make DESTDIR="$pkgdir/" install
 
+    rm "${pkgdir}/psp/lib/libSDL2_mixer.la"
+
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
     install -m644 COPYING.txt "$pkgdir/psp/share/licenses/$pkgname"
 }
