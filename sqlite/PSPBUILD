@@ -34,4 +34,6 @@ build() {
 package() {
     cd "SQLite-26778480"
     make DESTDIR="$pkgdir" install
+
+    rm "${pkgdir}/psp/lib/libsqlite3.la"
 }

@@ -24,6 +24,8 @@ package() {
     cd "SDL_gfx-$pkgver-psp"
     make DESTDIR="$pkgdir/" install
 
+    rm "${pkgdir}/psp/lib/libSDL_gfx.la"
+
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"

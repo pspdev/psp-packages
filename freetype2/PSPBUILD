@@ -26,6 +26,8 @@ package() {
     cd "$pkgname-$pkgver-psp"
     make DESTDIR="$pkgdir/" install
 
+    rm "${pkgdir}/psp/lib/libfreetype.la"
+
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 docs/LICENSE.TXT "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 docs/GPLv2.TXT "$pkgdir/psp/share/licenses/$pkgname"

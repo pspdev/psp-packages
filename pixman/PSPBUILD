@@ -36,6 +36,8 @@ package() {
     cd "$pkgname-$pkgver"
     make DESTDIR="$pkgdir/" install
 
+    rm "${pkgdir}/psp/lib/libpixman-1.la"
+
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"
 }

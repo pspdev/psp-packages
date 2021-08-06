@@ -24,6 +24,8 @@ package() {
     cd "SDL_image-$pkgver-psp"
     make DESTDIR="$pkgdir/" install
 
+    rm "${pkgdir}/psp/lib/libSDL_image.la"
+
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"
 }

@@ -35,6 +35,8 @@ package() {
     cd "yaml-$pkgver"
     make DESTDIR="$pkgdir/" install
 
+    rm "${pkgdir}/psp/lib/libyaml.la"
+
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
 }
