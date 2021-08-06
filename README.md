@@ -27,7 +27,7 @@ Replace library with the library which should be installed.
 An overview of libaries available can be viewed with:
 
 ```
-psp-pacman -Q
+psp-pacman -Ss
 ```
 
 Installing all available libraries can be done with:
