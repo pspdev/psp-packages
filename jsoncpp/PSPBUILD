@@ -6,6 +6,7 @@ pkgdesc="a C++ library for interacting with JSON"
 arch=('mips')
 license=('unlicense')
 url="https://github.com/open-source-parsers/jsoncpp"
+makedepends=('psp-cmake')
 source=("https://github.com/open-source-parsers/jsoncpp/archive/$pkgver.tar.gz" "${pkgname}-${pkgver}-PSP.patch")
 sha256sums=('c49deac9e0933bcb7044f08516861a2d560988540b23de2ac1ad443b219afdb6' '9d12c9f7c0e8566413cb60657c84ad86fbcb4f2105dc40b96b744c6962e8bef0')
 
