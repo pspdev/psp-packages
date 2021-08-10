@@ -14,10 +14,13 @@ prepare() {
 build() {
   mkdir -p $pkgname-$pkgver/build && cd $pkgname-$pkgver/build
   psp-cmake .. -DCMAKE_BUILD_TYPE=Release -DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF -DJSONCPP_WITH_TESTS=OFF -DCMAKE_INSTALL_INCLUDEDIR=include/jsoncpp -DCMAKE_INSTALL_PREFIX=/psp
-  make -j$(nproc)
+  make
 }
 
 package () {
   cd $pkgname-$pkgver/build
   make DESTDIR=$pkgdir install
+
+  mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+  install -m 644 ../LICENSE "$pkgdir/psp/share/licenses/$pkgname"
 }
