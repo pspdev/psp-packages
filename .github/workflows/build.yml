@@ -38,6 +38,8 @@ jobs:
       run: |
         chown -R build:build ${{ matrix.package }}
         cd ${{ matrix.package }}
+        sudo -u build PATH=${PATH} PSPDEV=${PSPDEV} ${PSPDEV}/bin/psp-pacman -Swdd --noconfirm ${{ matrix.package }} && \
+        sudo -u build PSPDEV=${PSPDEV} cp -v ${PSPDEV}/var/cache/pacman/pkg/${{ matrix.package }}-*.pkg.tar.gz ./ || true
         sudo -u build PATH=${PATH} PSPDEV=${PSPDEV} ${PSPDEV}/bin/psp-makepkg -i --noconfirm
         cd ..
     - name: Store package
