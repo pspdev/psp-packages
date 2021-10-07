@@ -1,6 +1,6 @@
 # Maintainer: Wouter Wijsman <wwijsman@live.nl>
 pkgname=psp-cmake
-pkgver=1.0.0
+pkgver=1.1.0
 pkgrel=1
 pkgdesc="CMake wrapper for building PSP software"
 arch=('any')
