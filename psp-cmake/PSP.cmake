@@ -3,13 +3,14 @@
 #
 # Copyright 2019 - Wally
 # Copyright 2020 - Daniel 'dbeef' Zalega
+# Copyright 2021 - max_ishere
 
 if (DEFINED PSPDEV)
     # Custom PSPDEV passed as cmake call argument.
 else()
     # Determine PSP toolchain installation directory;
     # psp-config binary is guaranteed to be in path after successful installation:
-    execute_process(COMMAND bash -c "psp-config --pspdev-path" OUTPUT_VARIABLE PSPDEV OUTPUT_STRIP_TRAILING_WHITESPACE)
+    execute_process(COMMAND sh -c "psp-config --pspdev-path" OUTPUT_VARIABLE PSPDEV OUTPUT_STRIP_TRAILING_WHITESPACE)
 endif()
 
 # Assert that PSP SDK path is now defined:
@@ -24,14 +25,16 @@ set(PSPBIN ${PSPDEV}/bin)
 set(PSPCMAKE ${PSPDEV}/psp/share/cmake)
 
 # Basic CMake Declarations
+set(CMAKE_PREFIX_PATH ${PSPDEV} ${PSPDEV}/psp ${PSPSDK})
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_C_COMPILER ${PSPBIN}/psp-gcc)
 set(CMAKE_CXX_COMPILER ${PSPBIN}/psp-g++)
-set(CMAKE_FIND_ROOT_PATH "${PSPSDK};${PSPDEV}")
+set(CMAKE_FIND_ROOT_PATH ${PSPDEV})
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
+set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 
 # Set paths to PSP-specific utilities:
 set(MKSFO ${PSPBIN}/mksfo)
@@ -40,6 +43,7 @@ set(PACK_PBP ${PSPBIN}/pack-pbp)
 set(FIXUP ${PSPBIN}/psp-fixup-imports)
 set(ENC ${PSPBIN}/PrxEncrypter)
 set(STRIP ${PSPBIN}/psp-strip)
+set(PRXGEN ${PSPBIN}/psp-prxgen)
 
 # Include directories:
 include_directories(${include_directories} ${PSPDEV}/include ${PSPSDK}/include)
@@ -65,4 +69,4 @@ set(PSP_LIBRARIES
 include("${PSPCMAKE}/CreatePBP.cmake")
 
 # Helper variable for multi-platform projects to identify current platform:
-set(PLATFORM_PSP TRUE BOOL)
+set(PLATFORM_PSP TRUE)
