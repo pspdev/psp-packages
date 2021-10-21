@@ -9,37 +9,24 @@ license=('MIT')
 depends=()
 makedepends=()
 optdepends=()
-source=(
-    "http://sourceforge.net/projects/expat/files/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.gz"
-    "config.sub"
-)
-sha256sums=(
-    'a00ae8a6b96b63a3910ddc1100b1a7ef50dc26dceb65ced18ded31ab392f132b'
-    'SKIP'
-)
-
-prepare() {
-    cd "$pkgname-$pkgver"
-    cp ../config.sub config.sub
-    cp ../config.sub conftools/config.sub
-}
+source=("git+https://github.com/libexpat/libexpat.git#commit=a28238bdeebc087071777001245df1876a11f5ee")
+sha256sums=('SKIP')
 
 build() {
-    cd "$pkgname-$pkgver"
-    LDFLAGS="$LDFLAGS -L$(psp-config --pspsdk-path)/lib -L$(psp-config --psp-prefix)/lib -lc -lpspuser" \
-    LIBS="$LIBS -lc -lpspuser" \
-    ./configure --host=psp --prefix=/psp --without-docbook
-    make
+    cd "libexpat/$pkgname"
+    mkdir -p build
+    cd build
+    cmake -Wno-dev -DCMAKE_C_FLAGS="-DHAVE_ARC4RANDOM " -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
+        "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
 }
 
 package() {
-    cd "$pkgname-$pkgver"
-    make DESTDIR="$pkgdir/" install
-
-    rm "${pkgdir}/psp/lib/libexpat.la"
+    cd "libexpat/$pkgname/build"
+    make --quiet $MAKEFLAGS install
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
-    install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 ../COPYING "$pkgdir/psp/share/licenses/$pkgname"
 
     # Remove the binary we can't use
     rm -rf "${pkgdir}/psp/share/man"

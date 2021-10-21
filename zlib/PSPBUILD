@@ -1,6 +1,6 @@
 # Maintainer: Wouter Wijsman <wwijsman@live.nl>
 pkgname=zlib
-pkgver=1.2.8
+pkgver=1.2.11
 pkgrel=1
 pkgdesc="Compression library implementing the deflate compression method found in gzip and PKZIP"
 arch=('mips')
@@ -9,35 +9,27 @@ license=('ZLIB')
 depends=()
 makedepends=()
 optdepends=()
-source=(
-    "https://sourceforge.net/projects/libpng/files/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.gz"
-    "${pkgname}-${pkgver}-PSP.patch"
-)
-sha256sums=(
-    '36658cb768a54c1d4dec43c3116c27ed893e88b02ecfcb44f2166f9c0b7f2a0d'
-    'SKIP'
-)
-
-prepare() {
-    cd "$pkgname-$pkgver"
-    patch -p1 < ../${pkgname}-${pkgver}-PSP.patch
-}
+source=("git+https://github.com/madler/zlib.git#commit=cacf7f1d4e3d44d871b605da3b647f07d718623f")
+sha256sums=('SKIP')
 
 build() {
-    cd "$pkgname-$pkgver"
-    make
+    cd "$pkgname"
+    mkdir -p build
+    cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
+        -DUNIX:BOOL=ON "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
 }
 
 package() {
-    cd "$pkgname-$pkgver"
-
-    make PSPDIR="$pkgdir/psp" install
+    cd "$pkgname/build"
+    make --quiet $MAKEFLAGS install || { exit 1; }
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
-    install -m 644 README "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 ../README "$pkgdir/psp/share/licenses/$pkgname"
 
     # Install documentation
     mkdir -p "$pkgdir/psp/share/doc/"
-    cp -r doc "$pkgdir/psp/share/doc/$pkgname"
+    cp -r ../doc "$pkgdir/psp/share/doc/$pkgname"
 }
 

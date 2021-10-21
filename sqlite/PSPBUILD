@@ -26,7 +26,7 @@ prepare() {
 build() {
     cd "SQLite-26778480"
     LDFLAGS="-L$(psp-config --pspsdk-path)/lib -lc -lpspuser" \
-    CFLAGS="-DSQLITE_OS_OTHER=1 -DSQLITE_OS_PSP=1 -I$(psp-config --pspsdk-path)/include" \
+    CFLAGS="-G0 -O2 -DSQLITE_OS_OTHER=1 -DSQLITE_OS_PSP=1 -I$(psp-config --pspsdk-path)/include" \
     ./configure --host=psp --prefix="/psp" --disable-readline --disable-tcl --disable-threadsafe --disable-amalgamation
     make
 }

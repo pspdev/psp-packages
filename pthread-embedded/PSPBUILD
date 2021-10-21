@@ -1,0 +1,27 @@
+
+# Maintainer: Wouter Wijsman <wwijsman@live.nl>
+pkgname=pthread-embedded
+pkgver=2.8.0
+pkgrel=1
+pkgdesc="PSP's pthread"
+arch=('mips')
+url="https://github.com/fjtrujy/pthread-embedded"
+license=('GPL2')
+depends=()
+makedepends=()
+optdepends=()
+source=("git+https://github.com/fjtrujy/pthread-embedded#commit=9f54480919e55e91fde408bf10b6d66eb84c052f")
+sha256sums=('SKIP')
+
+build() {
+    cd pthread-embedded
+    make --quiet $MAKEFLAGS -C platform/psp || { exit 1; }
+}
+
+package() {
+    cd pthread-embedded
+    make --quiet $MAKEFLAGS -C platform/psp DESTDIR="${pkgdir}" install
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"
+}

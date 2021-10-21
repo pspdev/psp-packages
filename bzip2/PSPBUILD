@@ -1,6 +1,6 @@
 # Maintainer: Wouter Wijsman <wwijsman@live.nl>
 pkgname=bzip2
-pkgver=1.0.6
+pkgver=1.0.8
 pkgrel=1
 pkgdesc="A high-quality data compression library"
 arch=('mips')
@@ -9,30 +9,24 @@ license=('custom')
 depends=()
 makedepends=()
 optdepends=()
-source=(
-    "ftp://sourceware.org/pub/${pkgname}/${pkgname}-${pkgver}.tar.gz"
-    "${pkgname}-${pkgver}-PSP.patch"
-)
-sha256sums=(
-    'a2848f34fcd5d6cf47def00461fcb528a0484d8edef8208d6d2e2909dc61d9cd'
-    'SKIP'
-)
-
-prepare() {
-    cd "$pkgname-$pkgver"
-    patch -p1 < ../${pkgname}-${pkgver}-PSP.patch
-}
+source=("git+https://gitlab.com/fjtrujy/bzip2.git#commit=859485c930a678df80df4bbaf5aab22889d76683")
+sha256sums=('SKIP')
 
 build() {
-    cd "$pkgname-$pkgver"
-    make
+    cd "$pkgname"
+    mkdir -p build
+    cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
+        -DENABLE_SHARED_LIB=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
 }
 
 package() {
-    cd "$pkgname-$pkgver"
-    make PREFIX="$pkgdir/psp" install
+    cd "$pkgname/build"
+    make --quiet $MAKEFLAGS install || { exit 1; }
+    cd ..
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
-    install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"
 }
 

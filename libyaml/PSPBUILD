@@ -1,6 +1,5 @@
-# Maintainer: Wouter Wijsman <wwijsman@live.nl>
 pkgname=libyaml
-pkgver=0.1.4
+pkgver=0.2.5
 pkgrel=1
 pkgdesc="LibYAML is a YAML parser and emitter library"
 arch=('mips')
@@ -9,35 +8,24 @@ license=('MIT')
 depends=()
 makedepends=()
 optdepends=()
-source=(
-    "http://pyyaml.org/download/libyaml/yaml-${pkgver}.tar.gz"
-    "config.sub"
-)
-sha256sums=(
-    '7bf81554ae5ab2d9b6977da398ea789722e0db75b86bffdaeb4e66d961de6a37'
-    'SKIP'
-)
-
-prepare() {
-    cd "yaml-$pkgver"
-    cp ../config.sub config/config.sub
-}
+source=("https://github.com/yaml/libyaml/archive/${pkgver}.tar.gz")
+sha256sums=('fa240dbf262be053f3898006d502d514936c818e422afdcf33921c63bed9bf2e')
 
 build() {
-    cd "yaml-$pkgver"
-    LDFLAGS="$LDFLAGS -L$(psp-config --pspsdk-path)/lib -L$(psp-config --psp-prefix)/lib -lc -lpspuser" \
-    LIBS="$LIBS -lc -lpspuser" \
-    ./configure --host=psp --prefix=/psp
-    make
+    cd "$pkgname-${pkgver}"
+    mkdir -p build
+    cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
+        "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
 }
 
 package() {
-    cd "yaml-$pkgver"
-    make DESTDIR="$pkgdir/" install
-
-    rm "${pkgdir}/psp/lib/libyaml.la"
+    cd "$pkgname-${pkgver}/build"
+    make --quiet $MAKEFLAGS install
+    cd ..
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
-    install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 License "$pkgdir/psp/share/licenses/$pkgname"
 }
 

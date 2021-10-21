@@ -1,35 +1,33 @@
-# Maintainer: Wouter Wijsman <wwijsman@live.nl>
 pkgname=freetype2
-pkgver=2.10.2
+pkgver=2.11.0
 pkgrel=1
 pkgdesc="a freely available software library to render fonts"
 arch=('mips')
 url="https://www.freetype.org/"
 license=('custom:Freetype' 'GPL2')
-depends=('zlib')
+depends=('zlib' 'bzip2' 'libpng')
 makedepends=()
 optdepends=()
-provides=('freetype')
 group=('all')
-source=("https://github.com/pspdev/freetype2/archive/${pkgver}-psp.tar.gz")
-sha256sums=('cda92a07646c0d1192a8d27b460c063a55a17bbf3961079bf12a6436bc652938')
+source=("https://github.com/freetype/freetype/archive/VER-${pkgver//./-}.tar.gz")
+sha256sums=('fffcba25febd1581cc12d706a39bee96f37eab627d0838ce6e8189ebd841d722')
 
 build() {
-    cd "$pkgname-$pkgver-psp"
-    ./autogen.sh
-    LDFLAGS="-L$(psp-config --pspsdk-path)/lib" LIBS="-lc -lpspuser" \
-    ./configure --host psp --prefix=/psp --without-bzip2 --without-png --enable-freetype-config
-    make
+    cd "freetype-VER-${pkgver//./-}"
+    mkdir -p build
+    cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
+        "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
 }
 
 package() {
-    cd "$pkgname-$pkgver-psp"
-    make DESTDIR="$pkgdir/" install
-
-    rm "${pkgdir}/psp/lib/libfreetype.la"
+    cd "freetype-VER-${pkgver//./-}/build"
+    make --quiet $MAKEFLAGS install
+    cd ..
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
-    install -m 644 docs/LICENSE.TXT "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 LICENSE.TXT "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 docs/GPLv2.TXT "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 docs/FTL.TXT "$pkgdir/psp/share/licenses/$pkgname"
 }

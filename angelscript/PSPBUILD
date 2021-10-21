@@ -1,21 +1,24 @@
 # Maintainer: Wouter Wijsman <wwijsman@live.nl>
 pkgname=angelscript
-pkgver=2.23.0
+pkgver=2.28.2
 pkgrel=1
 pkgdesc="A game-oriented interpreted compiled scripting language library"
 arch=('mips')
 url="http://angelcode.com/angelscript/"
 license=('ZLIB')
 depends=()
-makedepends=('psp-cmake')
+makedepends=()
 optdepends=()
 source=("http://www.angelcode.com/angelscript/sdk/files/${pkgname}_${pkgver}.zip")
-sha256sums=('667e5238c1ec687df8e5b6888871855a50d892a548970680f6c8556f19023e0c')
+sha256sums=('54bc6126d2ba2509f3916ff139758d3c3c2185dddb521fc040110c5afde6000a')
 
 build() {
     cd "sdk/${pkgname}/projects/cmake"
-    psp-cmake -D CMAKE_INSTALL_PREFIX=/psp/ .
-    make
+    mkdir -p build
+    cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
+        "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
 }
 
 package() {

@@ -9,34 +9,22 @@ license=('GPL2.1')
 depends=()
 makedepends=()
 optdepends=()
-source=(
-    "https://downloads.sourceforge.net/mikmod/${pkgname}-${pkgver}.tar.gz"
-    "${pkgname}-${pkgver}-PSP.patch"
-)
-sha256sums=(
-    'ad9d64dfc8f83684876419ea7cd4ff4a41d8bcd8c23ef37ecb3a200a16b46d19'
-    'SKIP'
-)
-
-prepare() {
-    cd "$pkgname-$pkgver"
-    patch -p1 < ../${pkgname}-${pkgver}-PSP.patch
-}
+source=("git+https://git.code.sf.net/p/mikmod/mikmod#commit=1db78000802cf78870f5b955f10700bd023ec86f")
+sha256sums=('SKIP')
 
 build() {
-    cd "$pkgname-$pkgver"
-    LDFLAGS="$LDFLAGS -L$(psp-config --pspsdk-path)/lib -L$(psp-config --psp-prefix)/lib -lc -lpspuser" \
-    LIBS="$LIBS -lc -lpspuser" \
-    ./configure --host=psp --prefix="/psp" --disable-alldrv --enable-psp --enable-aiff --enable-wav --enable-raw
-    make
+    cd mikmod/$pkgname
+    mkdir -p build
+    cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
+        "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
 }
 
-package() {
-    cd "$pkgname-$pkgver"
-
-    make DESTDIR="${pkgdir}" install
-
-    rm "${pkgdir}/psp/lib/libmikmod.la"
+package () {
+    cd "mikmod/$pkgname/build"
+    make --quiet $MAKEFLAGS install
+    cd ..
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 COPYING.LIB "$pkgdir/psp/share/licenses/$pkgname"

@@ -1,30 +1,29 @@
 # Contributor: Wouter Wijsman <wwijsman@live.nl>
 pkgname=jsoncpp
-pkgver=1.8.4
+pkgver=1.9.4
 pkgrel=1
 pkgdesc="a C++ library for interacting with JSON"
 arch=('mips')
 license=('unlicense')
 url="https://github.com/open-source-parsers/jsoncpp"
-makedepends=('psp-cmake')
-source=("https://github.com/open-source-parsers/jsoncpp/archive/$pkgver.tar.gz" "${pkgname}-${pkgver}-PSP.patch")
-sha256sums=('c49deac9e0933bcb7044f08516861a2d560988540b23de2ac1ad443b219afdb6' '9d12c9f7c0e8566413cb60657c84ad86fbcb4f2105dc40b96b744c6962e8bef0')
-
-prepare() {
-  cd $pkgname-$pkgver
-  patch -p1 < ../${pkgname}-${pkgver}-PSP.patch
-}
+makedepends=()
+source=("git+https://github.com/fjtrujy/jsoncpp#commit=29f9853455002bba46262ded9c1b57656796af75")
+sha256sums=('SKIP')
 
 build() {
-  mkdir -p $pkgname-$pkgver/build && cd $pkgname-$pkgver/build
-  psp-cmake .. -DCMAKE_BUILD_TYPE=Release -DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF -DJSONCPP_WITH_TESTS=OFF -DCMAKE_INSTALL_INCLUDEDIR=include/jsoncpp -DCMAKE_INSTALL_PREFIX=/psp
-  make
+  cd $pkgname
+  mkdir -p build
+  cd build
+  cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
+        -DCMAKE_BUILD_TYPE=Release -DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF -DJSONCPP_WITH_TESTS=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
+  make --quiet $MAKEFLAGS || { exit 1; }
 }
 
 package () {
-  cd $pkgname-$pkgver/build
-  make DESTDIR=$pkgdir install
+  cd "$pkgname/build"
+  make --quiet $MAKEFLAGS install
+  cd ..
 
   mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
-  install -m 644 ../LICENSE "$pkgdir/psp/share/licenses/$pkgname"
+  install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
 }

@@ -1,16 +1,14 @@
 name: Packages
 
 on:
-  workflow_dispatch:
-  pull_request:
   push:
-    branches: master
+  pull_request:
   repository_dispatch:
     types: [run_build]
 
 jobs:
   prepare_jobs:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     container: node:lts
     steps:
       - uses: actions/checkout@v2
@@ -25,8 +23,8 @@ jobs:
 
   build:
     needs: [prepare_jobs]
-    runs-on: ubuntu-18.04
-    container: ghcr.io/sharkwouter/psp-package-builder:latest
+    runs-on: ubuntu-latest
+    container: ghcr.io/fjtrujy/psp-tools:latest
     strategy:
       fail-fast: false
       matrix:
@@ -34,9 +32,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: |
+        apk --update add build-base bash acl sudo fakeroot curl patch gpgme-dev libarchive-tools libarchive-dev \
+          openssl-dev git bison autoconf automake tcl-dev libtool cmake doxygen texinfo
     - name: Build package
       run: |
-        chown -R build:build ${{ matrix.package }}
+        adduser -D -h /build -s /bin/bash build
+        chown -R build:build /build ${PSPDEV} ${{ matrix.package }}
         cd ${{ matrix.package }}
         sudo -u build PATH=${PATH} PSPDEV=${PSPDEV} ${PSPDEV}/bin/psp-makepkg -i --noconfirm
         cd ..
@@ -50,8 +53,8 @@ jobs:
 
   build_depends:
     needs: [prepare_jobs, build]
-    runs-on: ubuntu-18.04
-    container: ghcr.io/sharkwouter/psp-package-builder:latest
+    runs-on: ubuntu-latest
+    container: ghcr.io/fjtrujy/psp-tools:latest
     strategy:
       fail-fast: false
       matrix:
@@ -60,8 +63,14 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: actions/download-artifact@v2
-    - name: Install packages
+    - name: Install dependencies
       run: |
+        apk --update add build-base bash acl sudo fakeroot curl patch gpgme-dev libarchive-tools libarchive-dev \
+          openssl-dev git bison autoconf automake tcl-dev libtool cmake doxygen texinfo
+    - name: Install package
+      run: |
+        adduser -D -h /build -s /bin/bash build
+        chown -R build:build /build ${PSPDEV} package
         cd package
         sudo -u build PATH=${PATH} PSPDEV=${PSPDEV} ${PSPDEV}/bin/psp-pacman -U --noconfirm *.pkg.tar.gz
         cd ..
@@ -85,18 +94,21 @@ jobs:
   create_release:
     if: contains(github.ref,'refs/heads/master')
     needs: [prepare_jobs, build, build_depends]
-    runs-on: ubuntu-18.04
-    container: ghcr.io/sharkwouter/psp-package-builder:latest
+    runs-on: ubuntu-latest
+    container: ghcr.io/fjtrujy/psp-tools:latest
 
     steps:
     - uses: actions/checkout@v2
     - uses: actions/download-artifact@v2
+    - name: Install dependencies
+      run: |
+        apk --update add build-base bash curl patch gpgme-dev libarchive-tools libarchive-dev \
+          openssl-dev git bison autoconf automake tcl-dev libtool cmake doxygen
     - name: Upload files
       if: contains(github.ref,'refs/heads/master')
       run: |
         cd package
         ${PSPDEV}/share/pacman/bin/repo-add pspdev.db.tar.gz *.pkg.tar.gz
-        cd ..
     - uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
