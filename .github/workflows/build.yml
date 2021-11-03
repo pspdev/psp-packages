@@ -34,7 +34,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install dependencies
       run: |
-        apk --update add build-base bash acl sudo fakeroot curl patch gpgme-dev libarchive-tools libarchive-dev \
+        apk add build-base bash acl sudo fakeroot curl patch gpgme-dev libarchive-tools libarchive-dev \
           openssl-dev git bison autoconf automake tcl-dev libtool cmake doxygen texinfo
     - name: Build package
       run: |
@@ -65,7 +65,7 @@ jobs:
     - uses: actions/download-artifact@v2
     - name: Install dependencies
       run: |
-        apk --update add build-base bash acl sudo fakeroot curl patch gpgme-dev libarchive-tools libarchive-dev \
+        apk add build-base bash acl sudo fakeroot curl patch gpgme-dev libarchive-tools libarchive-dev \
           openssl-dev git bison autoconf automake tcl-dev libtool cmake doxygen texinfo
     - name: Install package
       run: |
@@ -102,14 +102,15 @@ jobs:
     - uses: actions/download-artifact@v2
     - name: Install dependencies
       run: |
-        apk --update add build-base bash curl patch gpgme-dev libarchive-tools libarchive-dev \
-          openssl-dev git bison autoconf automake tcl-dev libtool cmake doxygen
-    - name: Upload files
+        apk --update add build-base bash gpgme-dev libarchive-tools libarchive-dev libtool doxygen
+    - name: Create repo files
       if: contains(github.ref,'refs/heads/master')
       run: |
         cd package
         ${PSPDEV}/share/pacman/bin/repo-add pspdev.db.tar.gz *.pkg.tar.gz
-    - uses: svenstaro/upload-release-action@v2
+    - name: Upload files
+      if: contains(github.ref,'refs/heads/master')
+      uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: package/*
@@ -117,3 +118,54 @@ jobs:
         file_glob: true
         tag: ${{ github.ref }}-${{ github.run_id }}
         release_name: ${{ github.ref }} (${{ github.run_id }})
+
+  docker-layer:
+    if: contains(github.ref,'refs/heads/master')
+    needs: [create_release]
+  
+    runs-on: ubuntu-latest
+  
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Extract DOCKER_TAG using tag name
+      if: startsWith(github.ref, 'refs/tags/')
+      run: |
+        echo "DOCKER_TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+    
+    - name: Use default DOCKER_TAG
+      if: startsWith(github.ref, 'refs/tags/') != true
+      run: |
+        echo "DOCKER_TAG=latest" >> $GITHUB_ENV
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+      
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+      
+    - name: Login to Github registry
+      uses: docker/login-action@v1 
+      with:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+        registry: ghcr.io
+    
+    - uses: docker/build-push-action@v2
+      with:
+        push: true
+        tags: ghcr.io/${{ github.repository }}:${{ env.DOCKER_TAG }}
+        build-args: |
+          BASE_DOCKER_IMAGE=ghcr.io/${{ github.repository_owner }}/psp-tools:${{ env.DOCKER_TAG }}
+          PACKAGES_REPO=${{ github.repository }}
+    
+    - name: Send Compile action
+      run: |
+        export DISPATCH_ACTION="$(echo run_build)"
+        echo "NEW_DISPATCH_ACTION=$DISPATCH_ACTION" >> $GITHUB_ENV
+    - name: Repository Dispatch to pspdev
+      uses: peter-evans/repository-dispatch@v1
+      with:
+        repository: ${{ github.repository_owner }}/pspdev
+        token: ${{ secrets.DISPATCH_TOKEN }}
+        event-type: ${{ env.NEW_DISPATCH_ACTION }}
+        client-payload: '{"ref": "${{ github.ref }}"}'
