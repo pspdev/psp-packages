@@ -6,8 +6,10 @@ ARG PACKAGES_REPO
 
 COPY . /src
 
-RUN apk add build-base bash wget curl libarchive-dev gpgme-dev
+RUN apk add build-base bash wget curl libarchive-dev gpgme-dev tree
 RUN cd /src && ./install-latest.sh ${PACKAGES_REPO}
+
+RUN cd /usr/local/pspdev && tree
 
 # Second stage of Dockerfile
 FROM alpine:latest
