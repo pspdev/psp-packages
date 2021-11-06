@@ -10,7 +10,7 @@ license=('GPL2')
 depends=()
 makedepends=()
 optdepends=()
-source=("git+https://github.com/fjtrujy/pthread-embedded#commit=9f54480919e55e91fde408bf10b6d66eb84c052f")
+source=("git+https://github.com/fjtrujy/pthread-embedded#commit=545cb2f57ad3ebfeb2dc67602f52533db2f251c6")
 sha256sums=('SKIP')
 
 build() {
@@ -20,7 +20,7 @@ build() {
 
 package() {
     cd pthread-embedded
-    make --quiet $MAKEFLAGS -C platform/psp DESTDIR="${pkgdir}" install
+    make --quiet $MAKEFLAGS -C platform/psp DESTDIR="${pkgdir}/psp" install
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"
