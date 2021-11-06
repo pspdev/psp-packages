@@ -16,4 +16,4 @@ curl -s https://api.github.com/repos/${PACKAGES_REPO}/releases/latest \
         | tr -d \" \
         | wget -qi -
 
-psp-pacman -U --noconfirm *.pkg.tar.gz
+psp-pacman -U --noconfirm *.pkg.tar.gz --overwrite '*'
