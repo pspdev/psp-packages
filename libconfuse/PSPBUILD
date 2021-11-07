@@ -1,0 +1,28 @@
+pkgname=libconfuse
+pkgver=3.3
+pkgrel=1
+pkgdesc="Small configuration file parser library for C"
+arch=('mips')
+url="https://github.com/libconfuse/libconfuse/"
+license=('MIT')
+depends=()
+makedepends=()
+optdepends=()
+source=("git+https://github.com/fjtrujy/libconfuse.git#commit=f07689cc2a726f295c77ac7882b9c0159b7155b3")
+sha256sums=('SKIP')
+
+build() {
+    cd "$pkgname"
+    ./autogen.sh
+    CFLAGS="-G0 -O2 -DPSP" ./configure --host=psp --prefix=/psp --disable-examples || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package() {
+    cd "$pkgname"
+    make --quiet $MAKEFLAGS DESTDIR="$pkgdir/" install || { exit 1; }
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
+}
+
