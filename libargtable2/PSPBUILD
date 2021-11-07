@@ -1,0 +1,31 @@
+pkgname=libargtable2
+pkgver=2.14
+pkgrel=1
+pkgdesc="Argtable is an ANSI C library for parsing GNU style command line options with a minimum of fuss."
+arch=('mips')
+url="http://argtable.sourceforge.net/"
+license=()
+depends=()
+makedepends=()
+optdepends=()
+source=("git+https://github.com/makestuff/libargtable2.git#commit=a76e8773ad1fff8e1d8d2c1a6d4f961b5dc5719f")
+sha256sums=('SKIP')
+
+build() {
+    cd "$pkgname"
+    mkdir -p build
+    cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
+        "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package() {
+    cd "$pkgname/build"
+    make --quiet $MAKEFLAGS install
+    cd ..
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"
+}
+
