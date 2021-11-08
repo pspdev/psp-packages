@@ -1,0 +1,34 @@
+pkgname=enet
+pkgver=1.3.17
+pkgrel=1
+pkgdesc="ENet reliable UDP networking library"
+arch=('mips')
+url="http://enet.bespin.org/"
+license=()
+depends=()
+makedepends=()
+optdepends=()
+source=("git+https://github.com/lsalzman/enet.git#commit=74cea7abf52ddd355146aeb0a4077d2b95368122")
+sha256sums=('SKIP')
+
+build() {
+    cd "$pkgname"
+    mkdir -p build
+    cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
+        "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package() {
+    cd "$pkgname"
+    # We must do the install manually till this PR is merged https://github.com/lsalzman/enet/pull/82
+    mkdir -m 755 -p "$pkgdir/psp/lib"
+    install -m 644 build/libenet.a "$pkgdir/psp/lib"
+    mkdir -m 755 -p "$pkgdir/psp/include"
+    cp -R include "$pkgdir/psp/include"
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
+}
+
