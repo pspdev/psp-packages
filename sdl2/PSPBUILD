@@ -10,7 +10,7 @@ depends=('libpspvram' 'pspgl')
 makedepends=()
 optdepends=()
 provides=('sdl2-main')
-source=("git+https://github.com/pspdev/SDL.git#commit=d42f515c85cc1a9bc61b0071f1e98e86c868288c")
+source=("git+https://github.com/fjtrujy/SDL.git#commit=9d8f7d143f5ba4a45521a330bd7c9fdf855080c5")
 sha256sums=('SKIP')
 
 build() {
