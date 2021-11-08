@@ -25,7 +25,7 @@ package() {
     cd "${pkgname}2-13/build"
     make --quiet $MAKEFLAGS install
     # I don't know why header is not being copied
-    install -m 644 ../src/argtable2.h "$pkgdir/psp/include/" 
+    install -m 644 ../src/argtable2.h "$pkgdir/psp/include/argtable2.h" 
     cd ..
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
