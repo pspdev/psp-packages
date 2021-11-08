@@ -1,0 +1,31 @@
+pkgname=libxmp
+pkgver=4.5.0
+pkgrel=1
+pkgdesc="Libxmp is a library that renders module files to PCM data."
+arch=('mips')
+url="https://github.com/libxmp/libxmp"
+license=()
+depends=()
+makedepends=()
+optdepends=()
+source=("git+https://github.com/libxmp/libxmp.git#commit=b1766e972cebebaaf21f738ee6c26bed95c1e9ed")
+sha256sums=('SKIP')
+
+build() {
+    cd "$pkgname"
+    mkdir -p build
+    cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
+        "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package() {
+    cd "$pkgname/build"
+    make --quiet $MAKEFLAGS install
+    cd ..
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 docs/COPYING.LIB "$pkgdir/psp/share/licenses/$pkgname"
+}
+
