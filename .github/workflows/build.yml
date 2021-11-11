@@ -24,7 +24,7 @@ jobs:
   build:
     needs: [prepare_jobs]
     runs-on: ubuntu-latest
-    container: ghcr.io/fjtrujy/psp-tools:latest
+    container: ghcr.io/fjtrujy/pspsdk:latest
     strategy:
       fail-fast: false
       matrix:
@@ -55,7 +55,7 @@ jobs:
   build_depends:
     needs: [prepare_jobs, build]
     runs-on: ubuntu-latest
-    container: ghcr.io/fjtrujy/psp-tools:latest
+    container: ghcr.io/fjtrujy/pspsdk:latest
     strategy:
       fail-fast: false
       matrix:
@@ -97,7 +97,7 @@ jobs:
     if: contains(github.ref,'refs/heads/master')
     needs: [prepare_jobs, build, build_depends]
     runs-on: ubuntu-latest
-    container: ghcr.io/fjtrujy/psp-tools:latest
+    container: ghcr.io/fjtrujy/pspsdk:latest
 
     steps:
     - uses: actions/checkout@v2
@@ -157,7 +157,7 @@ jobs:
         push: true
         tags: ghcr.io/${{ github.repository }}:${{ env.DOCKER_TAG }}
         build-args: |
-          BASE_DOCKER_IMAGE=ghcr.io/${{ github.repository_owner }}/psp-tools:${{ env.DOCKER_TAG }}
+          BASE_DOCKER_IMAGE=ghcr.io/${{ github.repository_owner }}/pspsdk:${{ env.DOCKER_TAG }}
           PACKAGES_REPO=${{ github.repository }}
     
     - name: Send Compile action
