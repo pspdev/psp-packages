@@ -16,4 +16,12 @@ curl -s https://api.github.com/repos/${PACKAGES_REPO}/releases/latest \
         | tr -d \" \
         | wget -qi -
 
-psp-pacman -U --noconfirm *.pkg.tar.gz --overwrite '*'
+
+# Windows doesn't have pacman, so let's install manually
+if [ $2 = "manually" ]; then
+    for package in *.pkg.tar.gz; do
+        tar -xzf $package -C $PSPDEV
+    done
+else
+    psp-pacman -U --noconfirm *.pkg.tar.gz --overwrite '*'
+fi
