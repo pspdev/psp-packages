@@ -1,13 +1,13 @@
 # Contributor: Wouter Wijsman <wwijsman@live.nl>
 pkgname=jsoncpp
-pkgver=1.9.4
+pkgver=1.9.5
 pkgrel=1
 pkgdesc="a C++ library for interacting with JSON"
 arch=('mips')
 license=('unlicense')
 url="https://github.com/open-source-parsers/jsoncpp"
 makedepends=()
-source=("git+https://github.com/fjtrujy/jsoncpp#commit=29f9853455002bba46262ded9c1b57656796af75")
+source=("git+https://github.com/open-source-parsers/jsoncpp#commit=5defb4ed1a4293b8e2bf641e16b156fb9de498cc")
 sha256sums=('SKIP')
 
 build() {
