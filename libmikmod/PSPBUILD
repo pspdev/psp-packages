@@ -1,7 +1,7 @@
 # Maintainer: Wouter Wijsman <wwijsman@live.nl>
 pkgname=libmikmod
 pkgver=3.3.11.1
-pkgrel=1
+pkgrel=2
 pkgdesc="a portable sound library capable of playing samples as well as module files"
 arch=('mips')
 url="http://mikmod.sourceforge.net/"

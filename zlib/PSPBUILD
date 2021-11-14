@@ -9,11 +9,11 @@ license=('ZLIB')
 depends=()
 makedepends=()
 optdepends=()
-source=("git+https://github.com/madler/zlib.git#commit=cacf7f1d4e3d44d871b605da3b647f07d718623f")
-sha256sums=('SKIP')
+source=("https://github.com/madler/zlib/archive/v${pkgver}.tar.gz")
+sha256sums=('629380c90a77b964d896ed37163f5c3a34f6e6d897311f1df2a7016355c45eff')
 
 build() {
-    cd "$pkgname"
+    cd "${pkgname}-${pkgver}"
     mkdir -p build
     cd build
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
@@ -22,7 +22,7 @@ build() {
 }
 
 package() {
-    cd "$pkgname/build"
+    cd "${pkgname}-${pkgver}/build"
     make --quiet $MAKEFLAGS install || { exit 1; }
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"

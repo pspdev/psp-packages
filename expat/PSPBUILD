@@ -1,7 +1,7 @@
 # Maintainer: Wouter Wijsman <wwijsman@live.nl>
 pkgname=expat
 pkgver=2.4.1
-pkgrel=1
+pkgrel=2
 pkgdesc="XML parsing C library"
 arch=('mips')
 url="https://libexpat.github.io/"
@@ -9,11 +9,11 @@ license=('MIT')
 depends=()
 makedepends=()
 optdepends=()
-source=("git+https://github.com/libexpat/libexpat.git#commit=a28238bdeebc087071777001245df1876a11f5ee")
-sha256sums=('SKIP')
+source=("https://github.com/libexpat/libexpat/releases/download/R_${pkgver//./_}/expat-${pkgver}.tar.gz")
+sha256sums=('a00ae8a6b96b63a3910ddc1100b1a7ef50dc26dceb65ced18ded31ab392f132b')
 
 build() {
-    cd "libexpat/$pkgname"
+    cd "$pkgname-${pkgver}"
     mkdir -p build
     cd build
     cmake -Wno-dev -DCMAKE_C_FLAGS="-DHAVE_ARC4RANDOM " -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
@@ -22,7 +22,7 @@ build() {
 }
 
 package() {
-    cd "libexpat/$pkgname/build"
+    cd "$pkgname-${pkgver}/build"
     make --quiet $MAKEFLAGS install
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
