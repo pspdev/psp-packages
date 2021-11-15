@@ -1,7 +1,7 @@
 # Maintainer: Wouter Wijsman <wwijsman@live.nl>
 pkgname=sdl2-mixer
 pkgver=2.0.4
-pkgrel=1
+pkgrel=2
 pkgdesc="an audio mixer library based on the SDL2 library"
 arch=('mips')
 url="https://www.libsdl.org/projects/SDL_mixer/"

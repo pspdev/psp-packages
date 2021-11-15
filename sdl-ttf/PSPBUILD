@@ -1,7 +1,7 @@
 # Maintainer: Wouter Wijsman <wwijsman@live.nl>
 pkgname=sdl-ttf
 pkgver=2.0.11
-pkgrel=1
+pkgrel=2
 pkgdesc="a companion library to SDL for working with TrueType (tm) fonts"
 arch=('mips')
 url="https://www.libsdl.org/projects/SDL_ttf/release-1.2.html"

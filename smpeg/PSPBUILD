@@ -1,7 +1,7 @@
 # Maintainer: Wouter Wijsman <wwijsman@live.nl>
 pkgname=smpeg
 pkgver=0.4.5
-pkgrel=1
+pkgrel=2
 pkgdesc="a free MPEG1 video player library with sound support"
 arch=('mips')
 url="https://github.com/fungos/smpeg-psp/"

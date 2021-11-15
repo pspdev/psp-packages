@@ -1,5 +1,3 @@
-
-# Maintainer: Wouter Wijsman <wwijsman@live.nl>
 pkgname=pthread-embedded
 pkgver=2.8.0
 pkgrel=1

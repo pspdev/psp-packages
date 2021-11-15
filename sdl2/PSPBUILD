@@ -1,7 +1,7 @@
 # Maintainer: Wouter Wijsman <wwijsman@live.nl>
 pkgname=sdl2
 pkgver=2.0.14
-pkgrel=3
+pkgrel=4
 pkgdesc="a library designed to provide low level access to audio, input, and graphics hardware"
 arch=('mips')
 url="https://github.com/pspdev/SDL"
