@@ -24,7 +24,7 @@ jobs:
   build:
     needs: [prepare_jobs]
     runs-on: ubuntu-latest
-    container: ghcr.io/fjtrujy/pspsdk:latest
+    container: ghcr.io/pspdev/pspsdk:latest
     strategy:
       fail-fast: false
       matrix:
@@ -55,7 +55,7 @@ jobs:
   build_depends:
     needs: [prepare_jobs, build]
     runs-on: ubuntu-latest
-    container: ghcr.io/fjtrujy/pspsdk:latest
+    container: ghcr.io/pspdev/pspsdk:latest
     strategy:
       fail-fast: false
       matrix:
@@ -97,7 +97,7 @@ jobs:
     if: contains(github.ref,'refs/heads/master')
     needs: [prepare_jobs, build, build_depends]
     runs-on: ubuntu-latest
-    container: ghcr.io/fjtrujy/pspsdk:latest
+    container: ghcr.io/pspdev/pspsdk:latest
 
     steps:
     - uses: actions/checkout@v2
