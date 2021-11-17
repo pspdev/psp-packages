@@ -1,18 +1,18 @@
-pkgname=libyaml
-pkgver=0.2.5
+pkgname=libxmp
+pkgver=4.5.0
 pkgrel=1
-pkgdesc="LibYAML is a YAML parser and emitter library"
+pkgdesc="Libxmp is a library that renders module files to PCM data."
 arch=('mips')
-url="https://pyyaml.org/wiki/LibYAML"
-license=('MIT')
+url="https://github.com/libxmp/libxmp"
+license=('GPL2')
 depends=()
 makedepends=()
 optdepends=()
-source=("https://github.com/yaml/libyaml/archive/${pkgver}.tar.gz")
-sha256sums=('fa240dbf262be053f3898006d502d514936c818e422afdcf33921c63bed9bf2e')
+source=("git+https://github.com/libxmp/libxmp.git#commit=b1766e972cebebaaf21f738ee6c26bed95c1e9ed")
+sha256sums=('SKIP')
 
 build() {
-    cd "$pkgname-${pkgver}"
+    cd "$pkgname"
     mkdir -p build
     cd build
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
@@ -21,11 +21,11 @@ build() {
 }
 
 package() {
-    cd "$pkgname-${pkgver}/build"
+    cd "$pkgname/build"
     make --quiet $MAKEFLAGS install
     cd ..
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
-    install -m 644 License "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 docs/COPYING.LIB "$pkgdir/psp/share/licenses/$pkgname"
 }
 

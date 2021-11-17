@@ -4,7 +4,6 @@
 *.xz
 *.zip
 *.bz2
-psp-cmake/gpl-3.0.txt
 
 # do allow github workflow files
 !.github/workflows/

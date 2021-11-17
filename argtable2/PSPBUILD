@@ -1,0 +1,34 @@
+pkgname=argtable2
+pkgver=13
+pkgrel=1
+pkgdesc="Argtable is an ANSI C library for parsing GNU style command line options with a minimum of fuss"
+arch=('mips')
+url="http://argtable.sourceforge.net/"
+license=('GPL2')
+depends=()
+makedepends=()
+optdepends=()
+source=("http://prdownloads.sourceforge.net/argtable/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('8f77e8a7ced5301af6e22f47302fdbc3b1ff41f2b83c43c77ae5ca041771ddbf')
+
+
+build() {
+    cd "${pkgname}-${pkgver}"
+    mkdir -p build
+    cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
+        "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package() {
+    cd "${pkgname}-${pkgver}/build"
+    make --quiet $MAKEFLAGS install
+    # I don't know why header is not being copied
+    mkdir -m 755 -p "$pkgdir/psp/include"
+    install -m 644 ../src/argtable2.h "$pkgdir/psp/include/" 
+    cd ..
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"
+}

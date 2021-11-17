@@ -1,6 +1,6 @@
 # Maintainer: Wouter Wijsman <wwijsman@live.nl>
 pkgname=zziplib
-pkgver=0.13.38
+pkgver=0.13.72
 pkgrel=1
 pkgdesc="provides read access to zipped files in a zip-archive"
 arch=('mips')
@@ -9,25 +9,22 @@ license=('ZLIB')
 depends=('zlib')
 makedepends=()
 optdepends=()
-source=("git+https://github.com/pspdev/psp-ports.git#commit=5ee159bccf6b9539d69b5f43bba0eff0c75e6f11")
+source=("git+https://github.com/gdraheim/zziplib.git#commit=a82f98f94a2cc365fad71eee02d7dd50c0810844")
 sha256sums=('SKIP')
 
 build() {
-    cd "psp-ports/$pkgname"
-    LDFLAGS="$LDFLAGS -L$(psp-config --pspsdk-path)/lib -L$(psp-config --psp-prefix)/lib -lc -lpspuser" \
-    LIBS="$LIBS -lc -lpspuser" \
-    ./configure --host=psp --prefix="/psp"
-    make
+    cd "$pkgname"
+    mkdir -p build
+    cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
+        -DBUILD_STATIC_LIBS=ON -DZZIPSDL=OFF -DZZIPTEST=OFF -DZZIPDOCS=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
 }
 
 package() {
-    cd "psp-ports/$pkgname"
-    make DESTDIR="${pkgdir}" install
-
-    rm "${pkgdir}/psp/lib/libzzip.la"
-    rm "${pkgdir}/psp/lib/libzzipfseeko.la"
-    rm "${pkgdir}/psp/lib/libzzipmmapped.la"
-    rm "${pkgdir}/psp/lib/libzzipwrap.la"
+    cd "$pkgname/build"
+    make --quiet $MAKEFLAGS install
+    cd ..
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 COPYING.LIB "$pkgdir/psp/share/licenses/$pkgname"

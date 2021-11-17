@@ -1,6 +1,5 @@
-# Maintainer: Wouter Wijsman <wwijsman@live.nl>
 pkgname=libogg
-pkgver=1.1.2
+pkgver=1.3.5
 pkgrel=1
 pkgdesc="library for the multimedia container format, and the native file and stream format ogg"
 arch=('mips')
@@ -9,22 +8,24 @@ license=('BSD')
 depends=()
 makedepends=()
 optdepends=()
-source=("git+https://github.com/pspdev/psp-ports.git#commit=f47bd37edf202284fc039106a5b27d9b7314bd76")
-sha256sums=('SKIP')
+source=("https://github.com/xiph/ogg/archive/v${pkgver}.tar.gz")
+sha256sums=('f6f1b04cfa4e98b70ffe775d5e302d9c6b98541f05159af6de2d6617817ed7d6')
 
-build() {
-    cd "psp-ports/$pkgname"
-    LDFLAGS="-L$(psp-config --pspsdk-path)/lib" LIBS="-lc -lpspuser" ./autogen.sh --host psp --prefix=/psp
-    make
+build() {   
+    cd "ogg-${pkgver}"
+    mkdir -p build
+    cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
+        "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
+    cd ../..
 }
 
 package() {
-    cd "psp-ports/$pkgname"
-    make DESTDIR="${pkgdir}" install
-
-    rm "${pkgdir}/psp/lib/libogg.la"
+    cd "ogg-${pkgver}/build"
+    make --quiet $MAKEFLAGS install
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
-    install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 ../COPYING "$pkgdir/psp/share/licenses/$pkgname"
 }
 

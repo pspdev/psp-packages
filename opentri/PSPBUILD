@@ -1,22 +1,15 @@
-# Maintainer: Wouter Wijsman <wwijsman@live.nl>
 pkgname=opentri
-pkgver=r6.ec3f441
+pkgver=r7.95b040d
 pkgrel=1
 pkgdesc="openTRI is a game engine for the PSP"
 arch=('mips')
 url="https://github.com/SamRH/openTRI"
 license=('GPL2')
-depends=('zlib' 'freetype2' 'libpng')
+depends=('zlib' 'freetype2')
 makedepends=()
 optdepends=()
-source=("git+https://github.com/SamRH/openTRI.git")
+source=("git+https://github.com/fjtrujy/openTRI.git#commit=95b040d4f4dabda1ab779257fec5ddc3637a9a7d")
 sha256sums=('SKIP')
-
-pkgver() {
-    cd openTRI
-    # Set the revision of the repo as version
-    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
-}
 
 build() {
     cd openTRI

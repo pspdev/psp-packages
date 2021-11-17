@@ -1,6 +1,5 @@
-# Maintainer: Wouter Wijsman <wwijsman@live.nl>
 pkgname=pixman
-pkgver=0.24.4
+pkgver=0.40.0
 pkgrel=1
 pkgdesc="Pixman is a low-level software library for pixel manipulation"
 arch=('mips')
@@ -9,34 +8,21 @@ license=('MIT')
 depends=('libpng')
 makedepends=()
 optdepends=()
-source=(
-    "http://cairographics.org/releases/${pkgname}-${pkgver}.tar.gz"
-    "config.sub"
-)
-sha256sums=(
-    'fea7869c2ba41f49fbe1c9382390ff671ac62add44dc5f29134e61d0f17960de'
-    'SKIP'
-)
-
-prepare() {
-    cd "$pkgname-$pkgver"
-    cp ../config.sub config.sub
-}
+source=("https://github.com/freedesktop/pixman/archive/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('3a68a28318a78fffc61603c8385bb0010c3fb23d17cd1285d36a7148c87a3b91')
 
 build() {
-    cd "$pkgname-$pkgver"
-    LDFLAGS="$LDFLAGS -L$(psp-config --pspsdk-path)/lib -L$(psp-config --psp-prefix)/lib -lc -lpspuser" \
-    LIBS="$LIBS -lc -lpspuser" \
-    PNG_CFLAGS="-I$(psp-config --psp-prefix)/include/libpng15" PNG_LIBS="-L$(psp-config --psp-prefix)/lib -lpng -lz -lm" \
+    cd "$pkgname-$pkgname-${pkgver}"
+    ./autogen.sh
+    LDFLAGS="-L$(psp-config --pspsdk-path)/lib $(psp-pkgconf --libs libpng zlib)" \
+    CFLAGS="-G0 -O2 $(psp-pkgconf --cflags libpng zlib)" \
     ./configure --host=psp --prefix=/psp
-    make
+    make --quiet $MAKEFLAGS || { exit 1; }
 }
 
 package() {
-    cd "$pkgname-$pkgver"
-    make DESTDIR="$pkgdir/" install
-
-    rm "${pkgdir}/psp/lib/libpixman-1.la"
+    cd "$pkgname-$pkgname-${pkgver}"
+    make --quiet $MAKEFLAGS DESTDIR="$pkgdir/" install || { exit 1; }
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"

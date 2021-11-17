@@ -1,6 +1,6 @@
 # Maintainer: Wouter Wijsman <wwijsman@live.nl>
 pkgname=libpng
-pkgver=1.5.7
+pkgver=1.6.37
 pkgrel=1
 pkgdesc="libpng is the official PNG reference library"
 arch=('mips')
@@ -9,37 +9,23 @@ license=('ZLIB')
 depends=('zlib')
 makedepends=()
 optdepends=()
-source=(
-    "http://sourceforge.net/projects/libpng/files/libpng15/older-releases/${pkgver}/${pkgname}-${pkgver}.tar.gz"
-    "${pkgname}-${pkgver}-PSP.patch"
-)
-sha256sums=(
-    '7d6431388f67b48f20242d2623e1aaa99e1c7cab5d2d699742d0e4ac987e8241'
-    'SKIP'
-)
-
-prepare() {
-    cd "$pkgname-$pkgver"
-    patch -p1 < ../${pkgname}-${pkgver}-PSP.patch
-}
+source=("https://github.com/glennrp/libpng/archive/v${pkgver}.tar.gz")
+sha256sums=('ca74a0dace179a8422187671aee97dd3892b53e168627145271cad5b5ac81307')
 
 build() {
-    cd "$pkgname-$pkgver"
-    LDFLAGS="$LDFLAGS -L$(psp-config --pspsdk-path)/lib -L$(psp-config --psp-prefix)/lib -lc -lpspuser" \
-    LIBS="$LIBS -lc -lpspuser" \
-    ./configure --host=psp --prefix="/psp"
-    make
+    cd "$pkgname-${pkgver}"
+    mkdir -p build
+    cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
+        -DPNG_SHARED=OFF -DPNG_STATIC=ON "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
 }
 
 package() {
-    cd "$pkgname-$pkgver"
-
-    make DESTDIR="${pkgdir}" install
-
-    rm "${pkgdir}/psp/lib/libpng.la"
-    rm "${pkgdir}/psp/lib/libpng15.la"
+    cd "$pkgname-${pkgver}/build"
+    make --quiet $MAKEFLAGS install
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
-    install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 ../LICENSE "$pkgdir/psp/share/licenses/$pkgname"
 }
 
