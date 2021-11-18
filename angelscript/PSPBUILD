@@ -9,8 +9,19 @@ license=('ZLIB')
 depends=()
 makedepends=()
 optdepends=()
-source=("http://www.angelcode.com/angelscript/sdk/files/${pkgname}_${pkgver}.zip")
-sha256sums=('54bc6126d2ba2509f3916ff139758d3c3c2185dddb521fc040110c5afde6000a')
+source=(
+    "http://www.angelcode.com/angelscript/sdk/files/${pkgname}_${pkgver}.zip"
+    "${pkgname}_${pkgver}.patch"
+)
+sha256sums=(
+    '54bc6126d2ba2509f3916ff139758d3c3c2185dddb521fc040110c5afde6000a'
+    'SKIP'
+)
+
+prepare() {
+    cd "sdk"
+    patch -p1 < ../${pkgname}_${pkgver}.patch
+}
 
 build() {
     cd "sdk/${pkgname}/projects/cmake"
