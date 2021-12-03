@@ -16,7 +16,7 @@ build() {
     ./autogen.sh
     LDFLAGS="-L$(psp-config --pspsdk-path)/lib $(psp-pkgconf --libs libpng zlib)" \
     CFLAGS="-G0 -O2 $(psp-pkgconf --cflags libpng zlib)" \
-    ./configure --host=psp --prefix=/psp
+    ./configure --disable-loongson-mmi --host=psp --prefix=/psp
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 
