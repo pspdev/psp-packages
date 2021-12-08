@@ -1,0 +1,34 @@
+pkgname=kubridge
+pkgver=20211208
+pkgrel=1
+pkgdesc="a bridging library to provide Kernel functions for PSPs in User Mode"
+arch=('mips')
+license=('GPL2')
+url="https://github.com/pspdev/kubridge"
+makedepends=()
+source=(
+  "git+https://github.com/pspdev/${pkgname}#commit=dc33d96f8d1fc6c454c8a65711d38dd56b7f52a6"
+  "https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt"
+)
+sha256sums=(
+  'SKIP'
+  '8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643'
+)
+
+build() {
+  cd $pkgname
+  cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DBUILD_SHARED_LIBS=OFF \
+        -DCMAKE_BUILD_TYPE=Release "${XTRA_OPTS[@]}" . || { exit 1; }
+  make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package () {
+  cd "$pkgname"
+  mkdir -m 755 -p "$pkgdir/psp/lib" "$pkgdir/psp/include"
+  install -m 644 "libpspkubridge.a" "$pkgdir/psp/lib"
+  install -m 644 "include/kubridge.h" "$pkgdir/psp/include"
+  
+
+  mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+  install -m 644 ../gpl-2.0.txt "$pkgdir/psp/share/licenses/$pkgname/license.txt"
+}
