@@ -8,7 +8,7 @@ license=('MIT')
 depends=()
 makedepends=()
 optdepends=()
-source=("git+https://github.com/fjtrujy/libconfuse.git#commit=f07689cc2a726f295c77ac7882b9c0159b7155b3")
+source=("git+https://github.com/libconfuse/libconfuse.git#commit=5ef1c43dc0ec52b3ae165ed96a5951fea1fa21b6")
 sha256sums=('SKIP')
 
 build() {
