@@ -1,6 +1,6 @@
 pkgname=libmikmod
 pkgver=3.3.11.1
-pkgrel=2
+pkgrel=3
 pkgdesc="a portable sound library capable of playing samples as well as module files"
 arch=('mips')
 url="http://mikmod.sourceforge.net/"
@@ -8,14 +8,19 @@ license=('GPL2.1')
 depends=()
 makedepends=()
 optdepends=()
-source=("git+https://git.code.sf.net/p/mikmod/mikmod#commit=1db78000802cf78870f5b955f10700bd023ec86f")
+source=("git+https://git.code.sf.net/p/mikmod/mikmod#commit=65efd9e7b6cec78e91af1a1e664eadffab934888")
 sha256sums=('SKIP')
+
+prepare() {
+    cd mikmod/$pkgname
+    sed -i 's#@prefix@#${PSPDEV}/psp#' libmikmod-config.in
+}
 
 build() {
     cd mikmod/$pkgname
     mkdir -p build
     cd build
-    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DENABLE_SHARED=0 \
         "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
@@ -25,7 +30,8 @@ package () {
     make --quiet $MAKEFLAGS install
     cd ..
 
-    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
-    install -m 644 COPYING.LIB "$pkgdir/psp/share/licenses/$pkgname"
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname/"
+    install -m 644 COPYING.LIB "$pkgdir/psp/share/licenses/$pkgname/"
+    install -m 644 COPYING.LESSER "$pkgdir/psp/share/licenses/$pkgname/"
+    install -m 644 AUTHORS "$pkgdir/psp/share/licenses/$pkgname/"
 }
-
