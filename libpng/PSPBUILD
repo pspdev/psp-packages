@@ -1,6 +1,6 @@
 pkgname=libpng
 pkgver=1.6.37
-pkgrel=1
+pkgrel=2
 pkgdesc="libpng is the official PNG reference library"
 arch=('mips')
 url="http://libpng.org/pub/png/libpng.html"
@@ -10,6 +10,13 @@ makedepends=()
 optdepends=()
 source=("https://github.com/glennrp/libpng/archive/v${pkgver}.tar.gz")
 sha256sums=('ca74a0dace179a8422187671aee97dd3892b53e168627145271cad5b5ac81307')
+
+prepare() {
+    cd "$pkgname-${pkgver}"
+    sed -i 's#@prefix@\|@exec_prefix@#${PSPDEV}/psp#' libpng-config.in
+    sed -i 's#@libdir@#${PSPDEV}/psp/lib#' libpng-config.in
+    sed -i 's#@includedir@#${PSPDEV}/psp/include#' libpng-config.in
+}
 
 build() {
     cd "$pkgname-${pkgver}"
@@ -27,4 +34,3 @@ package() {
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 ../LICENSE "$pkgdir/psp/share/licenses/$pkgname"
 }
-
