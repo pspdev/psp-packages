@@ -1,7 +1,7 @@
 # Maintainer: Wouter Wijsman <wwijsman@live.nl>
 pkgname=libpng
 pkgver=1.6.37
-pkgrel=1
+pkgrel=2
 pkgdesc="libpng is the official PNG reference library"
 arch=('mips')
 url="http://libpng.org/pub/png/libpng.html"
