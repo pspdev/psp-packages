@@ -1,22 +1,10 @@
 # PSP Packages
 
-This repo contains PSPBUILD files for all the libraries shipped with PSPDEV. They are automatically build and hosted as an pacman repository using Github actions. Using it requires the [psptoolchain](https://github.com/pspdev/psptoolchain) and [psp-pacman](https://github.com/pspdev/psp-pacman).
+This repo contains build files for all the libraries shipped with PSPDEV. They are automatically build and hosted as a pacman repository using Github actions. They can be downloaded with the ``psp-pacman`` command.
 
-## Adding the pacman repo
+## Installing libraries from the repository
 
-Add the following lines to the file ``${PSPDEV}/etc/pacman.conf``:
-
-```
-[pspdev]
-SigLevel = Optional TrustAll
-Server = https://github.com/pspdev/psp-packages/releases/latest/download/
-```
-
-Then run: ``psp-pacman -Sy``
-
-## Installing libraries from the repo
-
-Installing libraries from this repo can be done like so:
+Installing libraries from this repository can be done with ``psp-pacman`` like so:
 
 ```
 psp-pacman -Sy library
@@ -43,9 +31,9 @@ Updating libraries can be done with:
 psp-pacman -Syu
 ```
 
-## Building individual packages
+## Building individual libraries
 
-Building a single package from the repository can be done by opening a terminal in the directory of the chosen library and running the following:
+Building a single package from a clone of this repository can be useful if you wish to modify it in some way. It can be done by opening a terminal in the directory of the chosen library and running the following:
 
 ```
 psp-makepkg -i
@@ -55,9 +43,7 @@ This will build and install the package.
 
 ## Contributing
 
-Contributions to this repository are welcome. Especially fixes and new libraries always add value. Take a look at [contributor guidelines](CONTRIBUTING.md).
-
-For more general information on how to write PSPBUILDs take a look at the [Arch wiki](https://wiki.archlinux.org/title/Creating_packages).
+Contributions to this repository are welcome. If you wish to update or add a library look at the [contributing page](CONTRIBUTING.md).
 
 ## Special thanks
 
