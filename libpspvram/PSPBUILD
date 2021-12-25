@@ -1,5 +1,5 @@
 pkgname=libpspvram
-pkgver=r3.5b6fabf
+pkgver=r7.20d1cf6
 pkgrel=1
 pkgdesc="Dynamic VRAM allocation manager for the PSP"
 arch=('mips')
@@ -8,7 +8,7 @@ license=('MIT')
 depends=()
 makedepends=()
 optdepends=()
-source=("git+https://github.com/albe/libpspvram.git")
+source=("git+https://github.com/pspdev/libpspvram.git#commit=20d1cf60f9c9bf8fd804c1bab579b03be86b3591")
 sha256sums=('SKIP')
 
 pkgver() {
@@ -19,18 +19,17 @@ pkgver() {
 
 build() {
     cd "$pkgname"
-    make
+    mkdir -p build
+    cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
 }
 
 package() {
-    cd "$pkgname"
-    mkdir -m 755 -p "$pkgdir/psp/lib"
-    install -m 644 "libpspvalloc.a" "$pkgdir/psp/lib"
-    install -m 644 "libpspvram.a" "$pkgdir/psp/lib"
+    cd "$pkgname/build"
+    make --quiet $MAKEFLAGS install
 
-    mkdir -m 755 -p "$pkgdir/psp/include/"
-    install -m 644 *.h "$pkgdir/psp/include/"
-
+    cd ..
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
 }
