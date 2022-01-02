@@ -1,0 +1,36 @@
+# Maintainer: Wouter Wijsman <wwijsman@live.nl>
+pkgname=lua51
+pkgver=5.1
+pkgrel=5
+pkgdesc="Lua programming language for PSP"
+arch=('mips')
+url="https://lua.org"
+license=('MIT')
+depends=()
+makedepends=()
+optdepends=()
+source=(
+"https://www.lua.org/ftp/lua-5.1.5.tar.gz"
+"psp.patch")
+sha256sums=(
+'2640fc56a795f29d28ef15e13c34a47e223960b0240e8cb0a82d9b0738695333'
+'SKIP')
+
+prepare() {
+    tar -xzf lua-5.1.5.tar.gz
+    cd lua-5.1.5
+    patch -p1 < ../psp.patch
+}
+
+build() {
+    cd lua-5.1.5
+    make -f Makefile.psp
+}
+
+package() {
+    cd lua-5.1.5
+    make -f Makefile.psp PSPDIR="${pkgdir}/psp" install
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 doc/readme.html "$pkgdir/psp/share/licenses/$pkgname"
+}

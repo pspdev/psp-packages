@@ -1,0 +1,34 @@
+# Maintainer: stdgregwar github.com/stdgregwar
+pkgname=libmodplug
+pkgver=0.8.8
+pkgrel=5
+pkgdesc="libmodplug - the library which was part of the Modplug-xmms project"
+arch=('mips')
+url="http://modplug-xmms.sf.net/"
+license=('public domain')
+depends=()
+makedepends=()
+optdepends=()
+provides=()
+source=(
+"git+https://github.com/Konstanty/libmodplug"
+)
+sha256sums=(
+"SKIP"
+)
+
+build() {
+    cd libmodplug
+    mkdir pspbuild
+    cd pspbuild
+    psp-cmake .. -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp
+    make
+}
+
+package() {
+    cd libmodplug
+    make install -C pspbuild
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"
+}
+

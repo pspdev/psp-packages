@@ -1,0 +1,41 @@
+# Maintainer: stdgregwar github.com/stdgregwar
+pkgname=mojoal
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="MojoAL is a full OpenAL 1.1 implementation, written in C, in a single source file."
+arch=('mips')
+url="https://icculus.org/mojoAL/"
+license=('ZLIB')
+depends=('sdl2')
+makedepends=()
+optdepends=()
+provides=("openal")
+source=("git+https://github.com/icculus/mojoAL" "psp.patch")
+sha256sums=('SKIP' 'SKIP')
+
+prepare() {
+    cd mojoAL
+    patch -p1 < ../psp.patch
+}
+
+build() {
+    cd mojoAL
+    mkdir pspbuild
+    cd pspbuild
+    psp-cmake .. -DCMAKE_INSTALL_PREFIX=$PSPDEV/psp
+    make
+}
+
+package() {
+    cd mojoAL
+    
+    mkdir -m 755 -p "$pkgdir/psp/lib" 
+    install -m 644 "pspbuild/libmojoal.a" "$pkgdir/psp/lib"
+
+    mkdir -m 755 -p "$pkgdir/psp/include/AL"
+    cp -v AL/*.h "$pkgdir/psp/include/AL"
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 LICENSE.txt "$pkgdir/psp/share/licenses/$pkgname"
+}
+

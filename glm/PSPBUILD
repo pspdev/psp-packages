@@ -1,0 +1,30 @@
+# Maintainer: stdgregwar github.com/stdgregwar
+pkgname=glm
+pkgver=0.9.9
+pkgrel=8
+pkgdesc="OpenGL Mathematics (GLM) is a header only C++ mathematics library for graphics software based on the OpenGL Shading Language (GLSL) specifications."
+arch=('mips')
+url="https://glm.g-truc.net/"
+license=('MIT')
+depends=()
+makedepends=()
+optdepends=()
+provides=()
+source=(
+"git+https://github.com/g-truc/glm#tag=0.9.9.8"
+)
+
+sha256sums=(
+"SKIP"
+)
+
+package() {
+    cd glm
+
+    mkdir -m 755 -p "$pkgdir/psp/include/glm"
+    cp -vr glm/* "$pkgdir/psp/include/glm"
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 copying.txt "$pkgdir/psp/share/licenses/$pkgname"
+}
+
