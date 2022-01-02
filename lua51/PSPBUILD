@@ -1,7 +1,6 @@
-# Maintainer: Wouter Wijsman <wwijsman@live.nl>
 pkgname=lua51
-pkgver=5.1
-pkgrel=5
+pkgver=5.1.5
+pkgrel=1
 pkgdesc="Lua programming language for PSP"
 arch=('mips')
 url="https://lua.org"

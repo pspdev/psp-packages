@@ -1,7 +1,6 @@
-# Maintainer: stdgregwar github.com/stdgregwar
 pkgname=libmodplug
-pkgver=0.8.8
-pkgrel=5
+pkgver=0.8.8.5
+pkgrel=1
 pkgdesc="libmodplug - the library which was part of the Modplug-xmms project"
 arch=('mips')
 url="http://modplug-xmms.sf.net/"
@@ -11,7 +10,7 @@ makedepends=()
 optdepends=()
 provides=()
 source=(
-"git+https://github.com/Konstanty/libmodplug"
+"git+https://github.com/Konstanty/libmodplug#commit=d7ba5efd5816696fba668a23194940f796d62b95"
 )
 sha256sums=(
 "SKIP"

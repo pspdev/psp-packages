@@ -1,4 +1,3 @@
-# Maintainer: stdgregwar github.com/stdgregwar
 pkgname=mojoal
 pkgver=1.0.0
 pkgrel=1
@@ -10,7 +9,7 @@ depends=('sdl2')
 makedepends=()
 optdepends=()
 provides=("openal")
-source=("git+https://github.com/icculus/mojoAL" "psp.patch")
+source=("git+https://github.com/icculus/mojoAL#commit=a4eb6c83807f7fe9123391a3ba4e5938441861b2" "psp.patch")
 sha256sums=('SKIP' 'SKIP')
 
 prepare() {
