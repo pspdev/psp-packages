@@ -1,0 +1,40 @@
+pkgname=curl
+pkgver=7.15.1
+pkgrel=4
+pkgdesc="A library for transferring data with URL syntax"
+arch=('mips')
+url="https://curl.se/"
+license=('custom')
+depends=()
+optdepends=()
+makedepends=()
+source=(
+    "https://github.com/curl/curl/archive/refs/tags/${pkgname}-${pkgver//./_}.tar.gz"
+    "${pkgname}-${pkgver}-PSP.patch"
+)
+sha256sums=(
+    "5de197156c8bde11992d0e3bb36136064625d9cfdedf30140a7d7a3ccd5d7ffa"
+    "SKIP"
+)
+
+prepare() {
+    cd "${pkgname}-${pkgname}-${pkgver//./_}"
+    patch -p1 < ../${pkgname}-${pkgver}-PSP.patch || { exit 1; }
+}
+
+build() {
+    cd "${pkgname}-${pkgname}-${pkgver//./_}"
+    LDFLAGS="-L$(psp-config --psp-prefix)/lib -L$(psp-config --pspsdk-path)/lib" \
+    CFLAGS="-I$(psp-config --pspsdk-path)/include -G0" \
+    LIBS="-lc -lpspnet_inet -lpspnet_resolver -lpspuser" \
+    ./configure --host=psp --disable-shared --prefix=$(psp-config --psp-prefix) || { exit 1; }
+    make || { exit 1; }
+}
+
+package() {
+    cd "${pkgname}-${pkgname}-${pkgver//./_}"
+    make install || { exit 1; }
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"
+}
