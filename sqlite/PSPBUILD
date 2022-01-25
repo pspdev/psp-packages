@@ -13,7 +13,7 @@ source=(
     "${pkgname}-${pkgver}-PSP.patch"
 )
 sha256sums=(
-    "02703fd07e5050ff627d27e23a0313a4a8288d7a2e6b4678f899b53b16286a50"
+    "bb49ad9c7d0e10f9c0862fdfc57dd6bfe5164b478a464179f3d34ca847a46dc6"
     "SKIP"
 )
 
