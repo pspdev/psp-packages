@@ -1,5 +1,5 @@
 pkgname=sdl2-ttf
-pkgver=2.0.15
+pkgver=2.0.18
 pkgrel=1
 pkgdesc="a companion library to SDL2 for working with TrueType (tm) fonts"
 arch=('mips')
@@ -8,25 +8,28 @@ license=('MIT')
 depends=('sdl2' 'freetype2')
 makedepends=()
 optdepends=()
-source=("https://github.com/pspdev/SDL_ttf/archive/${pkgver}-psp.tar.gz")
-sha256sums=('540b2aaea1df6204526fd6df4a9e1e524360b6d36e2bebea79a6ad7cd180a621')
+source=("https://github.com/libsdl-org/SDL_ttf/archive/refs/tags/release-${pkgver}.tar.gz")
+sha256sums=('6b61544441b72bdfa1ced89034c6396fe80228eff201eb72c5f78e500bb80bd0')
+
+prepare() {
+  cd "SDL_ttf-release-$pkgver"
+  sed -i '/POSITION_INDEPENDENT_CODE ON/d' CMakeLists.txt
+}
 
 build() {
-    cd "SDL_ttf-$pkgver-psp"
-    ./autogen.sh
-    LDFLAGS="-L$(psp-config --pspsdk-path)/lib" LIBS="-lc -lpspuser" \
-    SDL_CFLAGS="-I$(psp-config --psp-prefix)/include/SDL2" SDL_LIBS="-lSDL2" \
-    ./configure --host psp --prefix=/psp --without-x
-    make
+  cd "SDL_ttf-release-$pkgver"
+  mkdir -p build
+  cd build
+  cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
+    "${XTRA_OPTS[@]}" .. || { exit 1; }
+  make --quiet $MAKEFLAGS || { exit 1; }
 }
 
 package() {
-    cd "SDL_ttf-$pkgver-psp"
-    make DESTDIR="$pkgdir/" install
+  cd "SDL_ttf-release-$pkgver/build"
+  make --quiet $MAKEFLAGS install
 
-    rm "${pkgdir}/psp/lib/libSDL2_ttf.la"
-
-    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
-    install -m644 COPYING.txt "$pkgdir/psp/share/licenses/$pkgname"
+  mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+  install -m644 ../COPYING.txt "$pkgdir/psp/share/licenses/$pkgname"
 }
 
