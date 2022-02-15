@@ -1,0 +1,33 @@
+pkgname=minizip
+pkgver=3.0.4
+pkgrel=1
+pkgdesc="fork of the popular zip manipulation library found in the zlib distribution"
+arch=('mips')
+url="https://github.com/zlib-ng/minizip-ng"
+depends=('zlib' 'bzip2' 'libpng')
+makedepends=()
+optdepends=()
+source=("https://github.com/zlib-ng/minizip-ng/archive/$pkgver.zip")
+sha256sums=('cf4ae0dc0334266c710dfd1de188b575348ae2dfbbba2dccd7392f14bdb206f2')
+
+prepare() {
+  cd minizip-ng-$pkgver
+  sed -i '/POSITION_INDEPENDENT_CODE/d' CMakeLists.txt
+}
+
+build() {
+  cd minizip-ng-$pkgver
+  mkdir -p build
+  cd build
+  cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=/psp -DBUILD_SHARED_LIBS=OFF \
+      -DMZ_COMPAT=OFF -DMZ_LZMA=OFF -DMZ_OPENSSL=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
+  make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package () {
+  cd minizip-ng-$pkgver/build
+  make --quiet DESTDIR=$pkgdir $MAKEFLAGS install
+
+  mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+  install -m 644 ../LICENSE "$pkgdir/psp/share/licenses/$pkgname"
+}
