@@ -1,6 +1,6 @@
 pkgname=sqlite
-pkgver=3.7.3
-pkgrel=4
+pkgver=3.7.4
+pkgrel=1
 pkgdesc="SQLite is a C-language library that implements a small, fast, self-contained, high-reliability, full-featured, SQL database engine"
 arch=('mips')
 url="https://www.sqlite.org/"
@@ -9,21 +9,21 @@ depends=()
 optdepends=()
 makedepends=()
 source=(
-    "https://www.sqlite.org/src/tarball/26778480/SQLite-26778480.tar.gz"
+    "https://github.com/sqlite/sqlite/archive/refs/tags/version-3.7.4.tar.gz"
     "${pkgname}-${pkgver}-PSP.patch"
 )
 sha256sums=(
-    "bb49ad9c7d0e10f9c0862fdfc57dd6bfe5164b478a464179f3d34ca847a46dc6"
+    "5fdbe958102f6f9dc93f3fc2f9e61a327fe8067fed227cd63ae26ed210a2774a"
     "SKIP"
 )
 
 prepare() {
-    cd "SQLite-26778480"
+    cd "${pkgname}-version-${pkgver}"
     patch -p1 < ../${pkgname}-${pkgver}-PSP.patch
 }
 
 build() {
-    cd "SQLite-26778480"
+    cd "${pkgname}-version-${pkgver}"
     LDFLAGS="-L$(psp-config --pspsdk-path)/lib -lc -lpspuser" \
     CFLAGS="-G0 -O2 -DSQLITE_OS_OTHER=1 -DSQLITE_OS_PSP=1 -I$(psp-config --pspsdk-path)/include" \
     ./configure --host=psp --prefix="/psp" --disable-readline --disable-tcl --disable-threadsafe --disable-amalgamation
@@ -31,7 +31,7 @@ build() {
 }
 
 package() {
-    cd "SQLite-26778480"
+    cd "${pkgname}-version-${pkgver}"
     make DESTDIR="$pkgdir" install
 
     rm "${pkgdir}/psp/lib/libsqlite3.la"
