@@ -27,13 +27,13 @@ build() {
     LDFLAGS="-L$(psp-config --psp-prefix)/lib -L$(psp-config --pspsdk-path)/lib" \
     CFLAGS="-I$(psp-config --pspsdk-path)/include -G0" \
     LIBS="-lc -lpspnet_inet -lpspnet_resolver -lpspuser" \
-    ./configure --host=psp --disable-shared --prefix=$(psp-config --psp-prefix) || { exit 1; }
+    ./configure --host=psp --disable-shared --prefix=/psp || { exit 1; }
     make || { exit 1; }
 }
 
 package() {
     cd "${pkgname}-${pkgname}-${pkgver//./_}"
-    make install || { exit 1; }
+    make DESTDIR=$pkgdir install || { exit 1; }
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"
