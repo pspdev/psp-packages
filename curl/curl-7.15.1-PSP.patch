@@ -47469,6 +47469,42 @@ index 0000000..bcd7761
 +done
 +
 +exit 0
+diff --git a/curl-config.in b/curl-config.in
+index 2f51871..f57637d 100644
+--- a/curl-config.in
++++ b/curl-config.in
+@@ -5,9 +5,9 @@
+ #
+ # $Id$
+ #
+-prefix=@prefix@
+-exec_prefix=@exec_prefix@
+-includedir=@includedir@
++prefix=${PSPDEV}/psp
++exec_prefix=${PSPDEV}/psp
++includedir=${PSPDEV}/psp/include
+ 
+ usage()
+ {
+@@ -135,15 +135,15 @@ while test $# -gt 0; do
+ 	;;
+ 
+     --cflags)
+-       	if test "X@includedir@" = "X/usr/include"; then
++       	if test "X${PSPDEV}/psp/lib" = "X/usr/include"; then
+           echo ""
+         else
+-          echo "-I@includedir@"
++          echo "-I${PSPDEV}/psp/lib"
+         fi
+        	;;
+ 
+     --libs)
+-       	echo -L@libdir@ -lcurl @LDFLAGS@ @LIBS@
++       	echo -L${PSPDEV}/psp/lib -lcurl @LDFLAGS@ @LIBS@
+        	;;
+ 
+     *)
 diff --git a/depcomp b/depcomp
 new file mode 100755
 index 0000000..04701da
