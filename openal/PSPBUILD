@@ -1,0 +1,28 @@
+pkgname=openal
+pkgver=1.21.1
+pkgrel=1
+pkgdesc="a cross-platform 3D audio API"
+arch=('mips')
+license=('gpl2')
+url="https://openal-soft.org/"
+makedepends=()
+source=("https://openal-soft.org/openal-releases/openal-soft-${pkgver}.tar.bz2")
+sha256sums=('c8ad767e9a3230df66756a21cc8ebf218a9d47288f2514014832204e666af5d8')
+
+build() {
+  cd $pkgname-soft-$pkgver
+  mkdir -p build
+  cd build
+  cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=/psp -DCMAKE_BUILD_TYPE=Release \
+        -DALSOFT_UTILS=OFF -DALSOFT_EXAMPLES=OFF -DLIBTYPE=STATIC "${XTRA_OPTS[@]}" .. || { exit 1; }
+  make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package () {
+  cd "$pkgname-soft-$pkgver/build"
+  make --quiet DESTDIR=$pkgdir $MAKEFLAGS install
+  cd ..
+
+  mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+  install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"
+}
