@@ -1,0 +1,40 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ef13e56..0cab972 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -4,7 +4,7 @@
+ project(mojoAL)
+ cmake_minimum_required(VERSION 3.0.0)
+ 
+-find_package(SDL2 REQUIRED)
++#find_package(SDL2 REQUIRED)
+ 
+ add_library(mojoal SHARED mojoal.c)
+ target_include_directories(mojoal PRIVATE ${SDL2_INCLUDE_DIRS})
+@@ -18,9 +18,9 @@ macro(add_test_executable _NAME)
+     target_link_libraries(${_NAME} ${SDL2_LIBRARIES})
+ endmacro()
+ 
+-add_test_executable(testopenalinfo)
+-add_test_executable(testqueueing)
+-add_test_executable(testcapture)
+-add_test_executable(testposition)
++#add_test_executable(testopenalinfo)
++#add_test_executable(testqueueing)
++#add_test_executable(testcapture)
++#add_test_executable(testposition)
+ 
+ 
+diff --git a/mojoal.c b/mojoal.c
+index b65b467..cac2c19 100644
+--- a/mojoal.c
++++ b/mojoal.c
+@@ -22,7 +22,7 @@
+ 
+ #include "AL/al.h"
+ #include "AL/alc.h"
+-#include "SDL.h"
++#include "SDL2/SDL.h"
+ 
+ #ifdef __SSE__  /* if you are on x86 or x86-64, we assume you have SSE1 by now. */
+ #define NEED_SCALAR_FALLBACK 0

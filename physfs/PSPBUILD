@@ -1,0 +1,40 @@
+pkgname=physfs
+pkgver=3.0.2
+pkgrel=1
+pkgdesc="PhysicsFS; a portable, flexible file i/o abstraction."
+arch=('mips')
+url="https://icculus.org/physfs/"
+license=('ZLIB')
+depends=()
+makedepends=()
+optdepends=()
+provides=()
+source=(
+"git+https://github.com/icculus/physfs#tag=release-3.0.2"
+"psp.patch"
+)
+sha256sums=(
+"SKIP"
+"SKIP"
+)
+
+prepare() {
+    cd physfs
+    patch -p1 < ../psp.patch
+}
+
+build() {
+    cd physfs
+    mkdir pspbuild
+    cd pspbuild
+    psp-cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DPHYSFS_BUILD_TEST=Off -DPHYSFS_ARCHIVE_SLB=Off
+    make
+}
+
+package() {
+    cd physfs
+    make install -C pspbuild
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 LICENSE.txt "$pkgdir/psp/share/licenses/$pkgname"
+}
+
