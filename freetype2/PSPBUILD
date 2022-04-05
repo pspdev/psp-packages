@@ -1,6 +1,6 @@
 pkgname=freetype2
 pkgver=2.11.0
-pkgrel=1
+pkgrel=2
 pkgdesc="a freely available software library to render fonts"
 arch=('mips')
 url="https://www.freetype.org/"
@@ -16,14 +16,14 @@ build() {
     cd "freetype-VER-${pkgver//./-}"
     mkdir -p build
     cd build
-    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=/psp -DBUILD_SHARED_LIBS=OFF \
         "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 
 package() {
     cd "freetype-VER-${pkgver//./-}/build"
-    make --quiet $MAKEFLAGS install
+    make --quiet DESTDIR=$pkgdir $MAKEFLAGS install
     cd ..
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
