@@ -8,7 +8,7 @@ license=('MIT')
 depends=('sdl2' 'freetype2')
 makedepends=()
 optdepends=()
-source=("git+https://github.com/libsdl-org/SDL_ttf.git#commit=443fb12a8c9edde076beaa474071a3879a7829d3")
+source=("git+https://github.com/libsdl-org/SDL_ttf.git#commit=e9dcda6d7a5a872d3d8c9ccdae10fdaf7f7e73a0")
 sha256sums=('SKIP')
 
 build() {
