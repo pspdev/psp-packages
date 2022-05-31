@@ -24,7 +24,6 @@ package() {
   cd "SDL_ttf/build"
   make --quiet DESTDIR=$pkgdir $MAKEFLAGS install
 
-  mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
-  install -m644 ../COPYING.txt "$pkgdir/psp/share/licenses/$pkgname"
+  mv "$pkgdir/psp/share/licenses/SDL2_ttf" "$pkgdir/psp/share/licenses/$pkgname"
 }
 
