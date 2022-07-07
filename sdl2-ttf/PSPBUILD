@@ -1,5 +1,5 @@
 pkgname=sdl2-ttf
-pkgver=2.0.19
+pkgver=2.0.20
 pkgrel=1
 pkgdesc="a companion library to SDL2 for working with TrueType (tm) fonts"
 arch=('mips')
@@ -8,7 +8,7 @@ license=('MIT')
 depends=('sdl2' 'freetype2')
 makedepends=()
 optdepends=()
-source=("git+https://github.com/libsdl-org/SDL_ttf.git#commit=e9dcda6d7a5a872d3d8c9ccdae10fdaf7f7e73a0")
+source=("git+https://github.com/libsdl-org/SDL_ttf.git#commit=f5e4828ffc9d3a84f00011fede4446aecb4a685f")
 sha256sums=('SKIP')
 
 build() {
