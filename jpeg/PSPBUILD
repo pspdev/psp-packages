@@ -1,6 +1,6 @@
 pkgname=jpeg
 pkgver=2.1.1
-pkgrel=1
+pkgrel=2
 pkgdesc="a free library for JPEG image compression"
 arch=('mips')
 url="https://ijg.org/"

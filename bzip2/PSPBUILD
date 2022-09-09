@@ -1,6 +1,6 @@
 pkgname=bzip2
 pkgver=1.0.8
-pkgrel=1
+pkgrel=2
 pkgdesc="A high-quality data compression library"
 arch=('mips')
 url="http://www.sourceware.org/bzip2/"
