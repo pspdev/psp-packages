@@ -18,8 +18,8 @@ jobs:
           echo "dependant=\"$(node create-matrix.js dependant)\"" >> $GITHUB_ENV
           echo "non_dependant=\"$(node create-matrix.js non_dependant)\"" >> $GITHUB_ENV
     outputs:
-      dependant: ${{ steps.set-matrix.outputs.dependant }}
-      non_dependant: ${{ steps.set-matrix.outputs.non_dependant }}
+      dependant: ${{ steps.set-matrix.env.dependant }}
+      non_dependant: ${{ steps.set-matrix.env.non_dependant }}
 
   build:
     needs: [prepare_jobs]
