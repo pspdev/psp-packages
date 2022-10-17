@@ -15,8 +15,8 @@ jobs:
       - name: Install dependencies
         id: set-matrix
         run: |
-          echo "::set-output name=dependant::$(node create-matrix.js dependant)"
-          echo "::set-output name=non_dependant::$(node create-matrix.js non_dependant)"
+          echo "dependant=\"$(node create-matrix.js dependant)\"" >> $GITHUB_ENV
+          echo "non_dependant=\"$(node create-matrix.js non_dependant)\"" >> $GITHUB_ENV
     outputs:
       dependant: ${{ steps.set-matrix.outputs.dependant }}
       non_dependant: ${{ steps.set-matrix.outputs.non_dependant }}
