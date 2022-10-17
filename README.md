@@ -1,6 +1,6 @@
 # PSP Packages
 
-This repo contains build files for all the libraries shipped with PSPDEV. They are automatically build and hosted as a pacman repository using Github actions. They can be downloaded with the ``psp-pacman`` command.
+This repo contains build files for all the libraries shipped with `PSPDEV`. They are automatically build and hosted as a pacman repository using Github actions. They can be downloaded with the ``psp-pacman`` command.
 
 ## Installing libraries from the repository
 
