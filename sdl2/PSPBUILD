@@ -1,6 +1,6 @@
 pkgname=sdl2
 pkgver=2.25.0
-pkgrel=1
+pkgrel=2
 pkgdesc="a library designed to provide low level access to audio, input, and graphics hardware"
 arch=('mips')
 url="https://github.com/libsdl-org/SDL"
@@ -9,7 +9,7 @@ depends=('libpspvram' 'pspgl')
 makedepends=()
 optdepends=()
 provides=('sdl2-main')
-source=("git+https://github.com/libsdl-org/SDL.git#commit=3903f4c88ac4abfa5720ed0f329e5281643612de")
+source=("git+https://github.com/libsdl-org/SDL.git#commit=428b5ae5464d567881c383edeb2d1e5712b18ffd")
 sha256sums=('SKIP')
 
 prepare() {
