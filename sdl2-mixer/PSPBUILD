@@ -1,32 +1,30 @@
 pkgname=sdl2-mixer
-pkgver=2.0.4
+pkgver=2.6.2
 pkgrel=2
 pkgdesc="an audio mixer library based on the SDL2 library"
 arch=('mips')
 url="https://www.libsdl.org/projects/SDL_mixer/"
 license=('MIT')
-depends=('sdl2' 'libmikmod' 'libvorbis' 'libogg')
+depends=('sdl2' 'libxmp' 'libvorbis' 'libogg')
 makedepends=()
 optdepends=()
-source=("https://github.com/pspdev/SDL_mixer/archive/${pkgver}-psp.tar.gz")
-sha256sums=('b55f88ff0b63744be466ca8546249070fdfdb08258a0d008f54990226f462f8b')
+source=("git+https://github.com/libsdl-org/SDL_mixer#commit=75f318100d220e236c4fcc5a3d0c9ba33d064f3f")
+sha256sums=('SKIP')
 
 build() {
-    cd "SDL_mixer-$pkgver-psp"
-    ./autogen.sh
-    LDFLAGS="-L$(psp-config --pspsdk-path)/lib" LIBS="-lc -lpspuser" \
-    SDL_CFLAGS="-I$(psp-config --psp-prefix)/include/SDL2" SDL_LIBS="-lSDL2" \
-    ./configure --host psp --prefix=/psp --disable-music-cmd
+    cd "$srcdir/SDL_mixer"
+    mkdir -p build && cd build
+    cmake -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
+          -DCMAKE_POSITION_INDEPENDENT_CODE=OFF -DSDL2MIXER_DEPS_SHARED=OFF -DSDL2MIXER_OPUS=OFF -DSDL2MIXER_MIDI=OFF \
+          -DSDL2MIXER_FLAC=OFF  -DSDL2MIXER_VORBIS=VORBISFILE -DSDL2MIXER_VORBIS_VORBISFILE_SHARED=OFF \
+          -DSDL2MIXER_MOD=ON -DSDL2MIXER_MOD_MODPLUG=OFF -DSDL2MIXER_MOD_XMP=ON -DSDL2MIXER_SAMPLES=OFF ..
     make
 }
 
 package() {
-    cd "SDL_mixer-$pkgver-psp"
-    make DESTDIR="$pkgdir/" install
+    cd "$srcdir/SDL_mixer/build"
+    make --quiet $MAKEFLAGS install
 
-    rm "${pkgdir}/psp/lib/libSDL2_mixer.la"
-
-    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
-    install -m644 COPYING.txt "$pkgdir/psp/share/licenses/$pkgname"
+    mv "$pkgdir/psp/share/licenses/SDL2_mixer" "$pkgdir/psp/share/licenses/$pkgname"
 }
 
