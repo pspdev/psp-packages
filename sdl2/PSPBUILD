@@ -1,6 +1,6 @@
 pkgname=sdl2
 pkgver=2.25.0
-pkgrel=2
+pkgrel=3
 pkgdesc="a library designed to provide low level access to audio, input, and graphics hardware"
 arch=('mips')
 url="https://github.com/libsdl-org/SDL"
@@ -14,16 +14,18 @@ sha256sums=('SKIP')
 
 prepare() {
     cd SDL
-    sed -i 's#@prefix@\|@exec_prefix@#${PSPDEV}/psp#' sdl2-config.in
-    sed -i 's#@libdir@#${PSPDEV}/psp/lib#' sdl2-config.in
-    sed -i 's#@includedir@#${PSPDEV}/psp/include#' sdl2-config.in
+    sed -i 's#@prefix@#${PSPDEV}/psp#' sdl2-config.in sdl2.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' sdl2-config.in sdl2.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' sdl2-config.in sdl2.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' sdl2-config.in sdl2.pc.in
 }
 
 build() {
     cd SDL
     mkdir -p build
     cd build
-    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=/psp -DBUILD_SHARED_LIBS=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=/psp -DBUILD_SHARED_LIBS=OFF \
+    -DSDL_TESTS=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 
@@ -31,7 +33,6 @@ package() {
     cd SDL/build
     make --quiet DESTDIR=$pkgdir $MAKEFLAGS install
 
-    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
-    install -m 644 ../LICENSE.txt "$pkgdir/psp/share/licenses/$pkgname"
+    mv "$pkgdir/psp/share/licenses/SDL2" "$pkgdir/psp/share/licenses/$pkgname"
 }
 
