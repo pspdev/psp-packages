@@ -1,5 +1,5 @@
 pkgname=sdl2-ttf
-pkgver=2.0.19
+pkgver=2.21.0
 pkgrel=1
 pkgdesc="a companion library to SDL2 for working with TrueType (tm) fonts"
 arch=('mips')
@@ -8,20 +8,26 @@ license=('MIT')
 depends=('sdl2' 'freetype2')
 makedepends=()
 optdepends=()
-source=("git+https://github.com/libsdl-org/SDL_ttf.git#commit=e9dcda6d7a5a872d3d8c9ccdae10fdaf7f7e73a0")
+source=("git+https://github.com/libsdl-org/SDL_ttf.git#commit=fb8767cc692dcba6a3dbc020e71b74bf7bb993c5")
 sha256sums=('SKIP')
 
+prepare() {
+    cd "$srcdir/SDL_ttf"
+    sed -i 's#@prefix@#${PSPDEV}/psp#' SDL2_ttf.pc.in
+}
+
 build() {
-  cd "SDL_ttf"
+  cd "$srcdir/SDL_ttf"
   mkdir -p build
   cd build
   cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=/psp \
-    -DBUILD_SHARED_LIBS=OFF -DBUILD_SAMPLES=OFF -DVENDORED_DEFAULT=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
+    -DBUILD_SHARED_LIBS=OFF -DSDL2TTF_SAMPLES=OFF -DSDL2TTF_VENDORED=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=OFF \
+    -DSDL2TTF_INSTALL=ON "${XTRA_OPTS[@]}" .. || { exit 1; }
   make --quiet $MAKEFLAGS || { exit 1; }
 }
 
 package() {
-  cd "SDL_ttf/build"
+  cd "$srcdir/SDL_ttf/build"
   make --quiet DESTDIR=$pkgdir $MAKEFLAGS install
 
   mv "$pkgdir/psp/share/licenses/SDL2_ttf" "$pkgdir/psp/share/licenses/$pkgname"
