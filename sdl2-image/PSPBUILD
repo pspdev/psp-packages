@@ -1,32 +1,34 @@
 pkgname=sdl2-image
-pkgver=2.0.5
+pkgver=2.7.0
 pkgrel=1
 pkgdesc="a simple library to load images of various formats as SDL surfaces"
 arch=('mips')
 url="https://www.libsdl.org/projects/SDL_image/"
-license=('MIT')
+license=('zlib')
 depends=('sdl2' 'libpng' 'jpeg')
 makedepends=()
 optdepends=()
-source=("https://github.com/pspdev/SDL_image/archive/${pkgver}-psp.tar.gz")
-sha256sums=('21532e894f174a1be1ddf2e1242fe42604d4ad8abac61e97186adddf20e8dac0')
+source=("git+https://github.com/libsdl-org/SDL_image#commit=ede6056d844e7a1ecec3e688cb4068d1ad0aa884")
+sha256sums=('SKIP')
+
+prepare() {
+    cd "$srcdir/SDL_image"
+    sed -i 's#@prefix@#${PSPDEV}/psp#' SDL2_image.pc.in
+}
 
 build() {
-    cd "SDL_image-$pkgver-psp"
-    ./autogen.sh
-    LDFLAGS="-L$(psp-config --pspsdk-path)/lib" LIBS="-lc -lpspuser" \
-    SDL_CFLAGS="-I$(psp-config --psp-prefix)/include/SDL2" SDL_LIBS="-lSDL2" \
-    ./configure --host psp --prefix=/psp
-    make
+    cd "$srcdir/SDL_image"
+    mkdir -p build && cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=/psp \
+    -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=OFF -DSDL2IMAGE_DEPS_SHARED=OFF \
+    -DSDL2IMAGE_INSTALL=ON -DSDL2IMAGE_SAMPLES=OFF -DSDL2IMAGE_BACKEND_STB=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
 }
 
 package() {
-    cd "SDL_image-$pkgver-psp"
-    make DESTDIR="$pkgdir/" install
+    cd "$srcdir/SDL_image/build"
+    make DESTDIR="$pkgdir" install
 
-    rm "${pkgdir}/psp/lib/libSDL2_image.la"
-
-    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
-    install -m644 COPYING.txt "$pkgdir/psp/share/licenses/$pkgname"
+    mv "$pkgdir/psp/share/licenses/SDL2_image" "$pkgdir/psp/share/licenses/$pkgname"
 }
 
