@@ -8,7 +8,7 @@ license=('MIT')
 depends=()
 makedepends=()
 optdepends=()
-source=("git+https://github.com/pspdev/libpspvram.git#commit=20d1cf60f9c9bf8fd804c1bab579b03be86b3591")
+source=("git+https://github.com/pspdev/libpspvram.git#commit=885fd3f5420dbc6a9ed450d268d752813093b417")
 sha256sums=('SKIP')
 
 pkgver() {

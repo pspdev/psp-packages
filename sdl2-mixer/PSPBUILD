@@ -1,32 +1,38 @@
 pkgname=sdl2-mixer
-pkgver=2.0.4
-pkgrel=2
+pkgver=2.6.3
+pkgrel=1
 pkgdesc="an audio mixer library based on the SDL2 library"
 arch=('mips')
 url="https://www.libsdl.org/projects/SDL_mixer/"
 license=('MIT')
-depends=('sdl2' 'libmikmod' 'libvorbis' 'libogg')
+depends=('sdl2' 'libxmp' 'libvorbis' 'libogg')
 makedepends=()
 optdepends=()
-source=("https://github.com/pspdev/SDL_mixer/archive/${pkgver}-psp.tar.gz")
-sha256sums=('b55f88ff0b63744be466ca8546249070fdfdb08258a0d008f54990226f462f8b')
+source=("git+https://github.com/libsdl-org/SDL_mixer#commit=c9f0946a783293d12178ce86773dd6f8f1a08b1c")
+sha256sums=('SKIP')
+
+prepare() {
+    cd "$srcdir/SDL_mixer"
+    sed -i 's#@prefix@\|@exec_prefix@#${PSPDEV}/psp#' SDL2_mixer.pc.in
+    sed -i 's#@libdir@#${PSPDEV}/psp/lib#' SDL2_mixer.pc.in
+    sed -i 's#@includedir@#${PSPDEV}/psp/include#' SDL2_mixer.pc.in
+}
 
 build() {
-    cd "SDL_mixer-$pkgver-psp"
-    ./autogen.sh
-    LDFLAGS="-L$(psp-config --pspsdk-path)/lib" LIBS="-lc -lpspuser" \
-    SDL_CFLAGS="-I$(psp-config --psp-prefix)/include/SDL2" SDL_LIBS="-lSDL2" \
-    ./configure --host psp --prefix=/psp --disable-music-cmd
+    cd "$srcdir/SDL_mixer"
+    mkdir -p build && cd build
+    cmake -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
+          -DCMAKE_POSITION_INDEPENDENT_CODE=OFF -DSDL2MIXER_DEPS_SHARED=OFF -DSDL2MIXER_INSTALL=ON -DSDL2MIXER_SAMPLES=OFF \
+          -DSDL2MIXER_FLAC=OFF -DSDL2MIXER_OPUS=OFF -DSDL2MIXER_MIDI=OFF \
+          -DSDL2MIXER_VORBIS=VORBISFILE -DSDL2MIXER_VORBIS_VORBISFILE_SHARED=OFF \
+          -DSDL2MIXER_MOD=ON -DSDL2MIXER_MOD_MODPLUG=OFF -DSDL2MIXER_MOD_XMP=ON ..
     make
 }
 
 package() {
-    cd "SDL_mixer-$pkgver-psp"
-    make DESTDIR="$pkgdir/" install
+    cd "$srcdir/SDL_mixer/build"
+    make --quiet $MAKEFLAGS install
 
-    rm "${pkgdir}/psp/lib/libSDL2_mixer.la"
-
-    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
-    install -m644 COPYING.txt "$pkgdir/psp/share/licenses/$pkgname"
+    mv "$pkgdir/psp/share/licenses/SDL2_mixer" "$pkgdir/psp/share/licenses/$pkgname"
 }
 

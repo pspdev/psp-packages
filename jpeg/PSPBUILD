@@ -1,6 +1,6 @@
 pkgname=jpeg
 pkgver=2.1.1
-pkgrel=1
+pkgrel=2
 pkgdesc="a free library for JPEG image compression"
 arch=('mips')
 url="https://ijg.org/"
@@ -27,5 +27,13 @@ package() {
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 README.ijg "$pkgdir/psp/share/licenses/$pkgname"
+
+    # Build system produces a bunch of ELF binaries we never use, can't disable it, just delete them
+    rm -f "$pkgdir/psp/bin/tjbench"
+    rm -f "$pkgdir/psp/bin/cjpeg"
+    rm -f "$pkgdir/psp/bin/djpeg"
+    rm -f "$pkgdir/psp/bin/jpegtran"
+    rm -f "$pkgdir/psp/bin/rdjpgcom"
+    rm -f "$pkgdir/psp/bin/wrjpgcom"
 }
 
