@@ -10,12 +10,16 @@ pkgdesc="C++ template library for linear algebra: matrices, vectors, numerical s
 arch=('mips')
 sha256sums=('8586084f71f9bde545ee7fa6d00288b264a2b7ac3607b974e54d13e7162c1c72')
 
+prepare() {
+    cd "$srcdir/eigen-$pkgver"
+    sed -i 's#@CMAKE_INSTALL_PREFIX@#${PSPDEV}/psp#' eigen3.pc.in
+}
 
 build() {
   cd eigen-$pkgver
-  mkdir build
+  mkdir -p build
   cd build
-  cmake .. -DCMAKE_TOOLCHAIN_FILE="$PSPDEV/psp/share/pspdev.cmake" -DCMAKE_INSTALL_PREFIX="/psp" -DCMAKE_BUILD_TYPE=Release -Wno-dev -DBUILD_SHARED_LIBS=OFF
+  cmake .. -DCMAKE_TOOLCHAIN_FILE="$PSPDEV/psp/share/pspdev.cmake" -DCMAKE_INSTALL_PREFIX="/psp" -DCMAKE_BUILD_TYPE=Release -Wno-dev -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=OFF
   make $MAKEFLAGS || { exit 1; }
 }
 
@@ -25,5 +29,9 @@ package() {
         make DESTDIR="$pkgdir" install
     )
 
-    install -Dm644 "$srcdir/eigen-$pkgver/COPYING.BSD" "$pkgdir/$PSPDEV/licenses/$pkgname/COPYING.BSD"
+	mkdir -p "$pkgdir/psp/lib/cmake"
+	mv "$pkgdir/psp/share/eigen3/cmake" "$pkgdir/psp/lib/cmake/eigen3"
+	rmdir "$pkgdir/psp/share/eigen3"
+
+    install -Dm644 "$srcdir/eigen-$pkgver/COPYING.BSD" "$pkgdir/psp/share/licenses/$pkgname/COPYING.BSD"
 }
