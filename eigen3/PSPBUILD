@@ -15,7 +15,7 @@ build() {
   cd eigen-$pkgver
   mkdir build
   cd build
-  cmake .. -DCMAKE_TOOLCHAIN_FILE="$PSPDEV/psp/share/pspdev.cmake" -DCMAKE_INSTALL_PREFIX="$PSPDEV/psp" -DCMAKE_BUILD_TYPE=Release -Wno-dev -DBUILD_SHARED_LIBS=OFF
+  cmake .. -DCMAKE_TOOLCHAIN_FILE="$PSPDEV/psp/share/pspdev.cmake" -DCMAKE_INSTALL_PREFIX="/psp" -DCMAKE_BUILD_TYPE=Release -Wno-dev -DBUILD_SHARED_LIBS=OFF
   make $MAKEFLAGS || { exit 1; }
 }
 
