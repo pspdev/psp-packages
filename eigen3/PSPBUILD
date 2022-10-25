@@ -22,7 +22,7 @@ build() {
 package() {
     ( 
         cd eigen-$pkgver/build
-        make install
+        make DESTDIR="$pkgdir" install
     )
 
     install -Dm644 "$srcdir/eigen-$pkgver/COPYING.BSD" "$pkgdir/$PSPDEV/licenses/$pkgname/COPYING.BSD"
