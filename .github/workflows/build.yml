@@ -41,7 +41,7 @@ jobs:
         adduser -D -h /build -s /bin/bash build
         chown -R build:build /build ${PSPDEV} ${{ matrix.package }}
         cd ${{ matrix.package }}
-        sudo -u build PATH=${PATH} PSPDEV=${PSPDEV} ${PSPDEV}/bin/psp-makepkg --noconfirm
+        sudo -u build PATH=${PATH} PSPDEV=${PSPDEV} LIBMAKEPKG_LINT_PACKAGE_DOTFILES_SH=0 ${PSPDEV}/bin/psp-makepkg --noconfirm
         sudo -u build PATH=${PATH} PSPDEV=${PSPDEV} ${PSPDEV}/bin/psp-pacman -U --noconfirm *.pkg.tar.gz --overwrite '*'
         cd ..
     - name: Store package
@@ -80,7 +80,7 @@ jobs:
         for f in ${{ matrix.package }}; do
         chown -R build:build $f
         cd $f
-        sudo -u build PATH=${PATH} PSPDEV=${PSPDEV} ${PSPDEV}/bin/psp-makepkg --noconfirm
+        sudo -u build PATH=${PATH} PSPDEV=${PSPDEV} LIBMAKEPKG_LINT_PACKAGE_DOTFILES_SH=0 ${PSPDEV}/bin/psp-makepkg --noconfirm
         sudo -u build PATH=${PATH} PSPDEV=${PSPDEV} ${PSPDEV}/bin/psp-pacman -U --noconfirm *.pkg.tar.gz --overwrite '*'
         cd ..
         done
