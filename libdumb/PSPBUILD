@@ -1,6 +1,6 @@
 pkgname=dumb
 pkgver=2.0.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Dynamic Universal Music Bibliotheque - DUMB - Module/tracker based music format parser and player library"
 arch=('mips')
 url="https://github.com/kode54/dumb"
@@ -10,6 +10,13 @@ makedepends=()
 optdepends=()
 source=("https://github.com/kode54/dumb/archive/${pkgver}.tar.gz")
 sha256sums=('99bfac926aeb8d476562303312d9f47fd05b43803050cd889b44da34a9b2a4f9')
+
+prepare() {
+    cd "$pkgname-${pkgver}"
+    sed -i 's#@CMAKE_INSTALL_PREFIX@#${PSPDEV}/psp#' pkg-config.pc.in
+    sed -i 's#@CMAKE_INSTALL_FULL_LIBDIR@#${prefix}/lib#' pkg-config.pc.in
+    sed -i 's#@CMAKE_INSTALL_FULL_INCLUDEDIR@#${prefix}/include#' pkg-config.pc.in
+}
 
 build() {
     cd "$pkgname-${pkgver}"
