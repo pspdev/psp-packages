@@ -1,6 +1,6 @@
 pkgname=bzip2
 pkgver=1.0.8
-pkgrel=2
+pkgrel=3
 pkgdesc="A high-quality data compression library"
 arch=('mips')
 url="http://www.sourceware.org/bzip2/"
@@ -10,6 +10,15 @@ makedepends=()
 optdepends=()
 source=("git+https://gitlab.com/bzip2/bzip2.git#commit=bf5f505d0156ad5c6635d05db06b1bb7593b45b7")
 sha256sums=('SKIP')
+
+prepare() {
+    cd "$pkgname"
+    sed -i 's#@prefix@#${PSPDEV}/psp#' bzip2.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' bzip2.pc.in
+    sed -i 's#@bindir@#${prefix}/bin#' bzip2.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' bzip2.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' bzip2.pc.in
+}
 
 build() {
     cd "$pkgname"
