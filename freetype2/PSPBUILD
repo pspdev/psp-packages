@@ -1,6 +1,6 @@
 pkgname=freetype2
 pkgver=2.11.0
-pkgrel=2
+pkgrel=3
 pkgdesc="a freely available software library to render fonts"
 arch=('mips')
 url="https://www.freetype.org/"
@@ -11,6 +11,14 @@ optdepends=()
 group=('all')
 source=("https://github.com/freetype/freetype/archive/VER-${pkgver//./-}.tar.gz")
 sha256sums=('fffcba25febd1581cc12d706a39bee96f37eab627d0838ce6e8189ebd841d722')
+
+prepare() {
+    cd "freetype-VER-${pkgver//./-}/builds/unix"
+    sed -i 's#%prefix%#${PSPDEV}/psp#' freetype2.in
+    sed -i 's#%exec_prefix%#${prefix}#' freetype2.in
+    sed -i 's#%libdir%#${prefix}/lib#' freetype2.in
+    sed -i 's#%includedir%#${prefix}/include#' freetype2.in
+}
 
 build() {
     cd "freetype-VER-${pkgver//./-}"
