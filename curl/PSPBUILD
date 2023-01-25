@@ -1,6 +1,6 @@
 pkgname=curl
 pkgver=7.15.1
-pkgrel=4
+pkgrel=5
 pkgdesc="A library for transferring data with URL syntax"
 arch=('mips')
 url="https://curl.se/"
@@ -20,6 +20,10 @@ sha256sums=(
 prepare() {
     cd "${pkgname}-${pkgname}-${pkgver//./_}"
     patch -p1 < ../${pkgname}-${pkgver}-PSP.patch || { exit 1; }
+    sed -i 's#@prefix@#${PSPDEV}/psp#' curl-config.in libcurl.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' curl-config.in libcurl.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' curl-config.in libcurl.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' curl-config.in libcurl.pc.in
 }
 
 build() {
