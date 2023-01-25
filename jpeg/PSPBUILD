@@ -13,8 +13,7 @@ sha256sums=('20e9cd3e5f517950dfb7a300ad344543d88719c254407ffb5ad88d891bf701c4')
 
 prepare() {
     cd "libjpeg-turbo-${pkgver}/release"
-    sed -i 's#@CMAKE_INSTALL_PREFIX@#${PSPDEV}/psp#' libjpeg.pc.in libturbojpeg.pc.in
-    sed -i 's#@CMAKE_INSTALL_PREFIX@#${prefix}#' libjpeg.pc.in libturbojpeg.pc.in
+    sed -i 's#@CMAKE_INSTALL_PREFIX@#${PSPDEV}/psp#g' libjpeg.pc.in libturbojpeg.pc.in
     sed -i 's#@CMAKE_INSTALL_FULL_LIBDIR@#${prefix}/lib#' libjpeg.pc.in libturbojpeg.pc.in
     sed -i 's#@CMAKE_INSTALL_FULL_INCLUDEDIR@#${prefix}/include#' libjpeg.pc.in libturbojpeg.pc.in
 }
