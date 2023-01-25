@@ -1,6 +1,6 @@
 pkgname=expat
 pkgver=2.4.1
-pkgrel=2
+pkgrel=3
 pkgdesc="XML parsing C library"
 arch=('mips')
 url="https://libexpat.github.io/"
@@ -10,6 +10,14 @@ makedepends=()
 optdepends=()
 source=("https://github.com/libexpat/libexpat/releases/download/R_${pkgver//./_}/expat-${pkgver}.tar.gz")
 sha256sums=('a00ae8a6b96b63a3910ddc1100b1a7ef50dc26dceb65ced18ded31ab392f132b')
+
+prepare() {
+    cd "$pkgname-${pkgver}"
+    sed -i 's#@prefix@#${PSPDEV}/psp#' expat.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' expat.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' expat.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' expat.pc.in
+}
 
 build() {
     cd "$pkgname-${pkgver}"
