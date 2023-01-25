@@ -20,10 +20,10 @@ sha256sums=(
 prepare() {
     cd "${pkgname}-${pkgname}-${pkgver//./_}"
     patch -p1 < ../${pkgname}-${pkgver}-PSP.patch || { exit 1; }
-    sed -i 's#@prefix@#${PSPDEV}/psp#' curl-config.in libcurl.pc.in
-    sed -i 's#@exec_prefix@#${prefix}#' curl-config.in libcurl.pc.in
-    sed -i 's#@libdir@#${prefix}/lib#' curl-config.in libcurl.pc.in
-    sed -i 's#@includedir@#${prefix}/include#' curl-config.in libcurl.pc.in
+    sed -i 's#@prefix@#${PSPDEV}/psp#' libcurl.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' libcurl.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' libcurl.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' libcurl.pc.in
 }
 
 build() {
