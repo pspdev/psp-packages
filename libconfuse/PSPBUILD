@@ -1,6 +1,6 @@
 pkgname=libconfuse
 pkgver=3.3
-pkgrel=2
+pkgrel=3
 pkgdesc="Small configuration file parser library for C"
 arch=('mips')
 url="https://github.com/libconfuse/libconfuse/"
@@ -10,6 +10,14 @@ makedepends=()
 optdepends=()
 source=("https://github.com/libconfuse/libconfuse/archive/refs/tags/v${pkgver}.tar.gz")
 sha256sums=('cb90c06f2dbec971792af576d5b9a382fb3c4ca2b1deea55ea262b403f4e641e')
+
+prepare() {
+    cd "${pkgname}-${pkgver}"
+    sed -i 's#@prefix@#${PSPDEV}/psp#' libconfuse.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' libconfuse.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' libconfuse.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' libconfuse.pc.in
+}
 
 build() {
     cd "${pkgname}-${pkgver}"
