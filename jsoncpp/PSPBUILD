@@ -1,6 +1,6 @@
 pkgname=jsoncpp
 pkgver=1.9.5
-pkgrel=1
+pkgrel=2
 pkgdesc="a C++ library for interacting with JSON"
 arch=('mips')
 license=('unlicense')
@@ -8,6 +8,13 @@ url="https://github.com/open-source-parsers/jsoncpp"
 makedepends=()
 source=("git+https://github.com/open-source-parsers/jsoncpp#commit=5defb4ed1a4293b8e2bf641e16b156fb9de498cc")
 sha256sums=('SKIP')
+
+prepare() {
+    cd "$pkgname/pkg-config"
+    sed -i 's#@CMAKE_INSTALL_PREFIX@#${PSPDEV}/psp#g' jsoncpp.pc.in
+    sed -i 's#@libdir_for_pc_file@#${prefix}/lib#' jsoncpp.pc.in
+    sed -i 's#@includedir_for_pc_file@#${prefix}/include#' jsoncpp.pc.in
+}
 
 build() {
   cd $pkgname
