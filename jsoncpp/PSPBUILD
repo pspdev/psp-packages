@@ -11,7 +11,7 @@ sha256sums=('SKIP')
 
 prepare() {
     cd "$pkgname/pkg-config"
-    sed -i 's#@CMAKE_INSTALL_PREFIX@#${PSPDEV}/psp#' jsoncpp.pc.in
+    sed -i 's#@CMAKE_INSTALL_PREFIX@#${PSPDEV}/psp#g' jsoncpp.pc.in
     sed -i 's#@CMAKE_INSTALL_PREFIX@#${prefix}#' jsoncpp.pc.in
     sed -i 's#@libdir_for_pc_file@#${prefix}/lib#' jsoncpp.pc.in
     sed -i 's#@includedir_for_pc_file@#${prefix}/include#' jsoncpp.pc.in
