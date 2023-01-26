@@ -1,6 +1,6 @@
 pkgname=libmikmod
 pkgver=3.3.11.1
-pkgrel=3
+pkgrel=4
 pkgdesc="a portable sound library capable of playing samples as well as module files"
 arch=('mips')
 url="http://mikmod.sourceforge.net/"
@@ -13,7 +13,10 @@ sha256sums=('SKIP')
 
 prepare() {
     cd mikmod/$pkgname
-    sed -i 's#@prefix@#${PSPDEV}/psp#' libmikmod-config.in
+    sed -i 's#@prefix@#${PSPDEV}/psp#' libmikmod.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' libmikmod.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' libmikmod.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' libmikmod.pc.in
 }
 
 build() {
