@@ -1,6 +1,6 @@
 pkgname=pixman
 pkgver=0.40.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Pixman is a low-level software library for pixel manipulation"
 arch=('mips')
 url="http://pixman.org/"
@@ -10,6 +10,14 @@ makedepends=()
 optdepends=()
 source=("https://xorg.freedesktop.org/archive/individual/lib/${pkgname}-${pkgver}.tar.gz")
 sha256sums=('6d200dec3740d9ec4ec8d1180e25779c00bc749f94278c8b9021f5534db223fc')
+
+prepare() {
+    cd "${pkgname}-${pkgver}"
+    sed -i 's#@prefix@#${PSPDEV}/psp#' pixman-1.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' pixman-1.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' pixman-1.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' pixman-1.pc.in
+}
 
 build() {
     cd "${pkgname}-${pkgver}"
