@@ -11,6 +11,14 @@ optdepends=()
 source=("https://github.com/xiph/ogg/archive/v${pkgver}.tar.gz")
 sha256sums=('f6f1b04cfa4e98b70ffe775d5e302d9c6b98541f05159af6de2d6617817ed7d6')
 
+prepare() {
+    cd "ogg-${pkgver}"
+    sed -i 's#@prefix@#${PSPDEV}/psp#' ogg.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' ogg.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' ogg.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' ogg.pc.in
+}
+
 build() {   
     cd "ogg-${pkgver}"
     mkdir -p build
