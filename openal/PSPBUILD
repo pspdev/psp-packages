@@ -1,6 +1,6 @@
 pkgname=openal
 pkgver=1.21.1
-pkgrel=1
+pkgrel=2
 pkgdesc="a cross-platform 3D audio API"
 arch=('mips')
 license=('gpl2')
@@ -8,6 +8,14 @@ url="https://openal-soft.org/"
 makedepends=()
 source=("https://openal-soft.org/openal-releases/openal-soft-${pkgver}.tar.bz2")
 sha256sums=('c8ad767e9a3230df66756a21cc8ebf218a9d47288f2514014832204e666af5d8')
+
+prepare() {
+    cd $pkgname-soft-$pkgver
+    sed -i 's#@prefix@#${PSPDEV}/psp#' openal.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' openal.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' openal.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' openal.pc.in
+}
 
 build() {
   cd $pkgname-soft-$pkgver
