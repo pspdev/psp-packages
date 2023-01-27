@@ -1,6 +1,6 @@
 pkgname=sdl
 pkgver=1.2.15
-pkgrel=1
+pkgrel=2
 pkgdesc="a library designed to provide low level access to audio, input, and graphics hardware"
 arch=('mips')
 url="http://www.libsdl.org/"
@@ -18,8 +18,12 @@ sha256sums=(
 )
 
 prepare() {
-    cd SDL
+    cd "SDL"
     patch -p1 < ../sdl-config-fix.patch
+    sed -i 's#@prefix@#${PSPDEV}/psp#' sdl.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' sdl.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' sdl.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' sdl.pc.in
 }
 
 build() {
