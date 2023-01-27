@@ -1,6 +1,6 @@
 pkgname=sdl-ttf
 pkgver=2.0.11
-pkgrel=2
+pkgrel=3
 pkgdesc="a companion library to SDL for working with TrueType (tm) fonts"
 arch=('mips')
 url="https://www.libsdl.org/projects/SDL_ttf/release-1.2.html"
@@ -10,6 +10,14 @@ makedepends=()
 optdepends=()
 source=("https://github.com/pspdev/SDL_ttf/archive/${pkgver}-psp.tar.gz")
 sha256sums=('55e7366d62067837aef247c5b1ffe1559333773c7559e1f27070398589e10ae1')
+
+prepare() {
+    cd "SDL_ttf-$pkgver-psp"
+    sed -i 's#@prefix@#${PSPDEV}/psp#' SDL_ttf.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' SDL_ttf.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' SDL_ttf.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' SDL_ttf.pc.in
+}
 
 build() {
     cd "SDL_ttf-$pkgver-psp"
