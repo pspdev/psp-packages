@@ -1,6 +1,6 @@
 pkgname=sdl-gfx
 pkgver=2.0.26
-pkgrel=1
+pkgrel=2
 pkgdesc="SDL graphics drawing primitives and other support functions"
 arch=('mips')
 url="https://www.ferzkopp.net/wordpress/2016/01/02/sdl_gfx-sdl2_gfx/"
@@ -10,6 +10,14 @@ makedepends=()
 optdepends=()
 source=("https://github.com/pspdev/SDL_gfx/archive/${pkgver}-psp.tar.gz")
 sha256sums=('8a5116995bad20720978bc857588f58b5baf3dbe03f2b2099b339f445abae36d')
+
+prepare() {
+    cd "SDL_gfx-$pkgver-psp"
+    sed -i 's#@prefix@#${PSPDEV}/psp#' SDL_gfx.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' SDL_gfx.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' SDL_gfx.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' SDL_gfx.pc.in
+}
 
 build() {
     cd "SDL_gfx-$pkgver-psp"
