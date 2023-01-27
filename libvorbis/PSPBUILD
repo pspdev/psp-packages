@@ -1,6 +1,6 @@
 pkgname=libvorbis
 pkgver=1.3.7
-pkgrel=1
+pkgrel=2
 pkgdesc="Vorbis audio compression reference implementation"
 arch=('mips')
 url="https://gitlab.xiph.org/xiph/vorbis"
@@ -10,6 +10,14 @@ makedepends=()
 optdepends=()
 source=("https://github.com/xiph/vorbis/archive/v${pkgver}.tar.gz")
 sha256sums=('270c76933d0934e42c5ee0a54a36280e2d87af1de3cc3e584806357e237afd13')
+
+prepare() {
+    cd "vorbis-${pkgver}"
+    sed -i 's#@prefix@#${PSPDEV}/psp#' vorbisenc.pc.in vorbisfile.pc.in vorbis.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' vorbisenc.pc.in vorbisfile.pc.in vorbis.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' vorbisenc.pc.in vorbisfile.pc.in vorbis.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' vorbisenc.pc.in vorbisfile.pc.in vorbis.pc.in
+}
 
 build() {
     cd "vorbis-${pkgver}"
