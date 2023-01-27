@@ -1,6 +1,6 @@
 pkgname=sdl-image
 pkgver=1.2.12
-pkgrel=1
+pkgrel=2
 pkgdesc="a simple library to load images of various formats as SDL2 surfaces"
 arch=('mips')
 url="https://www.libsdl.org/projects/SDL_image/release-1.2.html"
@@ -10,6 +10,14 @@ makedepends=()
 optdepends=()
 source=("https://github.com/pspdev/SDL_image/archive/${pkgver}-psp.tar.gz")
 sha256sums=('345229534a7429ea944fa83d6fe2518bea169a75bb77295701865e6aed3a02f4')
+
+prepare() {
+    cd "SDL_image-$pkgver-psp"
+    sed -i 's#@prefix@#${PSPDEV}/psp#' SDL_image.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' SDL_image.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' SDL_image.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' SDL_image.pc.in
+}
 
 build() {
     cd "SDL_image-$pkgver-psp"
