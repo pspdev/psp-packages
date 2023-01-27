@@ -1,6 +1,6 @@
 pkgname=sdl-mixer
 pkgver=1.2.12
-pkgrel=2
+pkgrel=3
 pkgdesc="an audio mixer library based on the SDL library"
 arch=('mips')
 url="https://www.libsdl.org/projects/SDL_mixer/release-1.2.html"
@@ -10,6 +10,14 @@ makedepends=()
 optdepends=()
 source=("https://github.com/pspdev/SDL_mixer/archive/${pkgver}-psp.tar.gz")
 sha256sums=('6e6a3a07898b164140b4032635829a725cd78a3f7123cba5b3746aa8e4ad76c9')
+
+prepare() {
+    cd "SDL_mixer-$pkgver-psp"
+    sed -i 's#@prefix@#${PSPDEV}/psp#' SDL_mixer.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' SDL_mixer.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' SDL_mixer.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' SDL_mixer.pc.in
+}
 
 build() {
     cd "SDL_mixer-$pkgver-psp"
