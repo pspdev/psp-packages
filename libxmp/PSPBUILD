@@ -1,6 +1,6 @@
 pkgname=libxmp
 pkgver=4.5.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Libxmp is a library that renders module files to PCM data"
 arch=('mips')
 url="https://github.com/libxmp/libxmp"
@@ -10,6 +10,14 @@ makedepends=()
 optdepends=()
 source=("git+https://github.com/libxmp/libxmp.git#commit=b1766e972cebebaaf21f738ee6c26bed95c1e9ed")
 sha256sums=('SKIP')
+
+prepare() {
+    cd "$pkgname"
+    sed -i 's#@prefix@#${PSPDEV}/psp#' libxmp.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' libxmp.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' libxmp.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' libxmp.pc.in
+}
 
 build() {
     cd "$pkgname"
