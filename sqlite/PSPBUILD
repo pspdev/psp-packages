@@ -1,6 +1,6 @@
 pkgname=sqlite
 pkgver=3.7.4
-pkgrel=1
+pkgrel=2
 pkgdesc="SQLite is a C-language library that implements a small, fast, self-contained, high-reliability, full-featured, SQL database engine"
 arch=('mips')
 url="https://www.sqlite.org/"
@@ -20,6 +20,10 @@ sha256sums=(
 prepare() {
     cd "${pkgname}-version-${pkgver}"
     patch -p1 < ../${pkgname}-${pkgver}-PSP.patch
+    sed -i 's#@prefix@#${PSPDEV}/psp#' sqlite.pc.in sqlite3.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' sqlite.pc.in sqlite3.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' sqlite.pc.in sqlite3.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' sqlite.pc.in sqlite3.pc.in
 }
 
 build() {
