@@ -13,10 +13,10 @@ sha256sums=('ca74a0dace179a8422187671aee97dd3892b53e168627145271cad5b5ac81307')
 
 prepare() {
     cd "$pkgname-${pkgver}"
-    sed -i 's#@prefix@#${PSPDEV}/psp#' libpng.pc.in
-    sed -i 's#@exec_prefix@#${prefix}#' libpng.pc.in
-    sed -i 's#@libdir@#${prefix}/lib#' libpng.pc.in
-    sed -i 's#@includedir@/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@#${prefix}/include#' libpng.pc.in
+    sed -i 's#@prefix@#${PSPDEV}/psp#' libpng-config.in libpng.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' libpng-config.in libpng.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' libpng-config.in libpng.pc.in
+    sed -i 's#@includedir@/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@#${prefix}/include/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@#' libpng-config.in libpng.pc.in
 }
 
 build() {
