@@ -11,12 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     container: node:lts
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install dependencies
         id: set-matrix
         run: |
-          echo "::set-output name=dependant::$(node create-matrix.js dependant)"
-          echo "::set-output name=non_dependant::$(node create-matrix.js non_dependant)"
+          echo "dependant=$(node create-matrix.js dependant)" >> $GITHUB_OUTPUT
+          echo "non_dependant=$(node create-matrix.js non_dependant)" >> $GITHUB_OUTPUT
     outputs:
       dependant: ${{ steps.set-matrix.outputs.dependant }}
       non_dependant: ${{ steps.set-matrix.outputs.non_dependant }}
@@ -31,7 +31,7 @@ jobs:
         package: ${{ fromJson(needs.prepare_jobs.outputs.non_dependant) }}
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Install dependencies
       run: |
         apk add build-base bash acl sudo fakeroot curl patch gpgme-dev libarchive-tools libarchive-dev \
@@ -47,7 +47,7 @@ jobs:
     - name: Store package
       run: |
         echo ${{ matrix.package }}
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: package
         path: ${{ matrix.package }}/*.pkg.tar.gz
@@ -62,8 +62,8 @@ jobs:
         package: ${{ fromJson(needs.prepare_jobs.outputs.dependant) }}
 
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/download-artifact@v2
+    - uses: actions/checkout@v3
+    - uses: actions/download-artifact@v3
     - name: Install dependencies
       run: |
         apk add build-base bash acl sudo fakeroot curl patch gpgme-dev libarchive-tools libarchive-dev \
@@ -88,7 +88,7 @@ jobs:
       run: |
         export PACKAGE=`echo ${{ matrix.package }} | awk '{print $NF}'`
         echo "PACKAGE=$PACKAGE" >> $GITHUB_ENV
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: package
         path: ${{ env.PACKAGE }}/*.pkg.tar.gz
@@ -100,8 +100,8 @@ jobs:
     container: ghcr.io/pspdev/pspsdk:latest
 
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/download-artifact@v2
+    - uses: actions/checkout@v3
+    - uses: actions/download-artifact@v3
     - name: Install dependencies
       run: |
         apk --update add build-base bash gpgme-dev libarchive-tools libarchive-dev libtool doxygen libcrypto1.1
@@ -128,7 +128,7 @@ jobs:
     runs-on: ubuntu-latest
   
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Extract DOCKER_TAG using tag name
       if: startsWith(github.ref, 'refs/tags/')
