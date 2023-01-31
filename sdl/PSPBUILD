@@ -8,22 +8,15 @@ license=('GPL2.1')
 depends=('pspirkeyb')
 makedepends=()
 optdepends=()
-source=(
-    "git+https://github.com/pspdev/SDL.git#commit=0df75b67465fc6a35916de80e6d9139799adee2e"
-    "sdl-config-fix.patch"
-)
-sha256sums=(
-    'SKIP'
-    'SKIP'
-)
+source=("git+https://github.com/pspdev/SDL.git#commit=fa3952447126c5e6774d1edaf97e9594c1f2be19")
+sha256sums=('SKIP')
 
 prepare() {
     cd "SDL"
-    patch -p1 < ../sdl-config-fix.patch
-    sed -i 's#@prefix@#${PSPDEV}/psp#' sdl.pc.in
-    sed -i 's#@exec_prefix@#${prefix}#' sdl.pc.in
-    sed -i 's#@libdir@#${prefix}/lib#' sdl.pc.in
-    sed -i 's#@includedir@#${prefix}/include#' sdl.pc.in
+    sed -i 's#@prefix@#${PSPDEV}/psp#' sdl-config.in sdl.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' sdl-config.in sdl.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' sdl-config.in sdl.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' sdl-config.in sdl.pc.in
 }
 
 build() {
