@@ -34,7 +34,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Install dependencies
       run: |
-        apk add build-base bash acl sudo fakeroot curl patch gpgme-dev libarchive-tools libarchive-dev \
+        apk add build-base bash acl sudo fakeroot curl patch gpgme-dev libarchive-tools libarchive-dev xz \
           openssl-dev git bison autoconf automake tcl-dev libtool cmake doxygen texinfo flex pkgconf libcrypto1.1
     - name: Build package
       run: |
@@ -66,7 +66,7 @@ jobs:
     - uses: actions/download-artifact@v3
     - name: Install dependencies
       run: |
-        apk add build-base bash acl sudo fakeroot curl patch gpgme-dev libarchive-tools libarchive-dev \
+        apk add build-base bash acl sudo fakeroot curl patch gpgme-dev libarchive-tools libarchive-dev xz \
           openssl-dev git bison autoconf automake tcl-dev libtool cmake doxygen texinfo flex pkgconf libcrypto1.1
     - name: Install package
       run: |
@@ -104,7 +104,7 @@ jobs:
     - uses: actions/download-artifact@v3
     - name: Install dependencies
       run: |
-        apk --update add build-base bash gpgme-dev libarchive-tools libarchive-dev libtool doxygen libcrypto1.1
+        apk --update add build-base bash gpgme-dev libarchive-tools libarchive-dev libtool doxygen libcrypto1.1 xz
     - name: Create repo files
       if: contains(github.ref,'refs/heads/master')
       run: |
