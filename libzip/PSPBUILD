@@ -1,0 +1,32 @@
+pkgname=libzip
+pkgver=1.9.2
+pkgrel=1
+pkgdesc="libzip is a C library for reading, creating, and modifying zip archives."
+arch=('mips')
+url="https://libzip.org/"
+license=('3-clause BSD license')
+depends=('zlib' 'bzip2')
+makedepends=()
+optdepends=()
+source=("https://libzip.org/download/libzip-1.9.2.tar.xz")
+sha256sums=('c93e9852b7b2dc931197831438fee5295976ee0ba24f8524a8907be5c2ba5937')
+
+prepare() {
+    cd "$pkgname-$pkgver"
+    sed -i 's#@CMAKE_INSTALL_PREFIX@#${PSPDEV}/psp#' libzip.pc.in
+}
+
+build() {
+    cd "$pkgname-$pkgver"
+    mkdir -p build
+    cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED=OFF \
+        -DBUILD_EXAMPLES=OFF -DBUILD_TOOLS=OFF -DBUILD_REGRESS=OFF -DBUILD_DOC=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package() {
+    cd "$pkgname-$pkgver/build"
+    make --quiet $MAKEFLAGS install
+    cd ..
+}
