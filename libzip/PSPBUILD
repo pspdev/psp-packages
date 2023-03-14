@@ -12,11 +12,10 @@ source=("https://libzip.org/download/libzip-1.9.2.tar.xz")
 sha256sums=('c93e9852b7b2dc931197831438fee5295976ee0ba24f8524a8907be5c2ba5937')
 
 prepare() {
-    cd "$pkgname"
 }
 
 build() {
-    cd "$pkgname"
+    cd "$pkgname-$pkgver"
     mkdir -p build
     cd build
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED=OFF \
@@ -25,7 +24,7 @@ build() {
 }
 
 package() {
-    cd "$pkgname/build"
+    cd "$pkgname-$pkgver/build"
     make --quiet $MAKEFLAGS install
     cd ..
 }
