@@ -12,6 +12,7 @@ source=("https://libzip.org/download/libzip-1.9.2.tar.xz")
 sha256sums=('c93e9852b7b2dc931197831438fee5295976ee0ba24f8524a8907be5c2ba5937')
 
 prepare() {
+    echo "$pkgname-$pkgver"
 }
 
 build() {
