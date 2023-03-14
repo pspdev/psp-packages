@@ -104,7 +104,7 @@ jobs:
     - uses: actions/download-artifact@v3
     - name: Install dependencies
       run: |
-        apk --update add build-base bash gpgme-dev libarchive-tools libarchive-dev libtool doxygen libcrypto1.1 xz
+        apk --update add build-base bash gpgme-dev libarchive-tools libarchive-dev libtool doxygen libcrypto1.1
     - name: Create repo files
       if: contains(github.ref,'refs/heads/master')
       run: |
