@@ -21,6 +21,7 @@ prepare() {
     cd "${pkgname}-${pkgver}"
     patch -p1 < ../${pkgname}-${pkgver}-PSP.patch || { exit 1; }
     sed -i 's#@prefix@#${PSPDEV}/psp#' libcurl.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' libcurl.pc.in
 }
 
 build() {
