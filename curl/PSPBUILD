@@ -1,44 +1,40 @@
 pkgname=curl
-pkgver=7.15.1
-pkgrel=5
+pkgver=7.64.1
+pkgrel=6
 pkgdesc="A library for transferring data with URL syntax"
 arch=('mips')
 url="https://curl.se/"
 license=('custom')
-depends=()
+depends=('zlib' 'polarssl')
 optdepends=()
 makedepends=()
 source=(
-    "https://github.com/curl/curl/archive/refs/tags/${pkgname}-${pkgver//./_}.tar.gz"
+    "https://curl.haxx.se/download/${pkgname}-${pkgver}.tar.gz"
     "${pkgname}-${pkgver}-PSP.patch"
 )
 sha256sums=(
-    "5de197156c8bde11992d0e3bb36136064625d9cfdedf30140a7d7a3ccd5d7ffa"
+    "432d3f466644b9416bc5b649d344116a753aeaa520c8beaf024a90cba9d3d35d"
     "SKIP"
 )
 
 prepare() {
-    cd "${pkgname}-${pkgname}-${pkgver//./_}"
+    cd "${pkgname}-${pkgver}"
     patch -p1 < ../${pkgname}-${pkgver}-PSP.patch || { exit 1; }
     sed -i 's#@prefix@#${PSPDEV}/psp#' libcurl.pc.in
-    sed -i 's#@exec_prefix@#${prefix}#' libcurl.pc.in
     sed -i 's#@libdir@#${prefix}/lib#' libcurl.pc.in
-    sed -i 's#@includedir@#${prefix}/include#' libcurl.pc.in
 }
 
 build() {
-    cd "${pkgname}-${pkgname}-${pkgver//./_}"
-    LDFLAGS="-L$(psp-config --psp-prefix)/lib -L$(psp-config --pspsdk-path)/lib" \
-    CFLAGS="-I$(psp-config --pspsdk-path)/include -G0" \
-    LIBS="-lc -lpspnet_inet -lpspnet_resolver -lpspuser" \
-    ./configure --host=psp --disable-shared --prefix=/psp || { exit 1; }
-    make || { exit 1; }
+    cd "$pkgname-$pkgver"
+    mkdir -p build
+    cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DCMAKE_USE_POLARSSL=1 -DUSE_UNIX_SOCKETS=0 \
+         -DENABLE_IPV6=0 -DENABLE_THREADED_RESOLVER=0 -DBUILD_CURL_EXE=OFF -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
 }
 
 package() {
-    cd "${pkgname}-${pkgname}-${pkgver//./_}"
-    make DESTDIR=$pkgdir install || { exit 1; }
-
-    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
-    install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"
+    cd "$pkgname-$pkgver/build"
+    make --quiet $MAKEFLAGS install
+    cd ..
 }
