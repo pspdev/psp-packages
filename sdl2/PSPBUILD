@@ -9,8 +9,16 @@ depends=('libpspvram' 'pspgl')
 makedepends=()
 optdepends=()
 provides=('sdl2-main')
-source=("git+https://github.com/libsdl-org/SDL.git#commit=428b5ae5464d567881c383edeb2d1e5712b18ffd")
-sha256sums=('SKIP')
+source=(
+    "git+https://github.com/libsdl-org/SDL.git#commit=428b5ae5464d567881c383edeb2d1e5712b18ffd"
+    "main.c"
+    "CMakeLists.txt"
+)
+sha256sums=(
+    'SKIP'
+    'SKIP'
+    'SKIP'
+)
 
 prepare() {
     cd SDL
@@ -30,9 +38,12 @@ build() {
 }
 
 package() {
+    mkdir -p "$pkgdir/psp/sdk/samples/sdl2/basic/"
+    mv main.c "$pkgdir/psp/sdk/samples/sdl2/basic/"
+    mv CMakeLists.txt "$pkgdir/psp/sdk/samples/sdl2/basic/"
+
     cd SDL/build
     make --quiet DESTDIR=$pkgdir $MAKEFLAGS install
 
     mv "$pkgdir/psp/share/licenses/SDL2" "$pkgdir/psp/share/licenses/$pkgname"
 }
-

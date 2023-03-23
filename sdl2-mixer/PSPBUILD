@@ -8,8 +8,18 @@ license=('MIT')
 depends=('sdl2' 'libxmp' 'libvorbis' 'libogg')
 makedepends=()
 optdepends=()
-source=("git+https://github.com/libsdl-org/SDL_mixer#commit=c9f0946a783293d12178ce86773dd6f8f1a08b1c")
-sha256sums=('SKIP')
+source=(
+    "git+https://github.com/libsdl-org/SDL_mixer#commit=c9f0946a783293d12178ce86773dd6f8f1a08b1c"
+    "main.c"
+    "CMakeLists.txt"
+    "test.ogg"
+)
+sha256sums=(
+    'SKIP'
+    'SKIP'
+    'SKIP'
+    'SKIP'
+)
 
 prepare() {
     cd "$srcdir/SDL_mixer"
@@ -30,9 +40,13 @@ build() {
 }
 
 package() {
+    mkdir -p "$pkgdir/psp/sdk/samples/sdl2/mixer/"
+    mv main.c "$pkgdir/psp/sdk/samples/sdl2/mixer/"
+    mv CMakeLists.txt "$pkgdir/psp/sdk/samples/sdl2/mixer/"
+    mv test.ogg "$pkgdir/psp/sdk/samples/sdl2/mixer/"
+
     cd "$srcdir/SDL_mixer/build"
     make --quiet $MAKEFLAGS install
 
     mv "$pkgdir/psp/share/licenses/SDL2_mixer" "$pkgdir/psp/share/licenses/$pkgname"
 }
-
