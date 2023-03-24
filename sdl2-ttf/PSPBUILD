@@ -10,11 +10,13 @@ makedepends=()
 optdepends=()
 source=(
     "git+https://github.com/libsdl-org/SDL_ttf.git#commit=fb8767cc692dcba6a3dbc020e71b74bf7bb993c5"
-    "main.c"
-    "CMakeLists.txt"
-    "Pacifico.ttf"
+    "main.c.sample"
+    "CMakeLists.txt.sample"
+    "Pacifico.ttf.sample"
+    "Pacifico.OFL.txt"
 )
 sha256sums=(
+    'SKIP'
     'SKIP'
     'SKIP'
     'SKIP'
@@ -38,9 +40,10 @@ build() {
 
 package() {
   mkdir -p "$pkgdir/psp/sdk/samples/sdl2/ttf/"
-  mv main.c "$pkgdir/psp/sdk/samples/sdl2/ttf/"
-  mv CMakeLists.txt "$pkgdir/psp/sdk/samples/sdl2/ttf/"
-  mv Pacifico.ttf "$pkgdir/psp/sdk/samples/sdl2/ttf/"
+  install -m 644 $srcdir/main.c.sample $pkgdir/psp/sdk/samples/sdl2/ttf/main.c
+  install -m 644 $srcdir/CMakeLists.txt.sample $pkgdir/psp/sdk/samples/sdl2/ttf/CMakeLists.txt
+  install -m 644 $srcdir/Pacifico.ttf.sample $pkgdir/psp/sdk/samples/sdl2/ttf/Pacifico.ttf
+  install -m 644 $srcdir/Pacifico.OFL.txt $pkgdir/psp/sdk/samples/sdl2/ttf/OFL.txt
 
   cd "$srcdir/SDL_ttf/build"
   make --quiet DESTDIR=$pkgdir $MAKEFLAGS install

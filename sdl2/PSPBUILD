@@ -1,6 +1,6 @@
 pkgname=sdl2
 pkgver=2.25.0
-pkgrel=3
+pkgrel=4
 pkgdesc="a library designed to provide low level access to audio, input, and graphics hardware"
 arch=('mips')
 url="https://github.com/libsdl-org/SDL"
@@ -11,8 +11,8 @@ optdepends=()
 provides=('sdl2-main')
 source=(
     "git+https://github.com/libsdl-org/SDL.git#commit=428b5ae5464d567881c383edeb2d1e5712b18ffd"
-    "main.c"
-    "CMakeLists.txt"
+    "main.c.sample"
+    "CMakeLists.txt.sample"
 )
 sha256sums=(
     'SKIP'
@@ -39,8 +39,8 @@ build() {
 
 package() {
     mkdir -p "$pkgdir/psp/sdk/samples/sdl2/basic/"
-    mv main.c "$pkgdir/psp/sdk/samples/sdl2/basic/"
-    mv CMakeLists.txt "$pkgdir/psp/sdk/samples/sdl2/basic/"
+    install -m 644 $srcdir/main.c.sample $pkgdir/psp/sdk/samples/sdl2/basic/main.c
+    install -m 644 $srcdir/CMakeLists.txt.sample $pkgdir/psp/sdk/samples/sdl2/basic/CMakeLists.txt
 
     cd SDL/build
     make --quiet DESTDIR=$pkgdir $MAKEFLAGS install

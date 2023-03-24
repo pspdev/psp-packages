@@ -1,6 +1,6 @@
 pkgname=sdl2-mixer
 pkgver=2.6.3
-pkgrel=1
+pkgrel=2
 pkgdesc="an audio mixer library based on the SDL2 library"
 arch=('mips')
 url="https://www.libsdl.org/projects/SDL_mixer/"
@@ -10,9 +10,9 @@ makedepends=()
 optdepends=()
 source=(
     "git+https://github.com/libsdl-org/SDL_mixer#commit=c9f0946a783293d12178ce86773dd6f8f1a08b1c"
-    "main.c"
-    "CMakeLists.txt"
-    "test.ogg"
+    "main.c.sample"
+    "CMakeLists.txt.sample"
+    "test.ogg.sample"
 )
 sha256sums=(
     'SKIP'
@@ -41,9 +41,9 @@ build() {
 
 package() {
     mkdir -p "$pkgdir/psp/sdk/samples/sdl2/mixer/"
-    mv main.c "$pkgdir/psp/sdk/samples/sdl2/mixer/"
-    mv CMakeLists.txt "$pkgdir/psp/sdk/samples/sdl2/mixer/"
-    mv test.ogg "$pkgdir/psp/sdk/samples/sdl2/mixer/"
+    install -m 644 $srcdir/main.c.sample $pkgdir/psp/sdk/samples/sdl2/mixer/main.c
+    install -m 644 $srcdir/CMakeLists.txt.sample $pkgdir/psp/sdk/samples/sdl2/mixer/CMakeLists.txt
+    install -m 644 $srcdir/test.ogg.sample $pkgdir/psp/sdk/samples/sdl2/mixer/test.ogg
 
     cd "$srcdir/SDL_mixer/build"
     make --quiet $MAKEFLAGS install
