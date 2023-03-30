@@ -8,8 +8,20 @@ license=('MIT')
 depends=('sdl2' 'freetype2')
 makedepends=()
 optdepends=()
-source=("git+https://github.com/libsdl-org/SDL_ttf.git#commit=fb8767cc692dcba6a3dbc020e71b74bf7bb993c5")
-sha256sums=('SKIP')
+source=(
+    "git+https://github.com/libsdl-org/SDL_ttf.git#commit=fb8767cc692dcba6a3dbc020e71b74bf7bb993c5"
+    "main.c.sample"
+    "CMakeLists.txt.sample"
+    "Pacifico.ttf.sample"
+    "Pacifico.OFL.txt"
+)
+sha256sums=(
+    'SKIP'
+    'SKIP'
+    'SKIP'
+    'SKIP'
+    'SKIP'
+)
 
 prepare() {
     cd "$srcdir/SDL_ttf"
@@ -27,9 +39,14 @@ build() {
 }
 
 package() {
+  mkdir -p "$pkgdir/psp/sdk/samples/sdl2/ttf/"
+  install -m 644 $srcdir/main.c.sample $pkgdir/psp/sdk/samples/sdl2/ttf/main.c
+  install -m 644 $srcdir/CMakeLists.txt.sample $pkgdir/psp/sdk/samples/sdl2/ttf/CMakeLists.txt
+  install -m 644 $srcdir/Pacifico.ttf.sample $pkgdir/psp/sdk/samples/sdl2/ttf/Pacifico.ttf
+  install -m 644 $srcdir/Pacifico.OFL.txt $pkgdir/psp/sdk/samples/sdl2/ttf/OFL.txt
+
   cd "$srcdir/SDL_ttf/build"
   make --quiet DESTDIR=$pkgdir $MAKEFLAGS install
 
   mv "$pkgdir/psp/share/licenses/SDL2_ttf" "$pkgdir/psp/share/licenses/$pkgname"
 }
-
