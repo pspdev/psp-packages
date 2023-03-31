@@ -1,11 +1,11 @@
 pkgname=curl
 pkgver=7.64.1
-pkgrel=6
+pkgrel=7
 pkgdesc="A library for transferring data with URL syntax"
 arch=('mips')
 url="https://curl.se/"
 license=('custom')
-depends=('zlib' 'polarssl')
+depends=('zlib' 'mbedtls')
 optdepends=()
 makedepends=()
 source=(
@@ -28,7 +28,7 @@ build() {
     cd "$pkgname-$pkgver"
     mkdir -p build
     cd build
-    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DCMAKE_USE_POLARSSL=1 -DUSE_UNIX_SOCKETS=0 \
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DCMAKE_USE_MBEDTLS=1 -DUSE_UNIX_SOCKETS=0 \
          -DENABLE_IPV6=0 -DENABLE_THREADED_RESOLVER=0 -DBUILD_CURL_EXE=OFF -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
