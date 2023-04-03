@@ -35,4 +35,7 @@ package() {
     cd "$pkgname-$pkgver/build"
     make --quiet $MAKEFLAGS install
     cd ..
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 apache-2.0.txt "$pkgdir/psp/share/licenses/$pkgname"
 }
