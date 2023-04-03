@@ -1,0 +1,41 @@
+pkgname=mbedtls
+pkgver=2.16.6
+pkgrel=1
+pkgdesc="Secure Socket Layer library"
+arch=('mips')
+url="https://www.trustedfirmware.org/projects/mbed-tls/"
+license=('Apache 2.0 license')
+depends=()
+optdepends=()
+makedepends=()
+source=(
+    "http://sources.buildroot.net/mbedtls/${pkgname}-${pkgver}-apache.tgz"
+    "${pkgname}-${pkgver}-PSP.patch"
+)
+sha256sums=(
+    "66455e23a6190a30142cdc1113f7418158839331a9d8e6b0778631d077281770"
+    "SKIP"
+)
+
+prepare() {
+    cd "${pkgname}-${pkgver}"
+    patch -p1 < ../${pkgname}-${pkgver}-PSP.patch || { exit 1; }
+}
+
+build() {
+    cd "$pkgname-$pkgver"
+    mkdir -p build
+    cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp \
+        -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTING=FALSE -DENABLE_PROGRAMS=FALSE "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package() {
+    cd "$pkgname-$pkgver/build"
+    make --quiet $MAKEFLAGS install
+    cd ..
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 apache-2.0.txt "$pkgdir/psp/share/licenses/$pkgname"
+}
