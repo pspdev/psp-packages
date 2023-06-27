@@ -1,0 +1,28 @@
+pkgname=libun7zip
+pkgver=19.00
+pkgrel=1
+pkgdesc="A library that provides 7-Zip (.7z) archive handling and extraction"
+arch=('mips')
+license=('Apache-2.0 license')
+url="https://github.com/bucanero/libun7zip"
+makedepends=()
+source=("git+https://github.com/bucanero/${pkgname}#commit=23e7cecd979fd893a6a7d3fcc51b2478cd860607")
+sha256sums=('SKIP')
+
+build() {
+  cd $pkgname
+  make -f Makefile.psp
+}
+
+package () {
+  cd "$pkgname"
+  mkdir -m 755 -p "$pkgdir/psp/lib" "$pkgdir/psp/include"
+  install -m 644 psp-libun7zip.a "$pkgdir/psp/lib/"
+  install -m 644 include/7zExtractor.h "$pkgdir/psp/include/un7zip.h"
+
+  mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+  install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
+
+  mkdir -m 755 -p "$pkgdir/psp/share/doc/$pkgname"
+  install -m 644 README.md "$pkgdir/psp/share/doc/$pkgname"
+}
