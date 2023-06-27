@@ -11,7 +11,7 @@ sha256sums=('SKIP')
 
 build() {
   cd $pkgname
-  make -f Makefile.psp install
+  make -f Makefile.psp
 }
 
 package () {
