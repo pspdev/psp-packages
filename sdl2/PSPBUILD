@@ -11,21 +11,20 @@ optdepends=()
 provides=('sdl2-main')
 source=(
     "https://github.com/libsdl-org/SDL/releases/download/release-${pkgver}/SDL2-${pkgver}.tar.gz"
+    "pkg-config-fix.patch"
     "CMakeLists.txt.sample"
     "main.c.sample"
 )
 sha256sums=(
     "d215ae4541e69d628953711496cd7b0e8b8d5c8d811d5b0f98fdc7fd1422998a"
+    "4f3bf0dd850d778c4e496f5c4d1a9827d28aa094335ef5d8cca4ce36b62e3012"
     "47b2ce55d1e0a15a8d355c957576cc11eaf089638c5560ecb142d08fe90c74c6"
     "a14f3f8bd70f5be01d7e4230450558431230082deef064df30aaeeb34a73a33c"
 )
 
 prepare() {
     cd "${srcdir}/SDL2-${pkgver}"
-    sed -i 's#@prefix@#${PSPDEV}/psp#' sdl2-config.in sdl2.pc.in
-    sed -i 's#@exec_prefix@#${prefix}#' sdl2-config.in sdl2.pc.in
-    sed -i 's#@libdir@#${prefix}/lib#' sdl2-config.in sdl2.pc.in
-    sed -i 's#@includedir@#${prefix}/include#' sdl2-config.in sdl2.pc.in
+    patch -Np1 -i "${srcdir}/pkg-config-fix.patch"
 }
 
 build() {
