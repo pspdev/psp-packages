@@ -1,5 +1,5 @@
 pkgname=sdl2-ttf
-pkgver=2.21.0
+pkgver=2.20.2
 pkgrel=1
 pkgdesc="a companion library to SDL2 for working with TrueType (tm) fonts"
 arch=('mips')
@@ -9,44 +9,46 @@ depends=('sdl2' 'freetype2')
 makedepends=()
 optdepends=()
 source=(
-    "git+https://github.com/libsdl-org/SDL_ttf.git#commit=fb8767cc692dcba6a3dbc020e71b74bf7bb993c5"
-    "main.c.sample"
+    "https://github.com/libsdl-org/SDL_ttf/releases/download/release-${pkgver}/SDL2_ttf-${pkgver}.tar.gz"
+    "pkg-config-fix.patch"
     "CMakeLists.txt.sample"
-    "Pacifico.ttf.sample"
+    "main.c.sample"
     "Pacifico.OFL.txt"
+    "Pacifico.ttf.sample"
 )
 sha256sums=(
-    'SKIP'
-    'SKIP'
-    'SKIP'
-    'SKIP'
-    'SKIP'
+    "9dc71ed93487521b107a2c4a9ca6bf43fb62f6bddd5c26b055e6b91418a22053"
+    "68917e29593eaf1fadd01e820834530be6cec63ae56def3e5f156e68aa44c713"
+    "66d0f0e1f76228e8888145bf6f21d107fff3d4dc9e0a83be2d27ea579c95c30d"
+    "e8b8fe841120a098e4baab28903403eb2a3fd0eeb184b46578efcb20699e0a6e"
+    "857c9cfe99da9b1cb313234885d0909f4d36545410bb6e6d6b944340d1331d91"
+    "4dac9db3fa9ca072f7861fd916bf04bdceac6069d0f3a886f5e523d922e918f1"
 )
 
 prepare() {
-    cd "$srcdir/SDL_ttf"
-    sed -i 's#@prefix@#${PSPDEV}/psp#' SDL2_ttf.pc.in
+    cd "${srcdir}/SDL2_ttf-${pkgver}"
+    patch -Np1 -i "${srcdir}/pkg-config-fix.patch"
 }
 
 build() {
-  cd "$srcdir/SDL_ttf"
-  mkdir -p build
-  cd build
-  cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=/psp \
-    -DBUILD_SHARED_LIBS=OFF -DSDL2TTF_SAMPLES=OFF -DSDL2TTF_VENDORED=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=OFF \
-    -DSDL2TTF_INSTALL=ON "${XTRA_OPTS[@]}" .. || { exit 1; }
-  make --quiet $MAKEFLAGS || { exit 1; }
+    cd "${srcdir}/SDL2_ttf-${pkgver}"
+    mkdir -p build
+    cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE="${PSPDEV}/psp/share/pspdev.cmake" -DCMAKE_INSTALL_PREFIX=/psp \
+        -DBUILD_SHARED_LIBS=OFF -DSDL2TTF_SAMPLES=OFF -DSDL2TTF_VENDORED=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=OFF \
+        -DSDL2TTF_INSTALL=ON "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
 }
 
 package() {
-  mkdir -p "$pkgdir/psp/sdk/samples/sdl2/ttf/"
-  install -m 644 $srcdir/main.c.sample $pkgdir/psp/sdk/samples/sdl2/ttf/main.c
-  install -m 644 $srcdir/CMakeLists.txt.sample $pkgdir/psp/sdk/samples/sdl2/ttf/CMakeLists.txt
-  install -m 644 $srcdir/Pacifico.ttf.sample $pkgdir/psp/sdk/samples/sdl2/ttf/Pacifico.ttf
-  install -m 644 $srcdir/Pacifico.OFL.txt $pkgdir/psp/sdk/samples/sdl2/ttf/OFL.txt
+    mkdir -p "${pkgdir}/psp/sdk/samples/sdl2/ttf/"
+    install -m 644 "${srcdir}/main.c.sample" "${pkgdir}/psp/sdk/samples/sdl2/ttf/main.c"
+    install -m 644 "${srcdir}/CMakeLists.txt.sample" "${pkgdir}/psp/sdk/samples/sdl2/ttf/CMakeLists.txt"
+    install -m 644 "${srcdir}/Pacifico.ttf.sample" "${pkgdir}/psp/sdk/samples/sdl2/ttf/Pacifico.ttf"
+    install -m 644 "${srcdir}/Pacifico.OFL.txt" "${pkgdir}/psp/sdk/samples/sdl2/ttf/OFL.txt"
 
-  cd "$srcdir/SDL_ttf/build"
-  make --quiet DESTDIR=$pkgdir $MAKEFLAGS install
+    cd "${srcdir}/SDL2_ttf-${pkgver}/build"
+    make --quiet DESTDIR="${pkgdir}" ${MAKEFLAGS} install
 
-  mv "$pkgdir/psp/share/licenses/SDL2_ttf" "$pkgdir/psp/share/licenses/$pkgname"
+    mv "${pkgdir}/psp/share/licenses/SDL2_ttf" "${pkgdir}/psp/share/licenses/${pkgname}"
 }

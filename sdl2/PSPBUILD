@@ -1,6 +1,6 @@
 pkgname=sdl2
-pkgver=2.25.0
-pkgrel=4
+pkgver=2.28.0
+pkgrel=1
 pkgdesc="a library designed to provide low level access to audio, input, and graphics hardware"
 arch=('mips')
 url="https://github.com/libsdl-org/SDL"
@@ -10,18 +10,18 @@ makedepends=()
 optdepends=()
 provides=('sdl2-main')
 source=(
-    "git+https://github.com/libsdl-org/SDL.git#commit=428b5ae5464d567881c383edeb2d1e5712b18ffd"
-    "main.c.sample"
+    "https://github.com/libsdl-org/SDL/releases/download/release-${pkgver}/SDL2-${pkgver}.tar.gz"
     "CMakeLists.txt.sample"
+    "main.c.sample"
 )
 sha256sums=(
-    'SKIP'
-    'SKIP'
-    'SKIP'
+    "d215ae4541e69d628953711496cd7b0e8b8d5c8d811d5b0f98fdc7fd1422998a"
+    "47b2ce55d1e0a15a8d355c957576cc11eaf089638c5560ecb142d08fe90c74c6"
+    "a14f3f8bd70f5be01d7e4230450558431230082deef064df30aaeeb34a73a33c"
 )
 
 prepare() {
-    cd SDL
+    cd "${srcdir}/SDL2-${pkgver}"
     sed -i 's#@prefix@#${PSPDEV}/psp#' sdl2-config.in sdl2.pc.in
     sed -i 's#@exec_prefix@#${prefix}#' sdl2-config.in sdl2.pc.in
     sed -i 's#@libdir@#${prefix}/lib#' sdl2-config.in sdl2.pc.in
@@ -29,21 +29,20 @@ prepare() {
 }
 
 build() {
-    cd SDL
-    mkdir -p build
-    cd build
-    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=/psp -DBUILD_SHARED_LIBS=OFF \
-    -DSDL_TESTS=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
+    cd "${srcdir}/SDL2-${pkgver}"
+    mkdir -p build && cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE="${PSPDEV}/psp/share/pspdev.cmake" -DCMAKE_INSTALL_PREFIX=/psp \
+        -DBUILD_SHARED_LIBS=OFF -DSDL_TESTS=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 
 package() {
-    mkdir -p "$pkgdir/psp/sdk/samples/sdl2/basic/"
-    install -m 644 $srcdir/main.c.sample $pkgdir/psp/sdk/samples/sdl2/basic/main.c
-    install -m 644 $srcdir/CMakeLists.txt.sample $pkgdir/psp/sdk/samples/sdl2/basic/CMakeLists.txt
+    mkdir -p "${pkgdir}/psp/sdk/samples/sdl2/basic/"
+    install -m 644 "${srcdir}/main.c.sample" "${pkgdir}/psp/sdk/samples/sdl2/basic/main.c"
+    install -m 644 "${srcdir}/CMakeLists.txt.sample" "${pkgdir}/psp/sdk/samples/sdl2/basic/CMakeLists.txt"
 
-    cd SDL/build
-    make --quiet DESTDIR=$pkgdir $MAKEFLAGS install
+    cd "${srcdir}/SDL2-${pkgver}/build"
+    make --quiet DESTDIR="${pkgdir}" $MAKEFLAGS install
 
-    mv "$pkgdir/psp/share/licenses/SDL2" "$pkgdir/psp/share/licenses/$pkgname"
+    mv "${pkgdir}/psp/share/licenses/SDL2" "${pkgdir}/psp/share/licenses/${pkgname}"
 }
