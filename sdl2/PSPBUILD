@@ -31,7 +31,7 @@ build() {
     cd "${srcdir}/SDL2-${pkgver}"
     mkdir -p build && cd build
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE="${PSPDEV}/psp/share/pspdev.cmake" -DCMAKE_INSTALL_PREFIX=/psp \
-        -DBUILD_SHARED_LIBS=OFF -DSDL_TESTS=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
+        -DBUILD_SHARED_LIBS=OFF -DSDL_TESTS=OFF -DSDL_TEST=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 
