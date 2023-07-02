@@ -1,6 +1,6 @@
 pkgname=sdl2-mixer
 pkgver=2.6.3
-pkgrel=2
+pkgrel=3
 pkgdesc="an audio mixer library based on the SDL2 library"
 arch=('mips')
 url="https://www.libsdl.org/projects/SDL_mixer/"
@@ -9,44 +9,44 @@ depends=('sdl2' 'libxmp' 'libvorbis' 'libogg')
 makedepends=()
 optdepends=()
 source=(
-    "git+https://github.com/libsdl-org/SDL_mixer#commit=c9f0946a783293d12178ce86773dd6f8f1a08b1c"
-    "main.c.sample"
+    "https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-${pkgver}.tar.gz"
+    "pkg-config-fix.patch"
     "CMakeLists.txt.sample"
+    "main.c.sample"
     "test.ogg.sample"
 )
 sha256sums=(
-    'SKIP'
-    'SKIP'
-    'SKIP'
-    'SKIP'
+    "7a6ba86a478648ce617e3a5e9277181bc67f7ce9876605eea6affd4a0d6eea8f"
+    "5cd916deff335df405df54fbcac9ad833e9ea69af38de104d87982e5161c07ca"
+    "de65e71e7fd1ef742f78f44fac404642f1c48f4bec227df6dee12b0b5b7f2cd0"
+    "02398828cf31287f3eff72baf605d05df6abf4b1b26d823fe30dff1469499c26"
+    "6e506fae57ce4700e6f0a05adc31a95e66840080f889e7df247c08df180fdcd8"
 )
 
 prepare() {
-    cd "$srcdir/SDL_mixer"
-    sed -i 's#@prefix@\|@exec_prefix@#${PSPDEV}/psp#' SDL2_mixer.pc.in
-    sed -i 's#@libdir@#${PSPDEV}/psp/lib#' SDL2_mixer.pc.in
-    sed -i 's#@includedir@#${PSPDEV}/psp/include#' SDL2_mixer.pc.in
+    cd "${srcdir}/SDL2_mixer-${pkgver}"
+    patch -Np1 -i "${srcdir}/pkg-config-fix.patch"
 }
 
 build() {
-    cd "$srcdir/SDL_mixer"
+    cd "${srcdir}/SDL2_mixer-${pkgver}"
     mkdir -p build && cd build
-    cmake -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
-          -DCMAKE_POSITION_INDEPENDENT_CODE=OFF -DSDL2MIXER_DEPS_SHARED=OFF -DSDL2MIXER_INSTALL=ON -DSDL2MIXER_SAMPLES=OFF \
-          -DSDL2MIXER_FLAC=OFF -DSDL2MIXER_OPUS=OFF -DSDL2MIXER_MIDI=OFF \
-          -DSDL2MIXER_VORBIS=VORBISFILE -DSDL2MIXER_VORBIS_VORBISFILE_SHARED=OFF \
-          -DSDL2MIXER_MOD=ON -DSDL2MIXER_MOD_MODPLUG=OFF -DSDL2MIXER_MOD_XMP=ON ..
-    make
+    cmake -DCMAKE_TOOLCHAIN_FILE="${PSPDEV}/psp/share/pspdev.cmake" -DCMAKE_INSTALL_PREFIX=/psp \
+        -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=OFF -DSDL2MIXER_DEPS_SHARED=OFF \
+        -DSDL2MIXER_INSTALL=ON -DSDL2MIXER_SAMPLES=OFF -DSDL2MIXER_FLAC=OFF -DSDL2MIXER_OPUS=OFF \
+        -DSDL2MIXER_MIDI=OFF -DSDL2MIXER_VORBIS=VORBISFILE -DSDL2MIXER_VORBIS_VORBISFILE_SHARED=OFF \
+        -DSDL2MIXER_MOD=ON -DSDL2MIXER_MOD_MODPLUG=OFF -DSDL2MIXER_MOD_XMP=ON .. "${XTRA_OPTS[@]}" || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
 }
 
 package() {
-    mkdir -p "$pkgdir/psp/sdk/samples/sdl2/mixer/"
-    install -m 644 $srcdir/main.c.sample $pkgdir/psp/sdk/samples/sdl2/mixer/main.c
-    install -m 644 $srcdir/CMakeLists.txt.sample $pkgdir/psp/sdk/samples/sdl2/mixer/CMakeLists.txt
-    install -m 644 $srcdir/test.ogg.sample $pkgdir/psp/sdk/samples/sdl2/mixer/test.ogg
+    mkdir -p "${pkgdir}/psp/sdk/samples/sdl2/mixer/"
+    install -m 644 "${srcdir}/main.c.sample" "${pkgdir}/psp/sdk/samples/sdl2/mixer/main.c"
+    install -m 644 "${srcdir}/CMakeLists.txt.sample" "${pkgdir}/psp/sdk/samples/sdl2/mixer/CMakeLists.txt"
+    install -m 644 "${srcdir}/test.ogg.sample" "${pkgdir}/psp/sdk/samples/sdl2/mixer/test.ogg"
 
-    cd "$srcdir/SDL_mixer/build"
-    make --quiet $MAKEFLAGS install
+    cd "${srcdir}/SDL2_mixer-${pkgver}/build"
+    make --quiet DESTDIR="${pkgdir}" ${MAKEFLAGS} install
 
-    mv "$pkgdir/psp/share/licenses/SDL2_mixer" "$pkgdir/psp/share/licenses/$pkgname"
+    mv "${pkgdir}/psp/share/licenses/SDL2_mixer" "${pkgdir}/psp/share/licenses/${pkgname}"
 }

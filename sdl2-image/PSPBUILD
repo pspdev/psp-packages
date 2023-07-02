@@ -1,5 +1,5 @@
 pkgname=sdl2-image
-pkgver=2.7.0
+pkgver=2.6.3
 pkgrel=1
 pkgdesc="a simple library to load images of various formats as SDL surfaces"
 arch=('mips')
@@ -8,27 +8,32 @@ license=('zlib')
 depends=('sdl2' 'libpng' 'jpeg')
 makedepends=()
 optdepends=()
-source=("git+https://github.com/libsdl-org/SDL_image#commit=ede6056d844e7a1ecec3e688cb4068d1ad0aa884")
-sha256sums=('SKIP')
-
+source=(
+    "https://www.libsdl.org/projects/SDL_image/release/SDL2_image-${pkgver}.tar.gz"
+	"pkg-config-fix.patch"
+)
+sha256sums=(
+    "931c9be5bf1d7c8fae9b7dc157828b7eee874e23c7f24b44ba7eff6b4836312c"
+    "0adc4fbfbeb89b653a8050253d7bfa64a4ab3c54555879af68934168a978e16c"
+)
 prepare() {
-    cd "$srcdir/SDL_image"
-    sed -i 's#@prefix@#${PSPDEV}/psp#' SDL2_image.pc.in
+    cd "${srcdir}/SDL2_image-${pkgver}"
+    patch -Np1 -i "${srcdir}/pkg-config-fix.patch"
 }
 
 build() {
-    cd "$srcdir/SDL_image"
+    cd "${srcdir}/SDL2_image-${pkgver}"
     mkdir -p build && cd build
-    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=/psp \
-    -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=OFF -DSDL2IMAGE_DEPS_SHARED=OFF \
-    -DSDL2IMAGE_INSTALL=ON -DSDL2IMAGE_SAMPLES=OFF -DSDL2IMAGE_BACKEND_STB=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE="${PSPDEV}/psp/share/pspdev.cmake" -DCMAKE_INSTALL_PREFIX=/psp \
+        -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=OFF -DSDL2IMAGE_DEPS_SHARED=OFF \
+        -DSDL2IMAGE_INSTALL=ON -DSDL2IMAGE_SAMPLES=OFF -DSDL2IMAGE_BACKEND_STB=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 
 package() {
-    cd "$srcdir/SDL_image/build"
-    make DESTDIR="$pkgdir" install
+    cd "${srcdir}/SDL2_image-${pkgver}/build"
+    make --quiet DESTDIR="${pkgdir}" ${MAKEFLAGS} install
 
-    mv "$pkgdir/psp/share/licenses/SDL2_image" "$pkgdir/psp/share/licenses/$pkgname"
+    mv "${pkgdir}/psp/share/licenses/SDL2_image" "${pkgdir}/psp/share/licenses/${pkgname}"
 }
 

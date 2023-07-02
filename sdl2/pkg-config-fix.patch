@@ -1,0 +1,12 @@
+diff --git a/sdl2.pc.in b/sdl2.pc.in
+index 23a1d69c6..1c22f53f5 100644
+--- a/sdl2.pc.in
++++ b/sdl2.pc.in
+@@ -1,6 +1,6 @@
+ # sdl pkg-config source file
+ 
+-prefix=@prefix@
++prefix=${PSPDEV}/psp
+ exec_prefix=@exec_prefix@
+ libdir=@libdir@
+ includedir=@includedir@
