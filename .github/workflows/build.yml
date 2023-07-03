@@ -32,10 +32,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Install dependencies
-      run: |
-        apk add build-base bash acl sudo fakeroot curl patch gpgme-dev libarchive-tools libarchive-dev xz \
-          openssl-dev git bison autoconf automake tcl-dev libtool cmake doxygen texinfo flex pkgconf libcrypto1.1
     - name: Build package
       run: |
         adduser -D -h /build -s /bin/bash build
@@ -64,10 +60,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: actions/download-artifact@v3
-    - name: Install dependencies
-      run: |
-        apk add build-base bash acl sudo fakeroot curl patch gpgme-dev libarchive-tools libarchive-dev xz \
-          openssl-dev git bison autoconf automake tcl-dev libtool cmake doxygen texinfo flex pkgconf libcrypto1.1
     - name: Install package
       run: |
         adduser -D -h /build -s /bin/bash build
