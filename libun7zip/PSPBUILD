@@ -17,7 +17,7 @@ build() {
 package () {
   cd "$pkgname"
   mkdir -m 755 -p "$pkgdir/psp/lib" "$pkgdir/psp/include"
-  install -m 644 psp-libun7zip.a "$pkgdir/psp/lib/"
+  install -m 644 psp-libun7zip.a "$pkgdir/psp/lib/libun7zip.a"
   install -m 644 include/7zExtractor.h "$pkgdir/psp/include/un7zip.h"
 
   mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
