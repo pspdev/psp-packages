@@ -1,6 +1,6 @@
 pkgname=libun7zip
 pkgver=19.00
-pkgrel=1
+pkgrel=2
 pkgdesc="A library that provides 7-Zip (.7z) archive handling and extraction"
 arch=('mips')
 license=('Apache-2.0 license')
