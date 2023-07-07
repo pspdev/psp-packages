@@ -1,16 +1,17 @@
 pkgname=sdl2-mixer
 pkgver=2.6.3
-pkgrel=3
+pkgrel=4
 pkgdesc="an audio mixer library based on the SDL2 library"
 arch=('mips')
 url="https://www.libsdl.org/projects/SDL_mixer/"
 license=('MIT')
-depends=('sdl2' 'libxmp' 'libvorbis' 'libogg')
+depends=('sdl2' 'libxmp-lite' 'libvorbis' 'libogg')
 makedepends=()
 optdepends=()
 source=(
     "https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-${pkgver}.tar.gz"
     "pkg-config-fix.patch"
+    "libxmp-lite-fix.patch"
     "CMakeLists.txt.sample"
     "main.c.sample"
     "test.ogg.sample"
@@ -18,6 +19,7 @@ source=(
 sha256sums=(
     "7a6ba86a478648ce617e3a5e9277181bc67f7ce9876605eea6affd4a0d6eea8f"
     "5cd916deff335df405df54fbcac9ad833e9ea69af38de104d87982e5161c07ca"
+    "3dc9b332adb6b08af12c7e5e4aa3b0165c9ef4ed3e6d7e8b2f1a57a83118ad2d"
     "de65e71e7fd1ef742f78f44fac404642f1c48f4bec227df6dee12b0b5b7f2cd0"
     "02398828cf31287f3eff72baf605d05df6abf4b1b26d823fe30dff1469499c26"
     "6e506fae57ce4700e6f0a05adc31a95e66840080f889e7df247c08df180fdcd8"
@@ -26,6 +28,7 @@ sha256sums=(
 prepare() {
     cd "${srcdir}/SDL2_mixer-${pkgver}"
     patch -Np1 -i "${srcdir}/pkg-config-fix.patch"
+    patch -Np1 -i "${srcdir}/libxmp-lite-fix.patch"
 }
 
 build() {
@@ -35,7 +38,8 @@ build() {
         -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=OFF -DSDL2MIXER_DEPS_SHARED=OFF \
         -DSDL2MIXER_INSTALL=ON -DSDL2MIXER_SAMPLES=OFF -DSDL2MIXER_FLAC=OFF -DSDL2MIXER_OPUS=OFF \
         -DSDL2MIXER_MIDI=OFF -DSDL2MIXER_VORBIS=VORBISFILE -DSDL2MIXER_VORBIS_VORBISFILE_SHARED=OFF \
-        -DSDL2MIXER_MOD=ON -DSDL2MIXER_MOD_MODPLUG=OFF -DSDL2MIXER_MOD_XMP=ON .. "${XTRA_OPTS[@]}" || { exit 1; }
+        -DSDL2MIXER_MOD=ON -DSDL2MIXER_MOD_MODPLUG=OFF -DSDL2MIXER_MOD_XMP=ON -DSDL2MIXER_MOD_XMP_LITE=ON \
+        -DSDL2MIXER_MOD_XMP_SHARED=OFF .. "${XTRA_OPTS[@]}" || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 
