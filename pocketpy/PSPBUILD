@@ -20,8 +20,9 @@ build() {
 package() {
     cd "$pkgname/build"
 
-    mkdir -m 755 -p "$pkgdir/psp/lib" "$pkgdir/psp/include" "$pkgdir/psp/include/pocketpy"
+    mkdir -m 755 -p "$pkgdir/psp/lib" "$pkgdir/psp/include" "$pkgdir/psp/include/pocketpy" "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 libpocketpy.a "$pkgdir/psp/lib"
     install -m 644 ../include/pocketpy.h "$pkgdir/psp/include"
     install -m 644 ../include/pocketpy/*.h "$pkgdir/psp/include/pocketpy"
+    install -m 644 ../LICENSE "$pkgdir/psp/share/licenses/$pkgname"
 }
