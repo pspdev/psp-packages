@@ -26,5 +26,4 @@ build() {
 package() {
     cd "$pkgname-$pkgver/build"
     make --quiet $MAKEFLAGS install
-    cd ..
 }
