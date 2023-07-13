@@ -17,14 +17,13 @@ prepare() {
     sed -i 's#@CMAKE_INSTALL_FULL_LIBDIR@#${PSPDEV}/psp/lib#' library_config/libcjson_utils.pc.in
     sed -i 's#@CMAKE_INSTALL_FULL_INCLUDEDIR@#${PSPDEV}/psp/include#' library_config/libcjson.pc.in
     sed -i 's#@CMAKE_INSTALL_FULL_INCLUDEDIR@#${PSPDEV}/psp/include#' library_config/libcjson_utils.pc.in
-    sed -i 's#@CMAKE_INSTALL_FULL_INCLUDEDIR@#${PSPDEV}/psp/include#' library_config/cJSONConfig.cmake.in
     mkdir -p build
 }
 
 build() {
     cd "cJSON-$pkgver/build"
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
-        -DENABLE_CJSON_UTILS=On -DENABLE_LOCALES=OFF -DENABLE_CJSON_TEST=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
+        -DENABLE_CJSON_UTILS=On -DENABLE_LOCALES=OFF -DENABLE_CJSON_TEST=OFF -DENABLE_TARGET_EXPORT=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 
