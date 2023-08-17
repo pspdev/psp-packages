@@ -1,40 +1,34 @@
 pkgname=pspgl
 pkgver=r12
-pkgrel=1
+pkgrel=2
 pkgdesc="OpenGL-ESish library for PSP"
 arch=('mips')
-url="https://github.com/pspdev/psp-ports"
+url="https://github.com/pspdev/pspgl"
 license=('BSD')
 depends=()
 makedepends=()
 optdepends=()
-source=("git+https://github.com/pspdev/pspgl.git")
+source=("git+https://github.com/pspdev/${pkgname}.git#commit=eca18508633dedbe0c16457eef414eafed53e184")
 sha256sums=('SKIP')
 
-pkgver() {
-    cd pspgl
-    # Set the version to the revision of the pspgl directory
-    printf "r%s" "$(git rev-list --count HEAD)"
-}
-
 build() {
-    cd "pspgl"
+    cd "${pkgname}"
     make
 }
 
 package() {
-    cd "pspgl"
+    cd "${pkgname}"
     # make install isn't usable for pspgl, so we're installing manually
-    mkdir -m 755 -p "$pkgdir/psp/lib"
-    install -m 644 "libGL.a" "$pkgdir/psp/lib"
-    install -m 644 "libGLU.a" "$pkgdir/psp/lib"
-    install -m 644 "libglut.a" "$pkgdir/psp/lib"
+    mkdir -m 755 -p "${pkgdir}/psp/lib"
+    install -m 644 "libGL.a" "${pkgdir}/psp/lib"
+    install -m 644 "libGLU.a" "${pkgdir}/psp/lib"
+    install -m 644 "libglut.a" "${pkgdir}/psp/lib"
 
-    mkdir -m 755 -p "$pkgdir/psp/include/GL/" "$pkgdir/psp/include/GLES"
-    install -m 644 GL/* "$pkgdir/psp/include/GL"
-    install -m 644 GLES/* "$pkgdir/psp/include/GLES"
+    mkdir -m 755 -p "${pkgdir}/psp/include/GL/" "${pkgdir}/psp/include/GLES"
+    install -m 644 GL/* "${pkgdir}/psp/include/GL"
+    install -m 644 GLES/* "${pkgdir}/psp/include/GLES"
 
-    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
-    install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
+    mkdir -m 755 -p "${pkgdir}/psp/share/licenses/${pkgname}"
+    install -m 644 LICENSE "${pkgdir}/psp/share/licenses/${pkgname}"
 }
 
