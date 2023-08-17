@@ -1,21 +1,15 @@
 pkgname=pspgl
-pkgver=0
+pkgver=r12
 pkgrel=2
 pkgdesc="OpenGL-ESish library for PSP"
 arch=('mips')
-url="https://github.com/pspdev/${pkgname}"
+url="https://github.com/pspdev/pspgl"
 license=('BSD')
 depends=()
 makedepends=()
 optdepends=()
-source=("git+https://github.com/pspdev/${pkgname}.git")
+source=("git+https://github.com/pspdev/${pkgname}.git#commit=eca18508633dedbe0c16457eef414eafed53e184")
 sha256sums=('SKIP')
-
-# pkgver() {
-#    cd "pspgl"
-    # Set the version to the revision of the pspgl directory
-#    printf "r%s" "$(git rev-list --count HEAD)"
-# }
 
 build() {
     cd "${pkgname}"
