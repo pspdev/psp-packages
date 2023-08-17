@@ -1,5 +1,5 @@
 pkgname=pspirkeyb
-# pkgver=r1
+pkgver=0
 pkgrel=2
 pkgdesc="a library for using IRDA keyboards with Playstation Portable"
 arch=('mips')
