@@ -25,7 +25,7 @@ build() {
 package() {
     cd "${pkgname}"
 
-    mkdir -m 755 -p "${pkgdir}/psp/sdk/lib" "${pkgname}/psp/sdk/include"
+    mkdir -m 755 -p "${pkgdir}/psp/sdk/lib" "${pkgdir}/psp/sdk/include"
     cp -v libpspirkeyb/libpspirkeyb.a "${pkgdir}/psp/sdk/lib"
     cp -v libpspirkeyb/include/pspirkeyb.h "${pkgdir}/psp/sdk/include"
     cp -v libpspirkeyb/include/pspirkeyb_rawkeys.h "${pkgdir}/psp/sdk/include"
