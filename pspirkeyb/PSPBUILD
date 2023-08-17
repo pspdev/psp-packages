@@ -1,21 +1,15 @@
 pkgname=pspirkeyb
-pkgver=0
+pkgver=r1
 pkgrel=2
 pkgdesc="a library for using IRDA keyboards with Playstation Portable"
 arch=('mips')
-url="https://github.com/pspdev/${pkgname}"
+url="https://github.com/pspdev/pspirkeyb"
 license=('LGPL2.1')
 depends=()
 makedepends=()
 optdepends=()
 source=("git+https://github.com/pspdev/${pkgname}.git#commit=dd66ec05a946c4896e387bc05c8b130e84f7a21c")
 sha256sums=('SKIP')
-
-# pkgver() {
-#    cd psp-ports
-    # Set the version to the revision of the pspirkeyb directory
-#    printf "r%s" "$(git rev-list --count HEAD ${pkgname})"
-# }
 
 build() {
     cd "${pkgname}"
