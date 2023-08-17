@@ -1,6 +1,6 @@
 pkgname=pspgl
-# pkgver=r12
-pkgrel=1
+pkgver=0
+pkgrel=2
 pkgdesc="OpenGL-ESish library for PSP"
 arch=('mips')
 url="https://github.com/pspdev/${pkgname}"
