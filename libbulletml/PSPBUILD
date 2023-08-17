@@ -1,6 +1,6 @@
 pkgname=libbulletml
 pkgver=0.0.5
-pkgrel=1
+pkgrel=2
 pkgdesc="Bullet Markup Language for PSP"
 arch=('mips')
 url="https://www.asahi-net.or.jp/~cs8k-cyu/bulletml/index_e.html"
@@ -8,20 +8,20 @@ license=('BSD')
 depends=()
 makedepends=()
 optdepends=()
-source=("git+https://github.com/pspdev/psp-ports.git#commit=f47bd37edf202284fc039106a5b27d9b7314bd76")
+source=("git+https://github.com/pspdev/${pkgname}.git#commit=5313166eee9c9126873795dd6ac16e28b63e6f65")
 sha256sums=('SKIP')
 
 build() {
-    cd "psp-ports/$pkgname/src"
+    cd "${pkgname}/src"
     make
 }
 
 package() {
-    cd "psp-ports/$pkgname/src"
+    cd "${pkgname}/src"
     make PSPDIR="${pkgdir}/psp" install
 
     cd ..
-    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
-    install -m 644 README "$pkgdir/psp/share/licenses/$pkgname"
-    install -m 644 README.en "$pkgdir/psp/share/licenses/$pkgname"
+    mkdir -m 755 -p "${pkgdir}/psp/share/licenses/${pkgname}"
+    install -m 644 README "${pkgdir}/psp/share/licenses/${pkgname}"
+    install -m 644 README.en "${pkgdir}/psp/share/licenses/${pkgname}"
 }
