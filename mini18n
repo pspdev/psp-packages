@@ -1,0 +1,31 @@
+pkgname=mini18n
+pkgver=0.2.1
+pkgrel=1
+pkgdesc="mini18n is a translation library under GNU GPL."
+arch=('mips')
+url="https://github.com/bucanero/mini18n/"
+license=('GPL 2.0')
+depends=()
+makedepends=()
+optdepends=()
+source=("git+https://github.com/bucanero/${pkgname}#commit=c6af0d4817e12a7df72b7d34224093c795d1f574")
+sha256sums=('SKIP')
+
+prepare() {
+    mkdir -p "$pkgname/build"
+}
+
+build() {
+    cd "$pkgname/build"
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp \
+        -DBUILD_SHARED_LIBS=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS mini18n-static || { exit 1; }
+}
+
+package() {
+    cd "$pkgname/build"
+    cp src/libmini18n.a ${PSPDEV}/psp/lib/
+    cp src/mini18n.h ${PSPDEV}/psp/include/
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 ../COPYING "$pkgdir/psp/share/licenses/$pkgname"
+}
