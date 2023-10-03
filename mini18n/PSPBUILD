@@ -24,8 +24,9 @@ build() {
 
 package() {
     cd "$pkgname/build"
-    cp src/libmini18n.a ${PSPDEV}/psp/lib/
-    cp ../src/mini18n.h ${PSPDEV}/psp/include/
+    mkdir -p "${pkgdir}/psp/lib/" "${pkgdir}/psp/include/"
+    install -m 644 src/libmini18n.a "${pkgdir}/psp/lib/"
+    install -m 644 ../src/mini18n.h "${pkgdir}/psp/include/"
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 ../COPYING "$pkgdir/psp/share/licenses/$pkgname"
 }
