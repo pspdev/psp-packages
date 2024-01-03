@@ -6,7 +6,7 @@ ARG PACKAGES_REPO
 
 COPY . /src
 
-RUN apk add build-base bash wget curl libarchive-dev gpgme-dev tree libcrypto1.1
+RUN apk add build-base bash wget curl libarchive-dev gpgme-dev tree libcrypto3
 RUN cd /src && ./install-latest.sh ${PACKAGES_REPO}
 
 RUN cd /usr/local/pspdev && tree
