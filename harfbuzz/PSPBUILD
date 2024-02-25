@@ -5,7 +5,7 @@ pkgdesc="OpenType text shaping engine"
 arch=('mips')
 url="https://harfbuzz.github.io/"
 license=('MIT')
-depends=()
+depends=('freetype2')
 makedepends=()
 optdepends=()
 source=("https://github.com/harfbuzz/harfbuzz/releases/download/${pkgver}/harfbuzz-${pkgver}.tar.xz")
@@ -24,7 +24,7 @@ build() {
     mkdir -p build
     cd build
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
-        "${XTRA_OPTS[@]}" .. || { exit 1; }
+        -DHB_HAVE_FREETYPE=ON "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 
