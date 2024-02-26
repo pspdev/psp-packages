@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     container: node:lts
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install dependencies
         id: set-matrix
         run: |
