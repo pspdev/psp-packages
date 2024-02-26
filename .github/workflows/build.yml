@@ -45,7 +45,7 @@ jobs:
         echo ${{ matrix.package }}
     - uses: actions/upload-artifact@v4
       with:
-        name: package
+        name: artifact-${{ matrix.package }}
         path: ${{ matrix.package }}/*.pkg.tar.gz
 
   build_depends:
@@ -63,10 +63,9 @@ jobs:
     - name: Install package
       run: |
         adduser -D -h /build -s /bin/bash build
-        chown -R build:build /build ${PSPDEV} package
-        cd package
-        sudo -u build PATH=${PATH} PSPDEV=${PSPDEV} ${PSPDEV}/bin/psp-pacman -Udd --noconfirm *.pkg.tar.gz --overwrite '*'
-        cd ..
+        chown -R build:build /build  ${PSPDEV} artifact-*
+        sudo -u build PATH=${PATH} PSPDEV=${PSPDEV} ${PSPDEV}/bin/psp-pacman -Udd --noconfirm artifact-*/*.pkg.tar.gz --overwrite '*'
+
     - name: Build packages
       run: |
         for f in ${{ matrix.package }}; do
@@ -100,6 +99,8 @@ jobs:
     - name: Create repo files
       if: contains(github.ref,'refs/heads/master')
       run: |
+        mkdir package
+        cp artifact-*/*.pkg.tar.gz package/
         cd package
         ${PSPDEV}/share/pacman/bin/repo-add pspdev.db.tar.gz *.pkg.tar.gz
     - name: Upload files
