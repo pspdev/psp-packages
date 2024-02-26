@@ -4,11 +4,11 @@ pkgrel=1
 pkgdesc=" A YAML parser and emitter in C++ "
 arch=('mips')
 url="https://github.com/jbeder/yaml-cpp"
-license=('ZLIB')
-depends=('libpspvram' 'pspgl')
+license=('MIT')
+depends=()
 makedepends=()
 optdepends=()
-provides=('sdl2-main')
+provides=()
 source=('git+https://github.com/jbeder/yaml-cpp.git#commit=76dc6715734295ff1866bfc32872ff2278258fc8')
 sha256sums=('SKIP')
 
