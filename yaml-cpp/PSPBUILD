@@ -1,0 +1,37 @@
+pkgname=yaml-cpp
+pkgver=0.8.0git
+pkgrel=1
+pkgdesc=" A YAML parser and emitter in C++ "
+arch=('mips')
+url="https://github.com/jbeder/yaml-cpp"
+license=('MIT')
+depends=()
+makedepends=()
+optdepends=()
+provides=()
+source=('git+https://github.com/jbeder/yaml-cpp.git#commit=76dc6715734295ff1866bfc32872ff2278258fc8')
+sha256sums=('SKIP')
+
+prepare() {
+    cd "yaml-cpp"
+    sed -i 's#@CMAKE_INSTALL_PREFIX@#${PSPDEV}/psp#' yaml-cpp.pc.in
+    sed -i 's#@CMAKE_INSTALL_FULL_LIBDIR@#${prefix}/lib#' yaml-cpp.pc.in
+    sed -i 's#@CMAKE_INSTALL_FULL_INCLUDEDIR@#${prefix}/include#' yaml-cpp.pc.in
+}
+
+build() {
+    cd "yaml-cpp"
+    mkdir -p build && cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE="${PSPDEV}/psp/share/pspdev.cmake" -DCMAKE_INSTALL_PREFIX=/psp \
+        -DBUILD_SHARED_LIBS=OFF -DYAML_ENABLE_PIC=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package() {
+    cd "yaml-cpp/build"
+    make --quiet DESTDIR="${pkgdir}" $MAKEFLAGS install
+
+    cd ..
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
+}
