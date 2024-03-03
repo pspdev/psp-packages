@@ -13,10 +13,10 @@ sha256sums=('109501eaeb8bde3eadb25fab4164e993fbace29c3d775bcaa1c1e58e2f15f847')
 
 prepare() {
     cd "harfbuzz-${pkgver}/src"
-    sed -i 's#@prefix@#${PSPDEV}/psp#' harfbuzz*.pc.in
-    sed -i 's#@exec_prefix@#${prefix}#' harfbuzz*.pc.in
-    sed -i 's#@libdir@#${prefix}/lib#' harfbuzz*.pc.in
-    sed -i 's#@includedir@#${prefix}/include#' harfbuzz*.pc.in
+    sed -i 's#%prefix%#${PSPDEV}/psp#' harfbuzz*.pc.in
+    sed -i 's#%exec_prefix%#${prefix}#' harfbuzz*.pc.in
+    sed -i 's#%libdir%#${prefix}/lib#' harfbuzz*.pc.in
+    sed -i 's#%includedir%#${prefix}/include#' harfbuzz*.pc.in
 }
 
 build() {
