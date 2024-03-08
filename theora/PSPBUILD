@@ -1,0 +1,38 @@
+pkgname=theora
+pkgver=1.2.0git
+pkgrel=1
+pkgdesc="Standard encoder and decoder library for the Theora video compression format"
+arch=('mips')
+url="https://www.theora.org/"
+license=('BSD')
+depends=('libogg')
+makedepends=()
+optdepends=()
+source=("git+https://gitlab.xiph.org/xiph/theora.git#commit=7180717276af1ebc7da15c83162d6c5d6203aabf")
+sha256sums=('SKIP')
+
+prepare() {
+    cd "theora"
+    sed -i 's#@prefix@#${PSPDEV}/psp#' theora*.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' theora*.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' theora*.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' theora*.pc.in
+}
+
+build() {
+    cd "theora"
+    ./autogen.sh
+    ./configure --host=psp --prefix=/psp --disable-examples
+    make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package() {
+    cd "theora"
+    make --quiet $MAKEFLAGS DESTDIR="$pkgdir/" install || { exit 1; }
+
+    rm "${pkgdir}"/psp/lib/libtheora{,enc,dec}.la
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
+}
+
