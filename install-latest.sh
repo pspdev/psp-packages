@@ -18,7 +18,7 @@ curl -s https://api.github.com/repos/${PACKAGES_REPO}/releases/latest \
 
 
 # Windows doesn't have pacman, so let's install manually
-if [ $2 = "manually" ]; then
+if [ "$2" = "manually" ]; then
     for package in *.pkg.tar.gz; do
         tar -xzf $package -C $PSPDEV
     done
