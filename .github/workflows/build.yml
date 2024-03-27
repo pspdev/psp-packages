@@ -12,13 +12,13 @@ jobs:
     container: python:3-alpine
     steps:
       - uses: actions/checkout@v4
-      - name: Install dependencies
+      - name: Generate build list
         id: set-matrix
         run: |
-          echo "build_order=$(./get_depends.py)" >> $GITHUB_OUTPUT
+          echo "build_list=$(./get_depends.py)" >> $GITHUB_OUTPUT
+          cat $GITHUB_OUTPUT
     outputs:
-      dependant: ${{ steps.set-matrix.outputs.dependant }}
-      non_dependant: ${{ steps.set-matrix.outputs.non_dependant }}
+      build_list: ${{ steps.set-matrix.outputs.build_list }}
 
   build:
     needs: [prepare_jobs]
@@ -27,13 +27,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        package: ${{ fromJson(needs.prepare_jobs.outputs.build_order) }}
+        packages: ${{ fromJson(needs.prepare_jobs.outputs.build_list) }}
 
     steps:
     - uses: actions/checkout@v4
     - name: Build packages
       run: |
-        for f in ${{ matrix.package }}; do
+        for f in ${{ matrix.packages }}; do
         chown -R build:build $f
         cd $f
         sudo -u build PATH=${PATH} PSPDEV=${PSPDEV} LIBMAKEPKG_LINT_PACKAGE_DOTFILES_SH=0 ${PSPDEV}/bin/psp-makepkg --noconfirm
@@ -42,7 +42,7 @@ jobs:
         done
     - name: Store package
       run: |
-        export PACKAGE=`echo ${{ matrix.package }} | awk '{print $NF}'`
+        export PACKAGE=`echo ${{ matrix.packages }} | awk '{print $NF}'`
         echo "PACKAGE=$PACKAGE" >> $GITHUB_ENV
     - uses: actions/upload-artifact@v4
       with:
