@@ -33,6 +33,7 @@ jobs:
     - uses: actions/checkout@v4
     - name: Build packages
       run: |
+        adduser -D -h /build -s /bin/bash build
         for f in ${{ matrix.packages }}; do
         chown -R build:build $f
         cd $f
