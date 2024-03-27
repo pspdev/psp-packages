@@ -15,11 +15,19 @@ class Package:
 
     def get_build_order(self) -> str:
         build_order = ""
-        for dependency in self.dependencies:
-            build_order += dependency.get_build_order() + " "
+        for dependency in self.get_recursive_dependencies():
+            build_order += dependency + " "
         build_order += f"{self.name}"
         return build_order
 
+    def get_recursive_dependencies(self) -> list[str]:
+        return_value = self.dependencies_as_strings
+        for dependency in self.dependencies:
+            for recursive_dependency in dependency.get_recursive_dependencies():
+                if recursive_dependency in return_value:
+                    return_value.remove(recursive_dependency)
+                return_value.insert(0, recursive_dependency)
+        return return_value
 
 def parse_dependencies_string(value: str) -> list[str]:
     """
@@ -32,8 +40,7 @@ def parse_dependencies_string(value: str) -> list[str]:
     for package in initial_package_names_found:
         if ":" in package:
             package = package.split(":")[0]
-        if package not in return_value:
-            return_value.append(package)
+        return_value.append(package)
     return return_value
 
 
