@@ -32,7 +32,8 @@ def parse_dependencies_string(value: str) -> list[str]:
     for package in initial_package_names_found:
         if ":" in package:
             package = package.split(":")[0]
-        return_value.append(package)
+        if package not in return_value:
+            return_value.append(package)
     return return_value
 
 
