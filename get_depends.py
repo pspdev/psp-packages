@@ -14,18 +14,26 @@ class Package:
     dependencies: list['Package'] = field(default_factory=list)
 
     def get_build_order(self) -> str:
-        build_order = ""
-        for dependency in self.get_recursive_dependencies():
-            build_order += dependency + " "
-        build_order += f"{self.name}"
-        return build_order
+        build_order = self.get_recursive_dependencies()
+        build_order.append(self.name)
+
+        # Clean up duplicates
+        already_seen = []
+        to_remove = []
+        for i, dependency in enumerate(build_order):
+            if dependency in already_seen:
+                to_remove.append(i)
+            already_seen.append(dependency)
+        to_remove.reverse()
+        for i in to_remove:
+            build_order.pop(i)
+
+        return " ".join(build_order)
 
     def get_recursive_dependencies(self) -> list[str]:
         return_value = self.dependencies_as_strings
         for dependency in self.dependencies:
             for recursive_dependency in dependency.get_recursive_dependencies():
-                if recursive_dependency in return_value:
-                    return_value.remove(recursive_dependency)
                 return_value.insert(0, recursive_dependency)
         return return_value
 
