@@ -33,8 +33,7 @@ class Package:
     def get_recursive_dependencies(self) -> list[str]:
         return_value = self.dependencies_as_strings
         for dependency in self.dependencies:
-            for recursive_dependency in dependency.get_recursive_dependencies():
-                return_value.insert(0, recursive_dependency)
+            return_value = dependency.get_recursive_dependencies() + return_value;
         return return_value
 
 def parse_dependencies_string(value: str) -> list[str]:
