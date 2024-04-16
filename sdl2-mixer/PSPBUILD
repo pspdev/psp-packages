@@ -5,13 +5,12 @@ pkgdesc="an audio mixer library based on the SDL2 library"
 arch=('mips')
 url="https://www.libsdl.org/projects/SDL_mixer/"
 license=('MIT')
-depends=('sdl2' 'libxmp-lite' 'libvorbis' 'libogg')
+depends=('sdl2' 'libmodplug' 'libvorbis' 'libogg')
 makedepends=()
 optdepends=()
 source=(
     "https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-${pkgver}.tar.gz"
     "pkg-config-fix.patch"
-    "libxmp-lite-fix.patch"
     "CMakeLists.txt.sample"
     "main.c.sample"
     "https://pspdev.github.io/resources/test.ogg"
@@ -19,8 +18,7 @@ source=(
 sha256sums=(
     "7a6ba86a478648ce617e3a5e9277181bc67f7ce9876605eea6affd4a0d6eea8f"
     "5cd916deff335df405df54fbcac9ad833e9ea69af38de104d87982e5161c07ca"
-    "3dc9b332adb6b08af12c7e5e4aa3b0165c9ef4ed3e6d7e8b2f1a57a83118ad2d"
-    "de65e71e7fd1ef742f78f44fac404642f1c48f4bec227df6dee12b0b5b7f2cd0"
+    "32ad0cb808a8a9560cc2023d71533fc5caaefa7efe3b9243845ab55d5807bf47"
     "02398828cf31287f3eff72baf605d05df6abf4b1b26d823fe30dff1469499c26"
     "b728bb95b6018ba0bb5675d614f2e25d056d04c6b471f4f080623c570f905e01"
 )
@@ -28,7 +26,6 @@ sha256sums=(
 prepare() {
     cd "${srcdir}/SDL2_mixer-${pkgver}"
     patch -Np1 -i "${srcdir}/pkg-config-fix.patch"
-    patch -Np1 -i "${srcdir}/libxmp-lite-fix.patch"
 }
 
 build() {
@@ -38,8 +35,8 @@ build() {
         -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=OFF -DSDL2MIXER_DEPS_SHARED=OFF \
         -DSDL2MIXER_INSTALL=ON -DSDL2MIXER_SAMPLES=OFF -DSDL2MIXER_FLAC=OFF -DSDL2MIXER_OPUS=OFF \
         -DSDL2MIXER_MIDI=OFF -DSDL2MIXER_VORBIS=VORBISFILE -DSDL2MIXER_VORBIS_VORBISFILE_SHARED=OFF \
-        -DSDL2MIXER_MOD=ON -DSDL2MIXER_MOD_MODPLUG=OFF -DSDL2MIXER_MOD_XMP=ON -DSDL2MIXER_MOD_XMP_LITE=ON \
-        -DSDL2MIXER_MOD_XMP_SHARED=OFF -DSDL2MIXER_MP3=ON -DSDL2MIXER_MP3_DRMP3=ON -DSDL2MIXER_MP3_MPG123=OFF \
+        -DSDL2MIXER_MOD=ON -DSDL2MIXER_MOD_MODPLUG=ON -DSDL2MIXER_MOD_MODPLUG_SHARED=OFF \
+        -DSDL2MIXER_MOD_XMP=OFF -DSDL2MIXER_MP3=ON -DSDL2MIXER_MP3_DRMP3=ON -DSDL2MIXER_MP3_MPG123=OFF \
         .. "${XTRA_OPTS[@]}" || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
