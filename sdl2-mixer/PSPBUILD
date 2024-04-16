@@ -14,7 +14,7 @@ source=(
     "libxmp-lite-fix.patch"
     "CMakeLists.txt.sample"
     "main.c.sample"
-    "test.ogg.sample"
+    "https://pspdev.github.io/resources/test.ogg"
 )
 sha256sums=(
     "7a6ba86a478648ce617e3a5e9277181bc67f7ce9876605eea6affd4a0d6eea8f"
@@ -22,7 +22,7 @@ sha256sums=(
     "3dc9b332adb6b08af12c7e5e4aa3b0165c9ef4ed3e6d7e8b2f1a57a83118ad2d"
     "de65e71e7fd1ef742f78f44fac404642f1c48f4bec227df6dee12b0b5b7f2cd0"
     "02398828cf31287f3eff72baf605d05df6abf4b1b26d823fe30dff1469499c26"
-    "6e506fae57ce4700e6f0a05adc31a95e66840080f889e7df247c08df180fdcd8"
+    "b728bb95b6018ba0bb5675d614f2e25d056d04c6b471f4f080623c570f905e01"
 )
 
 prepare() {
@@ -48,7 +48,7 @@ package() {
     mkdir -p "${pkgdir}/psp/sdk/samples/sdl2/mixer/"
     install -m 644 "${srcdir}/main.c.sample" "${pkgdir}/psp/sdk/samples/sdl2/mixer/main.c"
     install -m 644 "${srcdir}/CMakeLists.txt.sample" "${pkgdir}/psp/sdk/samples/sdl2/mixer/CMakeLists.txt"
-    install -m 644 "${srcdir}/test.ogg.sample" "${pkgdir}/psp/sdk/samples/sdl2/mixer/test.ogg"
+    install -m 644 "${srcdir}/test.ogg" "${pkgdir}/psp/sdk/samples/sdl2/mixer/test.ogg"
 
     cd "${srcdir}/SDL2_mixer-${pkgver}/build"
     make --quiet DESTDIR="${pkgdir}" ${MAKEFLAGS} install
