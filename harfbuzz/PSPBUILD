@@ -1,0 +1,46 @@
+pkgname=harfbuzz
+pkgver=8.3.0
+pkgrel=1
+pkgdesc="OpenType text shaping engine"
+arch=('mips')
+url="https://harfbuzz.github.io/"
+license=('MIT')
+depends=('freetype2')
+makedepends=()
+optdepends=()
+source=(
+  "https://github.com/harfbuzz/harfbuzz/releases/download/${pkgver}/harfbuzz-${pkgver}.tar.xz"
+  "fix-cmake.patch"
+)
+sha256sums=(
+  "109501eaeb8bde3eadb25fab4164e993fbace29c3d775bcaa1c1e58e2f15f847"
+  "9248557e549775ce9f3689bf271722bedab9bceba4cbc9ba452c68b652d31616"
+)
+
+prepare() {
+    cd "harfbuzz-${pkgver}/src"
+    sed -i 's#%prefix%#${PSPDEV}/psp#' harfbuzz*.pc.in
+    sed -i 's#%exec_prefix%#${prefix}#' harfbuzz*.pc.in
+    sed -i 's#%libdir%#${prefix}/lib#' harfbuzz*.pc.in
+    sed -i 's#%includedir%#${prefix}/include#' harfbuzz*.pc.in
+
+    cd ..
+    patch -p1 < ../fix-cmake.patch
+}
+
+build() {
+    cd "harfbuzz-${pkgver}"
+    mkdir -p build
+    cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
+        -DHB_HAVE_FREETYPE=ON "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package() {
+    cd "harfbuzz-${pkgver}/build"
+    make --quiet $MAKEFLAGS install
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 ../COPYING "$pkgdir/psp/share/licenses/$pkgname"
+}

@@ -1,11 +1,11 @@
 pkgname=sdl2-ttf
 pkgver=2.20.2
-pkgrel=1
+pkgrel=2
 pkgdesc="a companion library to SDL2 for working with TrueType (tm) fonts"
 arch=('mips')
 url="https://www.libsdl.org/projects/SDL_ttf/"
 license=('MIT')
-depends=('sdl2' 'freetype2')
+depends=('sdl2' 'harfbuzz')
 makedepends=()
 optdepends=()
 source=(
@@ -35,8 +35,8 @@ build() {
     mkdir -p build
     cd build
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE="${PSPDEV}/psp/share/pspdev.cmake" -DCMAKE_INSTALL_PREFIX=/psp \
-        -DBUILD_SHARED_LIBS=OFF -DSDL2TTF_SAMPLES=OFF -DSDL2TTF_VENDORED=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=OFF \
-        -DSDL2TTF_INSTALL=ON "${XTRA_OPTS[@]}" .. || { exit 1; }
+        -DSDL2TTF_HARFBUZZ=ON -DBUILD_SHARED_LIBS=OFF -DSDL2TTF_SAMPLES=OFF -DSDL2TTF_VENDORED=OFF \
+        -DCMAKE_POSITION_INDEPENDENT_CODE=OFF -DSDL2TTF_INSTALL=ON "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 

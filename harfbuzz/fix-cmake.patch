@@ -1,0 +1,14 @@
+diff -ruN original/CMakeLists.txt new/CMakeLists.txt
+--- original/CMakeLists.txt	2023-11-11 15:08:45.000000000 +0100
++++ new/CMakeLists.txt	2024-03-18 22:57:40.191313381 +0100
+@@ -116,7 +116,9 @@
+   find_package(Threads)
+   if (CMAKE_USE_PTHREADS_INIT)
+     add_definitions("-DHAVE_PTHREAD")
+-    list(APPEND THIRD_PARTY_LIBS Threads::Threads)
++    if (NOT PSP)
++      list(APPEND THIRD_PARTY_LIBS Threads::Threads)
++    endif()
+     list(APPEND PC_LIBS_PRIV -pthread)
+   endif ()
+ endif ()

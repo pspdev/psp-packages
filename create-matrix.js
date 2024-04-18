@@ -87,7 +87,7 @@ directories.forEach(library => {
         let info = library;
         const deps = [];
         dependencies.forEach((dependency) => {
-            if (dependant.get(dependency))
+            if (dependant.get(dependency) && !deps.includes(dependency))
                 deps.push(dependency);
         });
         deps.forEach(dependency => info = dependency + " " + info);
