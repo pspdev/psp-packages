@@ -19,7 +19,8 @@ if(PSP)
         vorbisfile
         vorbis
         ogg
-        xmp
+        modplug
+        stdc++
     )
     create_pbp_file(
         TARGET ${PROJECT_NAME}
