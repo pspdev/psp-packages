@@ -1,6 +1,6 @@
 pkgname=harfbuzz
 pkgver=8.3.0
-pkgrel=1
+pkgrel=2
 pkgdesc="OpenType text shaping engine"
 arch=('mips')
 url="https://harfbuzz.github.io/"
@@ -14,7 +14,7 @@ source=(
 )
 sha256sums=(
   "109501eaeb8bde3eadb25fab4164e993fbace29c3d775bcaa1c1e58e2f15f847"
-  "9248557e549775ce9f3689bf271722bedab9bceba4cbc9ba452c68b652d31616"
+  "110f08631404c3f4d9f99b58679a626384658369355c682f5cf152c375cb7386"
 )
 
 prepare() {
