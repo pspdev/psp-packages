@@ -1,6 +1,6 @@
 pkgname=zziplib
-pkgver=0.13.72
-pkgrel=2
+pkgver=0.13.74
+pkgrel=3
 pkgdesc="provides read access to zipped files in a zip-archive"
 arch=('mips')
 url="http://zziplib.sourceforge.net/"
@@ -8,7 +8,7 @@ license=('ZLIB')
 depends=('zlib')
 makedepends=()
 optdepends=()
-source=("git+https://github.com/gdraheim/zziplib.git#commit=a82f98f94a2cc365fad71eee02d7dd50c0810844")
+source=("git+https://github.com/gdraheim/zziplib.git#commit=df9e9c06634cb0c48bdc42efe9f7ac55847503a5")
 sha256sums=('SKIP')
 
 build() {
