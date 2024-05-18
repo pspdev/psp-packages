@@ -22,7 +22,7 @@ prepare() {
 build() {
     cd "${pkgname}-${pkgver}"
     ./autogen.sh
-    CFLAGS="-G0 -O2 -DPSP" ./configure --host=psp --prefix=/psp --disable-examples || { exit 1; }
+        CFLAGS="-G0 -O2 -DPSP" LDFLAGS="-L$(psp-config --pspsdk-path)/lib" ./configure --host psp --prefix=/psp --disable-examples || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 

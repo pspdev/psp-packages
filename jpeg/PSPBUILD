@@ -1,6 +1,6 @@
 pkgname=jpeg
-pkgver=2.1.1
-pkgrel=3
+pkgver=3.0.3
+pkgrel=4
 pkgdesc="a free library for JPEG image compression"
 arch=('mips')
 url="https://ijg.org/"
@@ -9,7 +9,7 @@ depends=()
 makedepends=()
 optdepends=()
 source=("https://github.com/libjpeg-turbo/libjpeg-turbo/archive/${pkgver}.tar.gz")
-sha256sums=('20e9cd3e5f517950dfb7a300ad344543d88719c254407ffb5ad88d891bf701c4')
+sha256sums=('a649205a90e39a548863a3614a9576a3fb4465f8e8e66d54999f127957c25b21')
 
 prepare() {
     cd "libjpeg-turbo-${pkgver}/release"
