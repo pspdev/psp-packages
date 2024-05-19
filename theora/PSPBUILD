@@ -1,6 +1,6 @@
 pkgname=theora
 pkgver=1.2.0git
-pkgrel=1
+pkgrel=2
 pkgdesc="Standard encoder and decoder library for the Theora video compression format"
 arch=('mips')
 url="https://www.theora.org/"
@@ -22,6 +22,7 @@ prepare() {
 build() {
     cd "theora"
     ./autogen.sh
+   LDFLAGS=-L"$(psp-config --pspsdk-path)/lib" \
     ./configure --host=psp --prefix=/psp --disable-examples
     make --quiet $MAKEFLAGS || { exit 1; }
 }
