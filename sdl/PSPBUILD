@@ -8,7 +8,7 @@ license=('GPL2.1')
 depends=('pspirkeyb')
 makedepends=()
 optdepends=()
-source=("git+https://github.com/pspdev/SDL.git#commit=fa3952447126c5e6774d1edaf97e9594c1f2be19")
+source=("git+https://github.com/pspdev/SDL.git#commit=42ee00502244fc60e76ae395fcee29d82f64c369")
 sha256sums=('SKIP')
 
 prepare() {
