@@ -1,6 +1,6 @@
 pkgname=sdl
 pkgver=1.2.15
-pkgrel=2
+pkgrel=3
 pkgdesc="a library designed to provide low level access to audio, input, and graphics hardware"
 arch=('mips')
 url="http://www.libsdl.org/"
