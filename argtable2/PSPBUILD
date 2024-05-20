@@ -15,6 +15,7 @@ prepare() {
     cd "${pkgname}-${pkgver}"
     sed -i '30s/.*/#include <ctype.h>/' src/arg_int.c
     sed -i '39s/.*/#include <strings.h>/' src/arg_date.c
+    sed -i '40s/.*/#include <string.h>/' src/getopt.c
 }
 
 build() {
