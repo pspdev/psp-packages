@@ -16,16 +16,15 @@ prepare() {
     sed -i '84s/.*/defined(PSP)/' library/net.c
     sed -i '115s/.*/  /' include/polarssl/config.h
     sed -i '1974s/.*/ /' include/polarssl/config.h
-    sed -i '28s/.*/set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -I${PSPDEV}\/psp\/sdk\/include")/' CMakeLists.txt
+    sed -i '28s/.*/set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-error=incompatible-pointer-types -I${PSPDEV}\/psp\/sdk\/include")/' CMakeLists.txt
 }
 
 build() {
     cd "$pkgname-$pkgver"
     mkdir -p build
     cd build
-    export CFLAGS="-Wno-error=incompatible-pointer-types"
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp \
-        -DCMAKE_C_FLAGS="-Wno-error=incompatible-pointer-types" -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTING=FALSE -DENABLE_PROGRAMS=FALSE "${XTRA_OPTS[@]}" .. || { exit 1; }
+        -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTING=FALSE -DENABLE_PROGRAMS=FALSE "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 
