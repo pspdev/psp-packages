@@ -11,6 +11,10 @@ optdepends=()
 source=("http://prdownloads.sourceforge.net/argtable/${pkgname}-${pkgver}.tar.gz")
 sha256sums=('8f77e8a7ced5301af6e22f47302fdbc3b1ff41f2b83c43c77ae5ca041771ddbf')
 
+prepare() {
+    cd "${pkgname}-${pkgver}"
+    sed -i '30s/.*/#include <ctype.h>/' src/arg_int.c
+}
 
 build() {
     cd "${pkgname}-${pkgver}"
