@@ -8,15 +8,12 @@ license=('ZLIB')
 depends=()
 makedepends=()
 optdepends=()
-source=("https://github.com/madler/zlib/archive/v${pkgver}.tar.gz"
-        "cmake.patch")
-sha256sums=('17e88863f3600672ab49182f217281b6fc4d3c762bde361935e436a95214d05c'
-            'SKIP')
+source=("https://github.com/madler/zlib/archive/v${pkgver}.tar.gz")
+sha256sums=('17e88863f3600672ab49182f217281b6fc4d3c762bde361935e436a95214d05c')
 
-prepare() {
-    cd "${pkgname}-${pkgver}"
-    patch -p1 < ../cmake.patch
-}
+# prepare() {
+#     cd "${pkgname}-${pkgver}"
+# }
 
 build() {
     cd "${pkgname}-${pkgver}"
