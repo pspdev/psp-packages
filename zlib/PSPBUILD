@@ -1,6 +1,6 @@
 pkgname=zlib
-pkgver=1.2.11
-pkgrel=2
+pkgver=1.3.1
+pkgrel=3
 pkgdesc="Compression library implementing the deflate compression method found in gzip and PKZIP"
 arch=('mips')
 url="https://www.zlib.net/"
@@ -10,7 +10,7 @@ makedepends=()
 optdepends=()
 source=("https://github.com/madler/zlib/archive/v${pkgver}.tar.gz"
         "cmake.patch")
-sha256sums=('629380c90a77b964d896ed37163f5c3a34f6e6d897311f1df2a7016355c45eff'
+sha256sums=('17e88863f3600672ab49182f217281b6fc4d3c762bde361935e436a95214d05c'
             'SKIP')
 
 prepare() {
