@@ -1,6 +1,6 @@
 pkgname=libmad
 pkgver=0.15.1
-pkgrel=2
+pkgrel=3
 pkgdesc="MPEG audio decoder library for PSP"
 arch=('mips')
 url="https://www.underbit.com/products/mad"
@@ -8,7 +8,7 @@ license=('GPL2')
 depends=()
 makedepends=()
 optdepends=()
-source=("git+https://github.com/pspdev/${pkgname}.git#commit=edf6b42263ea4535a4d79c2ab88bd1f5d7bf6c4b")
+source=("git+https://github.com/pspdev/${pkgname}.git#commit=b94393de1c7af46360b54a650d4a4855bdf79bbc")
 sha256sums=('SKIP')
 
 build() {
