@@ -14,7 +14,7 @@ sha256sums=('8f77e8a7ced5301af6e22f47302fdbc3b1ff41f2b83c43c77ae5ca041771ddbf')
 prepare() {
     cd "${pkgname}-${pkgver}"
     sed -i '30s/.*/#include <ctype.h>/' src/arg_int.c
-    sed -i '115s/.*/memset(&tm,0,sizeof(tm));/' src/arg_date.c
+    sed -i '39s/.*/#include <strings.h>/' src/arg_date.c
 }
 
 build() {
