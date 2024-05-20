@@ -8,8 +8,8 @@ license=('ZLIB')
 depends=('zlib')
 makedepends=()
 optdepends=()
-source=("https://github.com/glennrp/libpng/archive/v${pkgver}.tar.gz")
-sha256sums=('ca74a0dace179a8422187671aee97dd3892b53e168627145271cad5b5ac81307')
+source=("https://github.com/pnggroup/libpng/archive/v${pkgver}.tar.gz")
+sha256sums=('fecc95b46cf05e8e3fc8a414750e0ba5aad00d89e9fdf175e94ff041caf1a03a')
 
 prepare() {
     cd "$pkgname-${pkgver}"
