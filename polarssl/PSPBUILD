@@ -16,7 +16,7 @@ prepare() {
     sed -i '84s/.*/defined(PSP)/' library/net.c
     sed -i '115s/.*/  /' include/polarssl/config.h
     sed -i '1974s/.*/ /' include/polarssl/config.h
-    sed -i '28s/.*/set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -I${PSPDEV}\/psp\/sdk\/include")/' CMakeLists.txt
+    sed -i '28s/.*/set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-error=incompatible-pointer-types -I${PSPDEV}\/psp\/sdk\/include")/' CMakeLists.txt
 }
 
 build() {

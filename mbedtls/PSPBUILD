@@ -27,6 +27,7 @@ build() {
     mkdir -p build
     cd build
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp \
+        -DCMAKE_C_FLAGS="-Wno-error=incompatible-pointer-types" \
         -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTING=FALSE -DENABLE_PROGRAMS=FALSE "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }

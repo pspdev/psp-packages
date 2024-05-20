@@ -114,7 +114,7 @@ new file mode 100644
 index 0000000..3c3f97d
 --- /dev/null
 +++ b/src/os_psp.c
-@@ -0,0 +1,689 @@
+@@ -0,0 +1,690 @@
 +/*
 +** 2010 Nov 01
 +**
@@ -145,6 +145,7 @@ index 0000000..3c3f97d
 +#include <pspiofilemgr.h>
 +#include <psptypes.h>
 +#include <psputils.h>
++#include <pspthreadman.h>
 +
 +/*
 +** Include standard C headers.
