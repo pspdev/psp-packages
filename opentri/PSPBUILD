@@ -1,14 +1,14 @@
 pkgname=opentri
 pkgver=r7.95b040d
-pkgrel=2
+pkgrel=3
 pkgdesc="openTRI is a game engine for the PSP"
 arch=('mips')
-url="https://github.com/SamRH/openTRI"
+url="https://github.com/fjtrujy/openTRI"
 license=('GPL2')
 depends=('zlib' 'freetype2')
 makedepends=()
 optdepends=()
-source=("git+https://github.com/fjtrujy/openTRI.git#commit=8e71cd738a12c94f5c1f854c646fc5444721ffb0")
+source=("git+https://github.com/fjtrujy/openTRI.git#commit=c4a47d4117aced8d7fc5d959a2d94291ed2ca3d0")
 sha256sums=('SKIP')
 
 build() {
