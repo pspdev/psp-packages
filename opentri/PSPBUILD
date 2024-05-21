@@ -8,7 +8,7 @@ license=('GPL2')
 depends=('zlib' 'freetype2')
 makedepends=()
 optdepends=()
-source=("git+https://github.com/fjtrujy/openTRI.git#commit=c4a47d4117aced8d7fc5d959a2d94291ed2ca3d0")
+source=("git+https://github.com/wally4000/openTRI.git#commit=adb3a6640385771388a453b0c63884c98380393e")
 sha256sums=('SKIP')
 
 build() {
