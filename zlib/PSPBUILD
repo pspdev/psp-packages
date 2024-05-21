@@ -21,12 +21,12 @@ build() {
     cd build
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=/psp -DBUILD_SHARED_LIBS=OFF -DZLIB_BUILD_EXAMPLES=OFF \
         -DUNIX:BOOL=ON "${XTRA_OPTS[@]}" .. || { exit 1; }
-    make --quiet $MAKEFLAGS || { exit 1; }
+    make --quiet -j1 || { exit 1; }
 }
 
 package() {
     cd "${pkgname}-${pkgver}/build"
-    make --quiet DESTDIR=$pkgdir $MAKEFLAGS install || { exit 1; }
+    make --quiet DESTDIR=$pkgdir install || { exit 1; }
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 ../README "$pkgdir/psp/share/licenses/$pkgname"
