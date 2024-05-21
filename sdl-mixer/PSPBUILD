@@ -8,8 +8,8 @@ license=('custom')
 depends=('sdl' 'libogg' 'libvorbis')
 makedepends=()
 optdepends=()
-source=("git+https://github.com/libsdl-org/SDL_mixer#commit78cde6dd63222f9345dda38e8b7dca836aa55803")
-sha256sums=('6e6a3a07898b164140b4032635829a725cd78a3f7123cba5b3746aa8e4ad76c9')
+source=("git+https://github.com/libsdl-org/SDL_mixer.git#commit=78cde6dd63222f9345dda38e8b7dca836aa55803")
+sha256sums=('SKIP')
 
 prepare() {
     cd "SDL_mixer"
@@ -26,12 +26,12 @@ build() {
     LDFLAGS="-L$(psp-config --pspsdk-path)/lib" LIBS="-lc -lpspuser" \
     ./configure --host psp --with-sdl-prefix=$(psp-config --psp-prefix) \
     --disable-music-mp3 --prefix=/psp \
-     --enable-music-mod
+     --enable-music-mod -disable-music-cmd
     make
 }
 
 package() {
-    cd "SDL_mixer-$pkgver-psp"
+    cd "SDL_mixer"
     make DESTDIR="$pkgdir/" install
 
     rm "${pkgdir}/psp/lib/libSDL_mixer.la"
