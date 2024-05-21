@@ -26,7 +26,7 @@ build() {
     LDFLAGS="-L$(psp-config --pspsdk-path)/lib" LIBS="-lc -lpspuser" \
     ./configure --host psp --with-sdl-prefix=$(psp-config --psp-prefix) \
     --disable-music-mp3 --prefix=/psp \
-     --enable-music-mod
+     --enable-music-mod -disable-music-cmd
     make
 }
 
