@@ -9,7 +9,7 @@ depends=('zlib')
 makedepends=()
 optdepends=()
 source=("https://github.com/pnggroup/libpng/archive/v${pkgver}.tar.gz")
-sha256sums=('2141134328d54e5d323ed9955eb41dae257c3500730fb5b09bfba8c63aa7f123')
+sha256sums=('fecc95b46cf05e8e3fc8a414750e0ba5aad00d89e9fdf175e94ff041caf1a03a')
 
 prepare() {
     cd "$pkgname-${pkgver}"
@@ -24,7 +24,7 @@ build() {
     mkdir -p build
     cd build
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=/psp -DBUILD_SHARED_LIBS=OFF \
-        -DPNG_SHARED=OFF -DPNG_STATIC=ON "${XTRA_OPTS[@]}" .. || { exit 1; }
+        -DPNG_SHARED=OFF -DPNG_STATIC=ON -DUNIX=ON "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 
