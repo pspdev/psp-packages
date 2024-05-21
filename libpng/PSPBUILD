@@ -24,7 +24,7 @@ build() {
     mkdir -p build
     cd build
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=/psp -DBUILD_SHARED_LIBS=OFF \
-        -DPNG_SHARED=OFF -DPNG_STATIC=ON "${XTRA_OPTS[@]}" .. || { exit 1; }
+        -DPNG_SHARED=OFF -DPNG_STATIC=ON -DUNIX=ON "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 
