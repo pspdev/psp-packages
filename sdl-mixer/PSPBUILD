@@ -31,7 +31,7 @@ build() {
 }
 
 package() {
-    cd "SDL_mixer-$pkgver-psp"
+    cd "SDL_mixer-$pkgver"
     make DESTDIR="$pkgdir/" install
 
     rm "${pkgdir}/psp/lib/libSDL_mixer.la"
