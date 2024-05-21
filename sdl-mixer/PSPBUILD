@@ -8,7 +8,7 @@ license=('custom')
 depends=('sdl' 'libogg' 'libvorbis')
 makedepends=()
 optdepends=()
-source=("git+https://github.com/libsdl-org/SDL_mixer.git#commit78cde6dd63222f9345dda38e8b7dca836aa55803")
+source=("git+https://github.com/libsdl-org/SDL_mixer.git#commit=78cde6dd63222f9345dda38e8b7dca836aa55803")
 sha256sums=('SKIP')
 
 prepare() {
