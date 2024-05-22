@@ -1,6 +1,6 @@
 pkgname=libpng
 pkgver=1.6.43
-pkgrel=4
+pkgrel=5
 pkgdesc="libpng is the official PNG reference library"
 arch=('mips')
 url="http://libpng.org/pub/png/libpng.html"
