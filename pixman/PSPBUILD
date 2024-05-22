@@ -1,6 +1,6 @@
 pkgname=pixman
 pkgver=0.40.0
-pkgrel=3
+pkgrel=4
 pkgdesc="Pixman is a low-level software library for pixel manipulation"
 arch=('mips')
 url="http://pixman.org/"
@@ -23,7 +23,7 @@ build() {
     cd "${pkgname}-${pkgver}"
     autoreconf -if
     LDFLAGS="-L$(psp-config --pspsdk-path)/lib $(psp-pkgconf --libs libpng zlib)" \
-    CFLAGS="-G0 -O2 $(psp-pkgconf --cflags libpng zlib)" \
+    CFLAGS="-G0 -O2 $(psp-pkgconf --cflags libpng zlib) -Wno-error=incompatible-pointer-types " \
     ./configure --disable-loongson-mmi --host=psp --prefix=/psp
     make --quiet $MAKEFLAGS || { exit 1; }
 }
