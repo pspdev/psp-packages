@@ -1,6 +1,6 @@
 pkgname=argtable2
 pkgver=13
-pkgrel=1
+pkgrel=2
 pkgdesc="Argtable is an ANSI C library for parsing GNU style command line options with a minimum of fuss"
 arch=('mips')
 url="http://argtable.sourceforge.net/"
