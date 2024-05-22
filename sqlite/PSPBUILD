@@ -1,6 +1,6 @@
 pkgname=sqlite
 pkgver=3.7.4
-pkgrel=2
+pkgrel=3
 pkgdesc="SQLite is a C-language library that implements a small, fast, self-contained, high-reliability, full-featured, SQL database engine"
 arch=('mips')
 url="https://www.sqlite.org/"
