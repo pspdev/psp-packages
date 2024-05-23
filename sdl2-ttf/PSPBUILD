@@ -14,7 +14,7 @@ source=(
     "CMakeLists.txt.sample"
     "main.c.sample"
     "Pacifico.OFL.txt"
-    "Pacifico.ttf.sample"
+    "https://pspdev.github.io/resources/Pacifico.ttf"
 )
 sha256sums=(
     "9dc71ed93487521b107a2c4a9ca6bf43fb62f6bddd5c26b055e6b91418a22053"
@@ -44,7 +44,7 @@ package() {
     mkdir -p "${pkgdir}/psp/sdk/samples/sdl2/ttf/"
     install -m 644 "${srcdir}/main.c.sample" "${pkgdir}/psp/sdk/samples/sdl2/ttf/main.c"
     install -m 644 "${srcdir}/CMakeLists.txt.sample" "${pkgdir}/psp/sdk/samples/sdl2/ttf/CMakeLists.txt"
-    install -m 644 "${srcdir}/Pacifico.ttf.sample" "${pkgdir}/psp/sdk/samples/sdl2/ttf/Pacifico.ttf"
+    install -m 644 "${srcdir}/Pacifico.ttf" "${pkgdir}/psp/sdk/samples/sdl2/ttf/"
     install -m 644 "${srcdir}/Pacifico.OFL.txt" "${pkgdir}/psp/sdk/samples/sdl2/ttf/OFL.txt"
 
     cd "${srcdir}/SDL2_ttf-${pkgver}/build"
