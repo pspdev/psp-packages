@@ -21,7 +21,8 @@ fi
 
 if [ -z "$1" ]
 then
-  PKG_LIST=`ls */PSPBUILD | xargs dirname`    # By default build them all
+  # By default build them all
+  PKG_LIST=$(find . -name "PSPBUILD" -exec sh -c 'echo $(basename $(dirname $0))' {} \;)
 else
   PKG_LIST=$1
 fi
