@@ -1,0 +1,40 @@
+pkgname=wolfssl
+pkgver=5.7.0
+pkgrel=1
+pkgdesc="The wolfSSL library is a small, fast, portable implementation of TLS/SSL for embedded devices to the cloud. wolfSSL supports up to TLS 1.3!"
+arch=('mips')
+url="www.wolfssl.com"
+license=('GPL2')
+depends=()
+makedepends=()
+optdepends=()
+source=("https://github.com/wolfSSL/wolfssl/archive/refs/tags/v${pkgver}-stable.tar.gz")
+sha256sums=('2de93e8af588ee856fe67a6d7fce23fc1b226b74d710b0e3946bc8061f6aa18f')
+
+prepare() {
+    cd "$pkgname-$pkgver-stable"
+    sed -i 's#@prefix@#${PSPDEV}/psp#' support/wolfssl.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' support/wolfssl.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' support/wolfssl.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' support/wolfssl.pc.in
+}
+
+build() {
+    cd "$pkgname-$pkgver-stable"
+    mkdir -p build
+    cd build
+    CFLAGS="-DNO_WRITEV" \
+        cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp \
+        -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DWOLFSSL_CRYPT_TESTS=OFF -DWOLFSSL_EXAMPLES=OFF \
+        -DWOLFSSL_OPENSSLEXTRA=ON -DWARNING_C_FLAGS=-w "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package() {
+    cd "$pkgname-$pkgver-stable/build"
+    make --quiet $MAKEFLAGS install
+    cd ..
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 LICENSING "$pkgdir/psp/share/licenses/$pkgname"
+}
