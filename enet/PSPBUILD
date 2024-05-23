@@ -1,6 +1,6 @@
 pkgname=enet
-pkgver=1.3.17
-pkgrel=2
+pkgver=1.3.18
+pkgrel=1
 pkgdesc="ENet reliable UDP networking library"
 arch=('mips')
 url="http://enet.bespin.org/"
@@ -9,7 +9,7 @@ depends=()
 makedepends=()
 optdepends=()
 source=("https://github.com/lsalzman/enet/archive/v${pkgver}.tar.gz")
-sha256sums=('1e0b4bc0b7127a2d779dd7928f0b31830f5b3dcb7ec9588c5de70033e8d2434a')
+sha256sums=('28603c895f9ed24a846478180ee72c7376b39b4bb1287b73877e5eae7d96b0dd')
 
 build() {
     cd "$pkgname-$pkgver"
@@ -22,11 +22,7 @@ build() {
 
 package() {
     cd "$pkgname-$pkgver"
-    # We must do the install manually till this PR is merged https://github.com/lsalzman/enet/pull/82
-    mkdir -m 755 -p "$pkgdir/psp/lib"
-    install -m 644 build/libenet.a "$pkgdir/psp/lib"
-    mkdir -m 755 -p "$pkgdir/psp/include"
-    cp -R include/enet "$pkgdir/psp/include"
+    make install -C build
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
