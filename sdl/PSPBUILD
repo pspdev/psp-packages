@@ -24,6 +24,7 @@ build() {
     ./autogen.sh
     LDFLAGS="$LDFLAGS -L$(psp-config --pspsdk-path)/lib -L$(psp-config --psp-prefix)/lib -lc -lpspuser" \
     LIBS="$LIBS -lc -lpspuser" \
+    CFLAGS="-Wno-error=incompatible-pointer-types" \
     ./configure --host=psp --prefix=/psp --enable-pspirkeyb
     make
 }
