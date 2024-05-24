@@ -23,6 +23,7 @@ prepare() {
     cd "${pkgname}-${pkgver}"
     patch -p1 < ../de359ea.patch
     patch -p1 < ../425.patch
+    sed -i 's@LUAPREFIX_psp?=.*@LUAPREFIX_psp?=$(PSP_PREFIX)@i' src/makefile
 }
 
 build() {
