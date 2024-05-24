@@ -11,6 +11,12 @@ optdepends=()
 source=("https://github.com/lsalzman/enet/archive/v${pkgver}.tar.gz")
 sha256sums=('28603c895f9ed24a846478180ee72c7376b39b4bb1287b73877e5eae7d96b0dd')
 
+prepare() {
+    cd "$pkgname-$pkgver"
+    # if ARCHIVE DESTINATION is not specified, static library will be installed to LIBRARY DESTINATION
+    sed -i '/ARCHIVE DESTINATION/d' CMakeLists.txt
+}
+
 build() {
     cd "$pkgname-$pkgver"
     mkdir -p build
