@@ -16,14 +16,13 @@ source=(
 sha256sums=(
     'bf033aeb9e62bcaa8d007df68c119c966418e8c9ef7e4f2d7e96bddeca9cca6e'
     'e4a8870ee6ae39c3965297724e83bfa5af78c6045bccbe2c5e1c1fdd0e6b1b05'
-    '1f34117c0ddca9a0967ee5e8493c33ca1e3a73c33e2faff2a620ba30bd23ebb6'
+    '25ab8c276fa6cd16fa5f6715b02db8206858e40c0b9a7a213f21138f9666c2aa'
 )
 
 prepare() {
     cd "${pkgname}-${pkgver}"
     patch -p1 < ../de359ea.patch
     patch -p1 < ../425.patch
-    sed -i 's@LUAPREFIX_psp?=.*@LUAPREFIX_psp?=$(PSP_PREFIX)@i' src/makefile
     sed -i '41,53d' src/usocket.h
 }
 
@@ -34,7 +33,7 @@ build() {
 
 package() {
     cd "${pkgname}-${pkgver}"
-    make install PLAT=psp LUAV=51
+    make install DESTDIR="$pkgdir" PLAT=psp LUAV=51
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
