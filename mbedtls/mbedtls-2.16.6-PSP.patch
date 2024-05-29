@@ -143,55 +143,19 @@ diff -ruN mbedtls-2.16.6/library/net_sockets.c mbedX/library/net_sockets.c
  }
  
  #if ( defined(_WIN32) || defined(_WIN32_WCE) ) && !defined(EFIX64) && \
-@@ -316,7 +399,7 @@
-     int ret;
-     int type;
+@@ -409,6 +492,7 @@
  
--    struct sockaddr_storage client_addr;
-+    struct sockaddr_in client_addr;
- 
- #if defined(__socklen_t_defined) || defined(_SOCKLEN_T) ||  \
-     defined(_SOCKLEN_T_DECLARED) || defined(__DEFINED_socklen_t)
-@@ -371,7 +454,7 @@
-      * then bind a new socket to accept new connections */
-     if( type != SOCK_STREAM )
-     {
--        struct sockaddr_storage local_addr;
-+        struct sockaddr_in local_addr;
-         int one = 1;
- 
-         if( connect( bind_ctx->fd, (struct sockaddr *) &client_addr, n ) != 0 )
-@@ -380,10 +463,10 @@
-         client_ctx->fd = bind_ctx->fd;
-         bind_ctx->fd   = -1; /* In case we exit early */
- 
--        n = sizeof( struct sockaddr_storage );
-+        n = sizeof( struct sockaddr_in );
-         if( getsockname( client_ctx->fd,
-                          (struct sockaddr *) &local_addr, &n ) != 0 ||
--            ( bind_ctx->fd = (int) socket( local_addr.ss_family,
-+            ( bind_ctx->fd = (int) socket( local_addr.sin_family,
-                                            SOCK_DGRAM, IPPROTO_UDP ) ) < 0 ||
-             setsockopt( bind_ctx->fd, SOL_SOCKET, SO_REUSEADDR,
-                         (const char *) &one, sizeof( one ) ) != 0 )
-@@ -399,6 +482,7 @@
- 
-     if( client_ip != NULL )
-     {
+             memcpy( client_ip, &addr4->sin_addr.s_addr, *ip_len );
+         }
 +#if 0
-         if( client_addr.ss_family == AF_INET )
+         else
          {
-             struct sockaddr_in *addr4 = (struct sockaddr_in *) &client_addr;
-@@ -419,6 +503,12 @@
+             struct sockaddr_in6 *addr6 = (struct sockaddr_in6 *) &client_addr;
+@@ -419,6 +503,7 @@
  
              memcpy( client_ip, &addr6->sin6_addr.s6_addr, *ip_len);
          }
 +#endif
-+        *ip_len = sizeof( client_addr.sin_addr.s_addr );
-+        if( buf_size < *ip_len )
-+            return( MBEDTLS_ERR_NET_BUFFER_TOO_SMALL );
-+
-+        memcpy( client_ip, &client_addr.sin_addr.s_addr, *ip_len );
      }
  
      return( 0 );
