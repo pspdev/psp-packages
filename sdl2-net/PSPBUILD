@@ -19,6 +19,7 @@ sha256sums=(
 
 prepare() {
     cd "${srcdir}/SDL2_net-${pkgver}"
+    sed -i '/^prefix=/s/=.*$/=${PSPDEV}\/psp/' SDL2_net.pc.in
     patch -p1 < ../${pkgname}-${pkgver}-PSP.patch || { exit 1; }
 }
 

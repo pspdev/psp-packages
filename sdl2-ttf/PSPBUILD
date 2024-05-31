@@ -27,6 +27,7 @@ sha256sums=(
 
 prepare() {
     cd "${srcdir}/SDL2_ttf-${pkgver}"
+    sed -i '/^prefix=/s/=.*$/=${PSPDEV}\/psp/' SDL2_ttf.pc.in
     patch -Np1 -i "${srcdir}/pkg-config-fix.patch"
 }
 

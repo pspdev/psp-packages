@@ -30,13 +30,3 @@ index 438a0aa..934a330 100644
  
      if(SDL2IMAGE_BUILD_SHARED_LIBS AND (APPLE OR (UNIX AND NOT ANDROID)))
          install(
-diff --git a/SDL2_image.pc.in b/SDL2_image.pc.in
-index 8711dd7..cf6b501 100644
---- a/SDL2_image.pc.in
-+++ b/SDL2_image.pc.in
-@@ -1,4 +1,4 @@
--prefix=@prefix@
-+prefix=${PSPDEV}/psp
- exec_prefix=@exec_prefix@
- libdir=@libdir@
- includedir=@includedir@

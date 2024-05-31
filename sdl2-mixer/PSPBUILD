@@ -25,6 +25,7 @@ sha256sums=(
 
 prepare() {
     cd "${srcdir}/SDL2_mixer-${pkgver}"
+    sed -i '/^prefix=/s/=.*$/=${PSPDEV}\/psp/' SDL2_mixer.pc.in
     patch -Np1 -i "${srcdir}/pkg-config-fix.patch"
 }
 

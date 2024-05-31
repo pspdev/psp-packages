@@ -18,6 +18,7 @@ sha256sums=(
 )
 prepare() {
     cd "${srcdir}/SDL2_image-${pkgver}"
+    sed -i '/^prefix=/s/=.*$/=${PSPDEV}\/psp/' SDL2_image.pc.in
     patch -Np1 -i "${srcdir}/pkg-config-fix.patch"
 }
 
