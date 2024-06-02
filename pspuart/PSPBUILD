@@ -1,0 +1,34 @@
+pkgname=pspuart
+pkgver=r14.9bb4add
+pkgrel=1
+pkgdesc="Library for PSP UART hardware communication (ex SioDriver)"
+arch=('mips')
+url="https://github.com/Operation-DITTO/psp-uart-library"
+license=('CC-BY-SA-4.0')
+depends=()
+makedepends=()
+optdepends=()
+source=("git+https://github.com/Operation-DITTO/psp-uart-library.git#commit=9bb4addc051c8cee563a255b79ad7a0c856cf14d")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "psp-uart-library"
+    # Set the revision of the repo as version
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+    cd "psp-uart-library"
+    make
+}
+
+package() {
+    cd "psp-uart-library"
+    mkdir -m 755 -p "$pkgdir/psp/lib"
+    install -m 644 libpspuart.a "$pkgdir/psp/lib"
+    mkdir -m 755 -p "$pkgdir/psp/include"
+    install -m 644 pspuart.h "$pkgdir/psp/include"
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
+}
