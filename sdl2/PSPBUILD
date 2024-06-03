@@ -1,6 +1,6 @@
 pkgname=sdl2
 pkgver=2.30.2
-pkgrel=2
+pkgrel=3
 pkgdesc="a library designed to provide low level access to audio, input, and graphics hardware"
 arch=('mips')
 url="https://wiki.libsdl.org/SDL2/FrontPage"
@@ -11,11 +11,13 @@ optdepends=()
 provides=('sdl2-main')
 source=(
     "https://github.com/libsdl-org/SDL/releases/download/release-${pkgver}/SDL2-${pkgver}.tar.gz"
+    "https://github.com/libsdl-org/SDL/pull/9953.patch"
     "CMakeLists.txt.sample"
     "main.c.sample"
 )
 sha256sums=(
     "891d66ac8cae51361d3229e3336ebec1c407a8a2a063b61df14f5fdf3ab5ac31"
+    "f465c3914901fa6e49e5389c8bb5ec2ede21a620c431b8fd6bc55e315ddb5523"
     "SKIP"
     "SKIP"
 )
@@ -23,6 +25,8 @@ sha256sums=(
 prepare() {
     cd "${srcdir}/SDL2-${pkgver}"
     sed -i '/^prefix=/s/=.*$/=${PSPDEV}\/psp/' sdl2.pc.in
+
+    patch -p1 < ../9953.patch
 }
 
 build() {
