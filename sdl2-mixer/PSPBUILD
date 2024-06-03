@@ -1,10 +1,10 @@
 pkgname=sdl2-mixer
 pkgver=2.6.3
-pkgrel=5
+pkgrel=6
 pkgdesc="an audio mixer library based on the SDL2 library"
 arch=('mips')
-url="https://www.libsdl.org/projects/SDL_mixer/"
-license=('MIT')
+url="https://wiki.libsdl.org/SDL2_mixer/FrontPage"
+license=('ZLIB')
 depends=('sdl2' 'libmodplug' 'libvorbis' 'libogg')
 makedepends=()
 optdepends=()
@@ -17,14 +17,15 @@ source=(
 )
 sha256sums=(
     "7a6ba86a478648ce617e3a5e9277181bc67f7ce9876605eea6affd4a0d6eea8f"
-    "5cd916deff335df405df54fbcac9ad833e9ea69af38de104d87982e5161c07ca"
-    "32ad0cb808a8a9560cc2023d71533fc5caaefa7efe3b9243845ab55d5807bf47"
-    "02398828cf31287f3eff72baf605d05df6abf4b1b26d823fe30dff1469499c26"
+    "SKIP"
+    "SKIP"
+    "SKIP"
     "b728bb95b6018ba0bb5675d614f2e25d056d04c6b471f4f080623c570f905e01"
 )
 
 prepare() {
     cd "${srcdir}/SDL2_mixer-${pkgver}"
+    sed -i '/^prefix=/s/=.*$/=${PSPDEV}\/psp/' SDL2_mixer.pc.in
     patch -Np1 -i "${srcdir}/pkg-config-fix.patch"
 }
 

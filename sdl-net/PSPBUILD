@@ -1,0 +1,39 @@
+pkgname=sdl-net
+pkgver=1.2.9
+pkgrel=1
+pkgdesc="a wrapper over TCP/IP sockets"
+arch=('mips')
+url="https://www.libsdl.org/projects/old/SDL_net/release-1.2.html"
+license=('ZLIB')
+depends=('sdl')
+makedepends=()
+optdepends=()
+source=("git+https://github.com/libsdl-org/SDL_net.git#commit=0043be2e559f8d562d04bf62d6e3f4162ed8edad")
+sha256sums=('SKIP')
+
+prepare() {
+    cd "SDL_net"
+    sed -i 's#@prefix@#${PSPDEV}/psp#' SDL_net.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' SDL_net.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' SDL_net.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' SDL_net.pc.in
+}
+
+build() {
+    cd "SDL_net"
+    ./autogen.sh
+    CFLAGS="-I$(psp-config --pspsdk-path)/include" LDFLAGS="-L$(psp-config --pspsdk-path)/lib" LIBS="-lc -lpspuser" \
+    ./configure --host psp --with-sdl-prefix=$(psp-config --psp-prefix) --prefix=/psp
+    make
+}
+
+package() {
+    cd "SDL_net"
+    make DESTDIR="$pkgdir/" install
+
+    rm "${pkgdir}/psp/lib/libSDL_net.la"
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname/COPYING"
+}
+

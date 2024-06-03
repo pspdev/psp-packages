@@ -1,0 +1,40 @@
+pkgname=sdl2-net
+pkgver=2.2.0
+pkgrel=1
+pkgdesc="a wrapper over TCP/IP sockets"
+arch=('mips')
+url="https://wiki.libsdl.org/SDL2_net/FrontPage"
+license=('ZLIB')
+depends=('sdl2')
+makedepends=()
+optdepends=()
+source=(
+    "https://www.libsdl.org/projects/SDL_net/release/SDL2_net-${pkgver}.tar.gz"
+    "${pkgname}-${pkgver}-PSP.patch"
+)
+sha256sums=(
+    "4e4a891988316271974ff4e9585ed1ef729a123d22c08bd473129179dc857feb"
+    "SKIP"
+)
+
+prepare() {
+    cd "${srcdir}/SDL2_net-${pkgver}"
+    sed -i '/^prefix=/s/=.*$/=${PSPDEV}\/psp/' SDL2_net.pc.in
+    patch -p1 < ../${pkgname}-${pkgver}-PSP.patch || { exit 1; }
+}
+
+build() {
+    cd "${srcdir}/SDL2_net-${pkgver}"
+    mkdir -p build && cd build
+    cmake -DCMAKE_TOOLCHAIN_FILE="${PSPDEV}/psp/share/pspdev.cmake" -DCMAKE_INSTALL_PREFIX=/psp \
+        -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=OFF -DSDL2NET_INSTALL=ON -DSDL2NET_SAMPLES=OFF \
+        .. "${XTRA_OPTS[@]}" || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package() {
+    cd "${srcdir}/SDL2_net-${pkgver}/build"
+    make --quiet DESTDIR="${pkgdir}" ${MAKEFLAGS} install
+
+    mv "${pkgdir}/psp/share/licenses/SDL2_net" "${pkgdir}/psp/share/licenses/${pkgname}"
+}

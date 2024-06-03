@@ -1,10 +1,10 @@
 pkgname=sdl2-image
 pkgver=2.6.3
-pkgrel=1
+pkgrel=2
 pkgdesc="a simple library to load images of various formats as SDL surfaces"
 arch=('mips')
-url="https://www.libsdl.org/projects/SDL_image/"
-license=('zlib')
+url="https://wiki.libsdl.org/SDL2_image/FrontPage"
+license=('ZLIB')
 depends=('sdl2' 'libpng' 'jpeg')
 makedepends=()
 optdepends=()
@@ -14,10 +14,11 @@ source=(
 )
 sha256sums=(
     "931c9be5bf1d7c8fae9b7dc157828b7eee874e23c7f24b44ba7eff6b4836312c"
-    "0adc4fbfbeb89b653a8050253d7bfa64a4ab3c54555879af68934168a978e16c"
+    "SKIP"
 )
 prepare() {
     cd "${srcdir}/SDL2_image-${pkgver}"
+    sed -i '/^prefix=/s/=.*$/=${PSPDEV}\/psp/' SDL2_image.pc.in
     patch -Np1 -i "${srcdir}/pkg-config-fix.patch"
 }
 
