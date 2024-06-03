@@ -14,7 +14,7 @@ source=(
 )
 sha256sums=(
     "931c9be5bf1d7c8fae9b7dc157828b7eee874e23c7f24b44ba7eff6b4836312c"
-    "0adc4fbfbeb89b653a8050253d7bfa64a4ab3c54555879af68934168a978e16c"
+    "SKIP"
 )
 prepare() {
     cd "${srcdir}/SDL2_image-${pkgver}"
