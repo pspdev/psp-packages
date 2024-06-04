@@ -37,6 +37,6 @@ package() {
     rm "${pkgdir}/psp/lib/libvorbisidec.la"
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
-    install -m 644 ../COPYING "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"
 }
 
