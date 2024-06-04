@@ -1,14 +1,16 @@
---- a/configure.in	2024-06-04 11:45:58.272647960 +0300
-+++ b/configure.in	2024-06-04 11:41:15.900699359 +0300
-@@ -61,7 +61,10 @@
-                 DEBUG="-g -Wall -D__NO_MATH_INLINES -fsigned-char -D_ARM_ASSEM_"
+diff --git a/configure.ac b/configure.ac
+index 6511f7f..bb2fba1 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -78,6 +78,11 @@ else
                  CFLAGS="-O2 -D_ARM_ASSEM_ -fsigned-char"
                  PROFILE="-W -pg -g -O2 -D_ARM_ASSEM_ -fsigned-char -fno-inline-functions";;
--
+ 
 +        mipsallegrex*-*-*)
 +                DEBUG="-g -W -fsigned-char"
 +                CFLAGS="-O2 -G0 -fsigned-char -DLITTLE_ENDIAN=1 -DBYTE_ORDER=LITTLE_ENDIAN -D_LOW_ACCURACY_"
 +                PROFILE="-W -pg -g -O2 -G0 -fsigned-char -fno-inline-functions";;
++
          *)
                  DEBUG="-g -Wall -D__NO_MATH_INLINES -fsigned-char"
                  CFLAGS="-O2 -Wall -fsigned-char"
