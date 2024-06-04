@@ -1,31 +1,40 @@
 pkgname=tremor
-pkgver=1.2.0git
+pkgver=1.2.1git
 pkgrel=1
 pkgdesc="Integer-only, fully Ogg Vorbis compliant software decoder library"
 arch=('mips')
 url="https://wiki.xiph.org/Tremor"
 license=('BSD')
-depends=()
+depends=('libogg')
 makedepends=()
 optdepends=()
 source=(
-    "git+https://gitlab.xiph.org/xiph/tremor.git#commit=64350e068cb8488c1fec8e8c870dce936267e057"
+    "git+https://gitlab.xiph.org/xiph/tremor.git#commit=7c30a66346199f3f09017a09567c6c8a3a0eedc8"
+    "https://github.com/sezero/tremor/compare/master...sezero.patch"
     "platform-allegrex.patch"
 )
 sha256sums=(
     'SKIP'
+    '5bd4ac5916bda07e6f9dbdcd1633ac7073c7972b874b04ca59d5edde65afc847'
     'SKIP'
 )
 
 prepare() {
     cd "${pkgname}"
+    patch -p1 < ../master...sezero.patch
     patch -p1 < ../platform-allegrex.patch
+
+    sed -i 's#@prefix@#${PSPDEV}/psp#' vorbisidec.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' vorbisidec.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' vorbisidec.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' vorbisidec.pc.in
 }
 
 build() {
     cd "${pkgname}"
     ./autogen.sh --host psp
     LDFLAGS="-L$(psp-config --pspsdk-path)/lib" LIBS="-lc -lpspuser" \
+    CFLAGS="-Wno-error=incompatible-pointer-types" \
     ./configure --host psp --prefix=/psp
     make
 }
