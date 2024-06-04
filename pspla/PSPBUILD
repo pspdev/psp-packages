@@ -1,5 +1,5 @@
 pkgname=pspla
-pkgver=1.2.0
+pkgver=2.0.0
 pkgrel=1
 pkgdesc="A VFPU accelerated linear algebra & quaternion library for PSP"
 arch=('mips')
@@ -9,7 +9,7 @@ depends=()
 makedepends=()
 optdepends=()
 source=("https://github.com/Jayanky/pspla/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('11512f4d5232d346e8b2b802f00ff15fa0ddd8ec6761bca3fb87191b2565e59f')
+sha256sums=('ce4fa8ef6b810b5e1e801ae10ab67cee4291d1d3ab95233bcac0a915218ace7b')
 
 build() {
     cd "${pkgname}-${pkgver}"
@@ -21,7 +21,7 @@ package() {
     mkdir -m 755 -p "$pkgdir/psp/lib"
     install -m 644 libpspla.a "$pkgdir/psp/lib"
     mkdir -m 755 -p "$pkgdir/psp/include"
-    cp -R pspla.h "$pkgdir/psp/include"
+    cp -R pspla2.h "$pkgdir/psp/include"
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
