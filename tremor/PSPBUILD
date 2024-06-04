@@ -1,0 +1,42 @@
+pkgname=tremor
+pkgver=1.2.0git
+pkgrel=1
+pkgdesc="Integer-only, fully Ogg Vorbis compliant software decoder library"
+arch=('mips')
+url="https://wiki.xiph.org/Tremor"
+license=('BSD')
+depends=()
+makedepends=()
+optdepends=()
+source=(
+    "git+https://gitlab.xiph.org/xiph/tremor.git#commit=64350e068cb8488c1fec8e8c870dce936267e057"
+    "platform-allegrex.patch"
+)
+sha256sums=(
+    'SKIP'
+    'SKIP'
+)
+
+prepare() {
+    cd "${pkgname}"
+    patch -p1 < ../platform-allegrex.patch
+}
+
+build() {
+    cd "${pkgname}"
+    ./autogen.sh --host psp
+    LDFLAGS="-L$(psp-config --pspsdk-path)/lib" LIBS="-lc -lpspuser" \
+    ./configure --host psp --prefix=/psp
+    make
+}
+
+package() {
+    cd "${pkgname}"
+    make DESTDIR="$pkgdir/" install
+
+    rm "${pkgdir}/psp/lib/libvorbisidec.la"
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 ../COPYING "$pkgdir/psp/share/licenses/$pkgname"
+}
+
