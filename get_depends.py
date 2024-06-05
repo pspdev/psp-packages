@@ -98,11 +98,7 @@ def resolve_package_dependencies(current_package: Package, packages: list[Packag
             current_package.dependencies.append(package)
 
 
-def main() -> None:
-    build_script_name = "PSPBUILD"
-    if len(sys.argv) == 2:
-        build_script_name = sys.argv[1]
-
+def get_full_package_list_with_dependencies(build_script_name: str) -> str:
     packages = []
     for directory in os.listdir():
         PKGBUILD = os.path.join(directory, build_script_name)
@@ -118,8 +114,15 @@ def main() -> None:
         build_order = package.get_build_order()
         build_orders.append(build_order)
 
-    print(json.dumps(build_orders))
+    return build_orders
 
+
+def main() -> None:
+    build_script_name = "PSPBUILD"
+    if len(sys.argv) == 2:
+        build_script_name = sys.argv[1]
+    package_list = get_full_package_list_with_dependencies(build_script_name=build_script_name)
+    print(json.dumps(package_list))
 
 if __name__ == '__main__':
     main()
