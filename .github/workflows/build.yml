@@ -9,17 +9,16 @@ on:
 jobs:
   prepare_jobs:
     runs-on: ubuntu-latest
-    container: node:lts
+    container: python:3-alpine
     steps:
       - uses: actions/checkout@v4
-      - name: Install dependencies
+      - name: Generate build list
         id: set-matrix
         run: |
-          echo "dependant=$(node create-matrix.js dependant)" >> $GITHUB_OUTPUT
-          echo "non_dependant=$(node create-matrix.js non_dependant)" >> $GITHUB_OUTPUT
+          echo "build_list=$(./get_depends.py)" >> $GITHUB_OUTPUT
+          cat $GITHUB_OUTPUT
     outputs:
-      dependant: ${{ steps.set-matrix.outputs.dependant }}
-      non_dependant: ${{ steps.set-matrix.outputs.non_dependant }}
+      build_list: ${{ steps.set-matrix.outputs.build_list }}
 
   build:
     needs: [prepare_jobs]
@@ -28,47 +27,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        package: ${{ fromJson(needs.prepare_jobs.outputs.non_dependant) }}
+        packages: ${{ fromJson(needs.prepare_jobs.outputs.build_list) }}
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build package
-      run: |
-        adduser -D -h /build -s /bin/bash build
-        chown -R build:build /build ${PSPDEV} ${{ matrix.package }}
-        cd ${{ matrix.package }}
-        sudo -u build PATH=${PATH} PSPDEV=${PSPDEV} LIBMAKEPKG_LINT_PACKAGE_DOTFILES_SH=0 ${PSPDEV}/bin/psp-makepkg --noconfirm
-        sudo -u build PATH=${PATH} PSPDEV=${PSPDEV} ${PSPDEV}/bin/psp-pacman -U --noconfirm *.pkg.tar.gz --overwrite '*'
-        cd ..
-    - name: Store package
-      run: |
-        echo ${{ matrix.package }}
-    - uses: actions/upload-artifact@v4
-      with:
-        name: artifact-${{ matrix.package }}
-        path: ${{ matrix.package }}/*.pkg.tar.gz
-
-  build_depends:
-    needs: [prepare_jobs, build]
-    runs-on: ubuntu-latest
-    container: ghcr.io/pspdev/pspsdk:latest
-    strategy:
-      fail-fast: false
-      matrix:
-        package: ${{ fromJson(needs.prepare_jobs.outputs.dependant) }}
-
-    steps:
-    - uses: actions/checkout@v4
-    - uses: actions/download-artifact@v4
-    - name: Install package
-      run: |
-        adduser -D -h /build -s /bin/bash build
-        chown -R build:build /build  ${PSPDEV} artifact-*
-        sudo -u build PATH=${PATH} PSPDEV=${PSPDEV} ${PSPDEV}/bin/psp-pacman -Udd --noconfirm artifact-*/*.pkg.tar.gz --overwrite '*'
-
     - name: Build packages
       run: |
-        for f in ${{ matrix.package }}; do
+        adduser -D -h /build -s /bin/bash build
+        chown -R build:build /build ${PSPDEV}
+        for f in ${{ matrix.packages }}; do
         chown -R build:build $f
         cd $f
         sudo -u build PATH=${PATH} PSPDEV=${PSPDEV} LIBMAKEPKG_LINT_PACKAGE_DOTFILES_SH=0 ${PSPDEV}/bin/psp-makepkg --noconfirm
@@ -77,7 +44,7 @@ jobs:
         done
     - name: Store package
       run: |
-        export PACKAGE=`echo ${{ matrix.package }} | awk '{print $NF}'`
+        export PACKAGE=`echo ${{ matrix.packages }} | awk '{print $NF}'`
         echo "PACKAGE=$PACKAGE" >> $GITHUB_ENV
     - uses: actions/upload-artifact@v4
       with:
@@ -86,7 +53,7 @@ jobs:
 
   create_release:
     if: contains(github.ref,'refs/heads/master')
-    needs: [prepare_jobs, build, build_depends]
+    needs: [prepare_jobs, build]
     runs-on: ubuntu-latest
     container: ghcr.io/pspdev/pspsdk:latest
 
