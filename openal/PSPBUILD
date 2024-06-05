@@ -1,13 +1,13 @@
 pkgname=openal
-pkgver=1.21.1
-pkgrel=3
+pkgver=1.23.1
+pkgrel=1
 pkgdesc="a cross-platform 3D audio API"
 arch=('mips')
-license=('gpl2')
+license=('LGPL-2.0')
 url="https://openal-soft.org/"
 makedepends=()
-source=("https://github.com/kcat/openal-soft/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('8ac17e4e3b32c1af3d5508acfffb838640669b4274606b7892aa796ca9d7467f')
+source=("https://github.com/kcat/openal-soft/releases/download/${pkgver}/openal-soft-${pkgver}.tar.bz2")
+sha256sums=('796f4b89134c4e57270b7f0d755f0fa3435b90da437b745160a49bd41c845b21')
 
 prepare() {
     cd $pkgname-soft-$pkgver
@@ -33,4 +33,5 @@ package () {
 
   mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
   install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"
+  install -m 644 BSD-3Clause "$pkgdir/psp/share/licenses/$pkgname"
 }
