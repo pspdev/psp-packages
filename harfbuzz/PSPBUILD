@@ -1,6 +1,6 @@
 pkgname=harfbuzz
-pkgver=8.3.0
-pkgrel=2
+pkgver=8.5.0
+pkgrel=1
 pkgdesc="OpenType text shaping engine"
 arch=('mips')
 url="https://harfbuzz.github.io/"
@@ -13,8 +13,8 @@ source=(
   "fix-cmake.patch"
 )
 sha256sums=(
-  "109501eaeb8bde3eadb25fab4164e993fbace29c3d775bcaa1c1e58e2f15f847"
-  "110f08631404c3f4d9f99b58679a626384658369355c682f5cf152c375cb7386"
+  "77e4f7f98f3d86bf8788b53e6832fb96279956e1c3961988ea3d4b7ca41ddc27"
+  "SKIP"
 )
 
 prepare() {

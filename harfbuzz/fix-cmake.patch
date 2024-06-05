@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index e22f2cf..b739707 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -116,11 +116,17 @@ if (NOT MSVC)
+@@ -117,7 +117,9 @@ if (NOT MSVC)
    find_package(Threads)
    if (CMAKE_USE_PTHREADS_INIT)
      add_definitions("-DHAVE_PTHREAD")
@@ -13,11 +13,12 @@ index e22f2cf..b739707 100644
      list(APPEND PC_LIBS_PRIV -pthread)
    endif ()
  endif ()
- 
-+if (PSP)
-+  list(APPEND PC_LIBS_PRIV -lstdc++)
-+endif ()
-+
- if (MSVC)
-   add_definitions(-wd4244 -wd4267 -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS)
+@@ -502,7 +504,7 @@ if (HB_BUILD_SUBSET)
+   endif ()
  endif ()
+ 
+-if (UNIX OR MINGW OR VITA)
++if (UNIX OR MINGW OR VITA OR PSP)
+   # Make symbols link locally
+   include (CheckCXXCompilerFlag)
+   CHECK_CXX_COMPILER_FLAG(-Bsymbolic-functions CXX_SUPPORTS_FLAG_BSYMB_FUNCS)
