@@ -24,7 +24,7 @@ prepare() {
 }
 
 build() {
-    cd "$pkgname-$pkgver-stable"
+    cd "$pkgname-$pkgver"
     mkdir -p build
     cd build
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp \
