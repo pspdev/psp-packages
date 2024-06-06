@@ -2,8 +2,6 @@ ARG BASE_DOCKER_IMAGE
 
 FROM $BASE_DOCKER_IMAGE
 
-COPY . /src
-
 RUN psp-pacman -Sy && \
     yes | psp-pacman -S $(psp-pacman -Slq) && \
     yes | psp-pacman -Scc && \
