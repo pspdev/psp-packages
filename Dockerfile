@@ -2,14 +2,10 @@ ARG BASE_DOCKER_IMAGE
 
 FROM $BASE_DOCKER_IMAGE
 
-ARG PACKAGES_REPO 
-
-COPY . /src
-
-RUN apk add build-base bash wget curl libarchive-dev gpgme-dev tree libcrypto3
-RUN cd /src && ./install-latest.sh ${PACKAGES_REPO}
-
-RUN cd /usr/local/pspdev && tree
+RUN psp-pacman -Sy && \
+    yes | psp-pacman -S $(psp-pacman -Slq) && \
+    yes | psp-pacman -Scc && \
+    cd /usr/local/pspdev && tree
 
 # Second stage of Dockerfile
 FROM alpine:latest

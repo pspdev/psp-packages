@@ -118,7 +118,6 @@ jobs:
         tags: ghcr.io/${{ github.repository }}:${{ env.DOCKER_TAG }}
         build-args: |
           BASE_DOCKER_IMAGE=ghcr.io/${{ github.repository_owner }}/pspsdk:${{ env.DOCKER_TAG }}
-          PACKAGES_REPO=${{ github.repository }}
     
     - name: Send Compile action
       run: |
