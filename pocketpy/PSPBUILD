@@ -1,24 +1,25 @@
 pkgname=pocketpy
-pkgver=1.0.9
+pkgver=1.4.5
 pkgrel=1
 pkgdesc="Python interpreter for game scripting"
 arch=('mips')
-license=('Apache-2.0 license')
-url="https://github.com/blueloveTH/pocketpy"
+license=('MIT')
+url="https://pocketpy.dev/"
 makedepends=()
-source=("git+https://github.com/blueloveTH/pocketpy#commit=9d91801626f6ba731a4d0108cfcc6d3b8b518797")
-sha256sums=('SKIP')
+source=("https://github.com/pocketpy/pocketpy/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('5f8875db057b9a0b8be324561f1a303c6ace62b5e39e1a082751a76e7edfd9f3')
 
 build() {
-    cd $pkgname
+    cd "$pkgname-${pkgver}"
     mkdir -p build
     cd build
-    cmake -Wno-dev -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DPK_BUILD_STATIC_LIB=ON ..
-    make --quiet
+    cmake -Wno-dev -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake \
+        -DPK_BUILD_STATIC_LIB=ON -DPK_BUILD_SHARED_LIB=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
 }
 
 package() {
-    cd "$pkgname/build"
+    cd "$pkgname-${pkgver}/build"
 
     mkdir -m 755 -p "$pkgdir/psp/lib" "$pkgdir/psp/include" "$pkgdir/psp/include/pocketpy" "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 libpocketpy.a "$pkgdir/psp/lib"
