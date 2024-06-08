@@ -41,6 +41,18 @@ psp-makepkg -i
 
 This will build and install the package.
 
+## Pacman Repository Hosting
+
+The pacman repository created from this repo is published to GitHub Pages by the GitHub Action in this repo. This is a change from the previous builds, which used GitHub releases for hosting. The repository should already be set up in `psp-pacman` like this at the bottom of `${PSPDEV}/etc/pacman.conf`:
+
+```
+[pspdev]
+SigLevel = Optional TrustAll
+Server = https://pspdev.github.io/psp-packages/
+```
+
+For forks or alternative repos, pspdev in the url in the `Server` setting should be replaced with the owner of the fork. When forking, make sure to set the GitHub Pages source to `GitHub Actions` in the settings of the GitHub repo.
+
 ## Contributing
 
 Contributions to this repository are welcome. If you wish to update or add a library look at the [contributing page](CONTRIBUTING.md).
