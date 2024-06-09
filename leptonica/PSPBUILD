@@ -1,0 +1,36 @@
+pkgname=leptonica
+pkgver=1.84.1
+pkgrel=1
+pkgdesc="An open source C library for efficient image processing and image analysis operations"
+arch=('mips')
+url="http://www.leptonica.org/"
+license=('BSD-2-Clause')
+depends=('zlib' 'libpng' 'jpeg')
+makedepends=()
+optdepends=()
+source=("https://github.com/DanBloomberg/leptonica/releases/download/${pkgver}/$pkgname-${pkgver}.tar.gz")
+sha256sums=("2b3e1254b1cca381e77c819b59ca99774ff43530209b9aeb511e1d46588a64f6")
+
+prepare() {
+    cd "$pkgname-${pkgver}"
+    sed -i 's#@prefix@#${PSPDEV}/psp#' lept.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' lept.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' lept.pc.in
+    sed -i 's#@includedir@#${prefix}include#' lept.pc.in
+}
+
+build() {
+    cd "$pkgname-${pkgver}"
+    mkdir -p build && cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF -DENABLE_WEBP=OFF -DENABLE_TIFF=OFF \
+        -DENABLE_GIF=OFF -DENABLE_OPENJPEG=OFF -DBUILD_PROG=0 "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package() {
+    cd "$pkgname-${pkgver}/build"
+    make --quiet $MAKEFLAGS install
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 ../leptonica-license.txt "$pkgdir/psp/share/licenses/$pkgname"
+}
