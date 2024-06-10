@@ -21,16 +21,20 @@ prepare() {
 
 build() {
     cd "$pkgname-${pkgver}"
-    mkdir -p build && cd build
-    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF -DENABLE_WEBP=OFF -DENABLE_TIFF=OFF \
-        -DENABLE_GIF=OFF -DENABLE_OPENJPEG=OFF -DBUILD_PROG=0 "${XTRA_OPTS[@]}" .. || { exit 1; }
+
+    ./autogen.sh --host=psp
+    ./configure --without-giflib --without-libtiff --without-libwebp --without-libwebpmux --without-libopenjpeg \
+    --disable-programs --host=psp --prefix=/psp
+
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 
 package() {
-    cd "$pkgname-${pkgver}/build"
-    make --quiet $MAKEFLAGS install
+    cd "$pkgname-${pkgver}"
+    make --quiet DESTDIR="$pkgdir" $MAKEFLAGS install
+
+    rm "${pkgdir}/psp/lib/libleptonica.la"
+
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
-    install -m 644 ../leptonica-license.txt "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 leptonica-license.txt "$pkgdir/psp/share/licenses/$pkgname"
 }
