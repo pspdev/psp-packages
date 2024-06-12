@@ -1,0 +1,41 @@
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 8997c63..5a4b030 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -1,4 +1,4 @@
+-AM_CPPFLAGS = $(ZLIB_CFLAGS) $(LIBPNG_CFLAGS) $(JPEG_CFLAGS) $(LIBTIFF_CFLAGS) $(LIBWEBP_CFLAGS) $(LIBWEBPMUX_CFLAGS) $(LIBJP2K_CFLAGS)
++AM_CPPFLAGS = $(ZLIB_CFLAGS) $(LIBPNG_CFLAGS) $(JPEG_CFLAGS) $(LIBTIFF_CFLAGS) $(LIBWEBP_CFLAGS) $(LIBWEBPMUX_CFLAGS) $(LIBJP2K_CFLAGS) -DPATH_MAX_SIZE=1024
+ 
+ lib_LTLIBRARIES = libleptonica.la
+ libleptonica_la_LIBADD = $(LIBPNG_LIBS) $(JPEG_LIBS) $(GIFLIB_LIBS) $(LIBTIFF_LIBS) $(LIBWEBP_LIBS) $(LIBWEBPMUX_LIBS) $(LIBJP2K_LIBS) $(GDI_LIBS) $(LIBM) $(ZLIB_LIBS)
+@@ -63,7 +63,7 @@ libleptonica_la_SOURCES = adaptmap.c affine.c                        \
+  tiffio.c tiffiostub.c                                          \
+  utils1.c utils2.c warper.c watershed.c                         \
+  webpio.c webpiostub.c webpanimio.c webpanimiostub.c            \
+- writefile.c zlibmem.c zlibmemstub.c
++ writefile.c zlibmem.c zlibmemstub.c realpath.c
+ 
+ pkginclude_HEADERS = allheaders.h alltypes.h                    \
+  array.h array_internal.h                                       \
+diff --git a/src/utils1.c b/src/utils1.c
+index b8dedd5..c5ec75a 100644
+--- a/src/utils1.c
++++ b/src/utils1.c
+@@ -1104,7 +1104,7 @@ size_t  bufsize = 100;
+ /*---------------------------------------------------------------------*
+  *                           Timing procs                              *
+  *---------------------------------------------------------------------*/
+-#if !defined(_WIN32) && !defined(__Fuchsia__)
++#if !defined(_WIN32) && !defined(__Fuchsia__) && !defined(PSP)
+ 
+ #include <sys/time.h>
+ #include <sys/resource.h>
+@@ -1198,7 +1198,7 @@ struct timeval tv;
+     if (usec) *usec = (l_int32)tv.tv_usec;
+ }
+ 
+-#elif defined(__Fuchsia__) /* resource.h not implemented on Fuchsia. */
++#elif defined(__Fuchsia__) || defined(PSP) /* resource.h not implemented on Fuchsia. */
+ 
+     /* Timer functions are used for testing and debugging, and
+      * are stubbed out.  If they are needed in the future, they
