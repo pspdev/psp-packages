@@ -1,6 +1,6 @@
 pkgname=leptonica
 pkgver=1.84.1
-pkgrel=1
+pkgrel=2
 pkgdesc="An open source C library for efficient image processing and image analysis operations"
 arch=('mips')
 url="http://www.leptonica.org/"
@@ -8,11 +8,23 @@ license=('BSD-2-Clause')
 depends=('zlib' 'libpng' 'jpeg')
 makedepends=()
 optdepends=()
-source=("https://github.com/DanBloomberg/leptonica/releases/download/${pkgver}/$pkgname-${pkgver}.tar.gz")
-sha256sums=("2b3e1254b1cca381e77c819b59ca99774ff43530209b9aeb511e1d46588a64f6")
+source=(
+    "https://github.com/DanBloomberg/leptonica/releases/download/${pkgver}/$pkgname-${pkgver}.tar.gz"
+    "https://github.com/pspdev/newlib/raw/master/newlib/libc/sys/phoenix/realpath.c"
+    "${pkgname}-${pkgver}-PSP.patch"
+)
+sha256sums=(
+    "2b3e1254b1cca381e77c819b59ca99774ff43530209b9aeb511e1d46588a64f6"
+    "fcc13a98886eb6e2fdbff6a04aa4fdcf3a6c6b6dff8c019a9698303e06722661"
+    "SKIP"
+)
 
 prepare() {
     cd "$pkgname-${pkgver}"
+
+    mv ../realpath.c src
+    patch -p1 < ../${pkgname}-${pkgver}-PSP.patch
+
     sed -i 's#@prefix@#${PSPDEV}/psp#' lept.pc.in
     sed -i 's#@exec_prefix@#${prefix}#' lept.pc.in
     sed -i 's#@libdir@#${prefix}/lib#' lept.pc.in
