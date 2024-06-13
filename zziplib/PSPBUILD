@@ -1,6 +1,6 @@
 pkgname=zziplib
-pkgver=0.13.74
-pkgrel=3
+pkgver=0.13.76
+pkgrel=1
 pkgdesc="provides read access to zipped files in a zip-archive"
 arch=('mips')
 url="http://zziplib.sourceforge.net/"
@@ -8,20 +8,20 @@ license=('ZLIB')
 depends=('zlib')
 makedepends=()
 optdepends=()
-source=("git+https://github.com/gdraheim/zziplib.git#commit=df9e9c06634cb0c48bdc42efe9f7ac55847503a5")
-sha256sums=('SKIP')
+source=("https://github.com/gdraheim/zziplib/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('08b0e300126329c928a41b6d68e397379fad02469e34a0855d361929968ea4c0')
 
 build() {
-    cd "$pkgname"
+    cd "$pkgname-$pkgver"
     mkdir -p build
     cd build
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
-        -DBUILD_STATIC_LIBS=ON -DZZIPSDL=OFF -DZZIPBINS=OFF -DZZIPTEST=OFF -DZZIPDOCS=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
+        -DZZIPSDL=OFF -DZZIPBINS=OFF -DZZIPTEST=OFF -DZZIPDOCS=OFF -DGCOV_PATH=psp-gcov "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 
 package() {
-    cd "$pkgname/build"
+    cd "$pkgname-$pkgver/build"
     make --quiet $MAKEFLAGS install
     cd ..
 
