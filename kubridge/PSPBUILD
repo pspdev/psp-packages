@@ -1,19 +1,13 @@
 pkgname=kubridge
-pkgver=20220827
+pkgver=20240427
 pkgrel=1
 pkgdesc="a bridging library to provide Kernel functions for PSPs in User Mode"
 arch=('mips')
 license=('GPL2')
 url="https://github.com/pspdev/kubridge"
 makedepends=()
-source=(
-  "git+https://github.com/pspdev/${pkgname}#commit=744b8980c178c05e2325f87f1ba581c627f98b30"
-  "https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt"
-)
-sha256sums=(
-  'SKIP'
-  '8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643'
-)
+source=("git+https://github.com/pspdev/${pkgname}#commit=370b753145509578a1d4697eb50e8e9912d75679")
+sha256sums=('SKIP')
 
 build() {
   cd $pkgname
@@ -30,5 +24,5 @@ package () {
   
 
   mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
-  install -m 644 ../gpl-2.0.txt "$pkgdir/psp/share/licenses/$pkgname/license.txt"
+  install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
 }
