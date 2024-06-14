@@ -1,6 +1,6 @@
 pkgname=pspgl
 pkgver=r12
-pkgrel=2
+pkgrel=3
 pkgdesc="OpenGL-ESish library for PSP"
 arch=('mips')
 url="https://github.com/pspdev/pspgl"
@@ -8,7 +8,7 @@ license=('BSD')
 depends=()
 makedepends=()
 optdepends=()
-source=("git+https://github.com/pspdev/${pkgname}.git#commit=eca18508633dedbe0c16457eef414eafed53e184")
+source=("git+https://github.com/pspdev/${pkgname}.git#commit=de4260adf56d06516ec46018d404ca77e0b61748")
 sha256sums=('SKIP')
 
 build() {
