@@ -26,6 +26,12 @@ prepare() {
 build() {
     cd "lua-${pkgver}"
     make -f Makefile.psp
+
+    # extract the license from readme
+    grep -A21 Copyright doc/readme.html | \
+        sed -e 's/&ndash;/–/g' \
+            -e 's/&copy;/©/g' \
+            -e '/<P>/d' > LICENSE
 }
 
 package() {
@@ -33,5 +39,5 @@ package() {
     make -f Makefile.psp PSPDIR="${pkgdir}/psp" install
 
     mkdir -m 755 -p "${pkgdir}/psp/share/licenses/${pkgname}"
-    install -m 644 doc/readme.html "${pkgdir}/psp/share/licenses/${pkgname}"
+    install -m 644 LICENSE "${pkgdir}/psp/share/licenses/${pkgname}"
 }
