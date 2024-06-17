@@ -1,7 +1,7 @@
 pkgname=lua
-pkgver=5.2.0
+pkgver=5.2.4
 pkgrel=1
-pkgdesc="a powerful, efficient, lightweight, embeddable scripting language"
+pkgdesc="a powerful, efficient, lightweight, embeddable scripting language (version 5.2)"
 arch=('mips')
 url="https://lua.org"
 license=('MIT')
@@ -14,7 +14,7 @@ source=(
     "lua-${pkgver}-PSP.patch"
 )
 sha256sums=(
-    'cabe379465aa8e388988073d59b69e76ba0025429d2c1da80821a252cdf6be0d'
+    'b9e2e4aad6789b3b63a056d442f7b39f0ecfca3ae0f1fc0ae4e9614401b69f4b'
     'SKIP'
 )
 
@@ -25,7 +25,7 @@ prepare() {
 
 build() {
     cd "lua-${pkgver}"
-    make -f Makefile.psp
+    make psp
 
     # extract the license from readme
     grep -A21 Copyright doc/readme.html | \
@@ -36,7 +36,7 @@ build() {
 
 package() {
     cd "lua-${pkgver}"
-    make -f Makefile.psp PSPDIR="${pkgdir}/psp" install
+    make INSTALL_TOP="${pkgdir}/psp" INSTALL_BIN="/tmp" TO_BIN="/dev/null" install
 
     mkdir -m 755 -p "${pkgdir}/psp/share/licenses/${pkgname}"
     install -m 644 LICENSE "${pkgdir}/psp/share/licenses/${pkgname}"
