@@ -1,22 +1,3 @@
-diff --git a/src/Makefile.am b/src/Makefile.am
-index 8997c63..5a4b030 100644
---- a/src/Makefile.am
-+++ b/src/Makefile.am
-@@ -1,4 +1,4 @@
--AM_CPPFLAGS = $(ZLIB_CFLAGS) $(LIBPNG_CFLAGS) $(JPEG_CFLAGS) $(LIBTIFF_CFLAGS) $(LIBWEBP_CFLAGS) $(LIBWEBPMUX_CFLAGS) $(LIBJP2K_CFLAGS)
-+AM_CPPFLAGS = $(ZLIB_CFLAGS) $(LIBPNG_CFLAGS) $(JPEG_CFLAGS) $(LIBTIFF_CFLAGS) $(LIBWEBP_CFLAGS) $(LIBWEBPMUX_CFLAGS) $(LIBJP2K_CFLAGS) -DPATH_MAX_SIZE=1024
- 
- lib_LTLIBRARIES = libleptonica.la
- libleptonica_la_LIBADD = $(LIBPNG_LIBS) $(JPEG_LIBS) $(GIFLIB_LIBS) $(LIBTIFF_LIBS) $(LIBWEBP_LIBS) $(LIBWEBPMUX_LIBS) $(LIBJP2K_LIBS) $(GDI_LIBS) $(LIBM) $(ZLIB_LIBS)
-@@ -63,7 +63,7 @@ libleptonica_la_SOURCES = adaptmap.c affine.c                        \
-  tiffio.c tiffiostub.c                                          \
-  utils1.c utils2.c warper.c watershed.c                         \
-  webpio.c webpiostub.c webpanimio.c webpanimiostub.c            \
-- writefile.c zlibmem.c zlibmemstub.c
-+ writefile.c zlibmem.c zlibmemstub.c realpath.c
- 
- pkginclude_HEADERS = allheaders.h alltypes.h                    \
-  array.h array_internal.h                                       \
 diff --git a/src/utils1.c b/src/utils1.c
 index b8dedd5..c5ec75a 100644
 --- a/src/utils1.c
