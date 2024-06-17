@@ -1,0 +1,87 @@
+diff --color -Naur lua-5.2.0/Makefile.psp Lua/Makefile.psp
+--- lua-5.2.0/Makefile.psp	1970-01-01 02:00:00.000000000 +0200
++++ Lua/Makefile.psp	2024-06-14 14:54:56.983930524 +0300
+@@ -0,0 +1,25 @@
++LUA = .
++
++PSPSDK = $(shell psp-config --pspsdk-path)
++PSPDIR = $(shell psp-config --psp-prefix)
++
++CFLAGS = -O2 -G0 -I$(LUA)/include
++
++CORE_O=	src/lapi.o src/lcode.o src/lctype.o src/ldebug.o src/ldo.o src/ldump.o\
++        src/lfunc.o src/lgc.o src/llex.o src/lmem.o src/lobject.o\
++        src/lopcodes.o src/lparser.o src/lstate.o src/lstring.o src/ltable.o \
++	      src/ltm.o src/lundump.o src/lvm.o src/lzio.o
++LIB_O=	src/lauxlib.o src/lbaselib.o src/lbitlib.o src/lcorolib.o src/ldblib.o\
++        src/liolib.o src/lmathlib.o src/loslib.o src/lstrlib.o src/ltablib.o\
++        src/loadlib.o src/linit.o
++BASE_O= $(CORE_O) $(LIB_O)
++
++OBJS = $(BASE_O)
++TARGET_LIB = liblua.a
++
++include $(PSPSDK)/lib/build.mak
++
++install: all
++	mkdir -p $(PSPDIR)/include $(PSPDIR)/lib
++	cp src/lua.h src/luaconf.h src/lualib.h src/lauxlib.h src/lua.hpp $(PSPDIR)/include
++	cp *.a $(PSPDIR)/lib
+diff --color -Naur lua-5.2.0/README.PSP Lua/README.PSP
+--- lua-5.2.0/README.PSP	1970-01-01 02:00:00.000000000 +0200
++++ Lua/README.PSP	2024-06-14 14:54:56.983930524 +0300
+@@ -0,0 +1,11 @@
++Requirements:
++
++    
++
++To install, run:
++   
++    make -f Makefile.psp
++    make -f Makefile.psp install
++
++
++You'll find a small example how to use it with the PSPSDK in the "sample" directory.
+diff --color -Naur lua-5.2.0/src/lmathlib.c Lua/src/lmathlib.c
+--- lua-5.2.0/src/lmathlib.c	2011-07-05 15:49:35.000000000 +0300
++++ Lua/src/lmathlib.c	2024-06-14 14:54:56.991930534 +0300
+@@ -24,7 +24,7 @@
+ 
+ /* macro 'l_tg' allows the addition of an 'l' or 'f' to all math operations */
+ #if !defined(l_tg)
+-#define l_tg(x)		(x)
++#define l_tg(x)		(x##f)
+ #endif
+ 
+ 
+diff --color -Naur lua-5.2.0/src/lobject.c Lua/src/lobject.c
+--- lua-5.2.0/src/lobject.c	2011-11-30 21:30:16.000000000 +0200
++++ Lua/src/lobject.c	2024-06-14 14:54:56.991930534 +0300
+@@ -203,7 +203,7 @@
+         break;
+       }
+       case 'f': {
+-        setnvalue(L->top, cast_num(va_arg(argp, l_uacNumber)));
++        setnvalue(L->top, cast_num(va_arg(argp, double)));
+         incr_top(L);
+         break;
+       }
+diff --color -Naur lua-5.2.0/src/luaconf.h Lua/src/luaconf.h
+--- lua-5.2.0/src/luaconf.h	2011-12-06 18:58:36.000000000 +0200
++++ Lua/src/luaconf.h	2024-06-14 14:54:56.991930534 +0300
+@@ -377,13 +377,13 @@
+ */
+ 
+ #define LUA_NUMBER_DOUBLE
+-#define LUA_NUMBER	double
++#define LUA_NUMBER	float
+ 
+ /*
+ @@ LUAI_UACNUMBER is the result of an 'usual argument conversion'
+ @* over a number.
+ */
+-#define LUAI_UACNUMBER	double
++#define LUAI_UACNUMBER	float
+ 
+ 
+ /*
