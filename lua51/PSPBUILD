@@ -1,6 +1,6 @@
 pkgname=lua51
 pkgver=5.1.5
-pkgrel=1
+pkgrel=2
 pkgdesc="Lua programming language for PSP"
 arch=('mips')
 url="https://lua.org"
@@ -9,7 +9,8 @@ depends=()
 makedepends=()
 optdepends=()
 source=(
-"https://www.lua.org/ftp/lua-5.1.5.tar.gz"
+#"https://www.lua.org/ftp/lua-5.1.5.tar.gz"
+https://www.tecgraf.puc-rio.br/lua/mirror/ftp/lua-5.1.5.tar.gz # temporary
 "psp.patch")
 sha256sums=(
 '2640fc56a795f29d28ef15e13c34a47e223960b0240e8cb0a82d9b0738695333'
