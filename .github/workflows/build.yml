@@ -80,7 +80,7 @@ jobs:
     - name: Create repo index pages
       run: |
         chown -R $(id -nu):$(id -ng) .
-        apk add --no-cache bash
+        apk add --no-cache bash coreutils
         ./make-repo-html.sh
     - name: Upload repo artifact
       uses: actions/upload-artifact@v4

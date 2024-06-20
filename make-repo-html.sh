@@ -27,9 +27,8 @@ for PSPBUILD in $(find . -name "PSPBUILD" | sort); do
 		# Get file size info
 		FILENAME="repo/${DOWNLOAD_URL}"
 		if [ -f "${FILENAME}" ]; then
-			# GZSTATS="$(gzip -l $FILENAME | tail -n 1 | tr -s ' ')"
-			# PKGSIZE=$(echo $GZSTATS | cut -d ' ' -f 1 | numfmt --to=iec --suffix=B --format="%.2f")
-  			# INSTSIZE=$(echo $GZSTATS | cut -d ' ' -f 2 | numfmt --to=iec --suffix=B --format="%.2f")
+  			INSTSIZE=$(du "${FILENAME}" | cut -d ' ' -f 1 | numfmt --to=iec --suffix=B --format="%.2f")
+			PKGSIZE="$(gunzip -c "${FILENAME}"|grep -a '^size = '|cut -d' ' -f3|numfmt --to iec --suffix=B --format "%.1f")"
 		fi
 
 		# List dependencies
