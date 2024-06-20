@@ -45,7 +45,7 @@ for PSPBUILD in $(find . -name "PSPBUILD" | sort); do
 		# List content of files
 		if [ -f "${FILENAME}" ]; then
 			CONTENT="<ul>"
-			for item in =$(tar tzf $FILENAME | grep -v '\.BUILDINFO\|\.MTREE\|\.PKGINFO'); do
+			for item in $(tar tzf $FILENAME | grep -v '\.BUILDINFO\|\.MTREE\|\.PKGINFO'); do
 				CONTENT="${CONTENT}<li>${item}</li>"
 			done
 			CONTENT="${CONTENT}</ul>"
