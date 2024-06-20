@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>${GITHUB_REPOSITORY_OWNER}&#39;s package index</title>
+    </head>
+    <body>
+        <p><h1>${GITHUB_REPOSITORY_OWNER}&#39;s package index</h1></p>
+        <table>
+            <tr><th>Name</th><th>Version</th><th>Description</th><th>Last Updated</th></tr>
+            ${INDEX_TABLE_CONTENT}
+        </table>
+        <p>Source on <a href="https://github.com/${GITHUB_REPOSITORY}/">GitHub</a></p>
+    </body>
+</html>
