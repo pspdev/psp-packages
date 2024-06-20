@@ -69,19 +69,16 @@ jobs:
       uses: actions/download-artifact@v4
     - name: Create repo files
       run: |
+        chown -R $(id -nu):$(id -ng) .
+        apk add --no-cache bash coreutils
         mkdir repo
         cp artifact-*/*.pkg.tar.gz repo/
+        ./make-repo-html.sh
         cd repo
         ${PSPDEV}/share/pacman/bin/repo-add pspdev.db.tar.gz *.pkg.tar.gz
         mv pspdev.db.tar.gz pspdev.db
         mv pspdev.files.tar.gz pspdev.files
-        tar -cvf ../repo.tar ./*
-        cd ..
-    - name: Create repo index pages
-      run: |
-        chown -R $(id -nu):$(id -ng) .
-        apk add --no-cache bash coreutils
-        ./make-repo-html.sh
+        tar -cvf ../repo.tar ./*        
     - name: Upload repo artifact
       uses: actions/upload-artifact@v4
       with:
