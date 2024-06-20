@@ -1,0 +1,45 @@
+diff --color -Naur lua-5.3.4/Makefile.psp lua53-psp/Makefile.psp
+--- lua-5.3.4/Makefile.psp	1970-01-01 02:00:00.000000000 +0200
++++ lua53-psp/Makefile.psp	2017-06-27 16:20:47.000000000 +0300
+@@ -0,0 +1,26 @@
++LUA = .
++
++PSPSDK = $(shell psp-config --pspsdk-path)
++PSPDIR = $(shell psp-config --psp-prefix)
++
++CFLAGS = -O2 -G0 -I$(LUA)/include -DLUA_32BITS
++
++CORE_O=	src/lapi.o src/lcode.o src/lctype.o src/ldebug.o src/ldo.o src/ldump.o\
++        src/lfunc.o src/lgc.o src/llex.o src/lmem.o src/lobject.o\
++        src/lopcodes.o src/lparser.o src/lstate.o src/lstring.o src/ltable.o \
++	      src/ltm.o src/lundump.o src/lvm.o src/lzio.o 
++LIB_O=	src/lauxlib.o src/lbaselib.o src/lbitlib.o src/lcorolib.o src/ldblib.o\
++        src/liolib.o src/lmathlib.o src/loslib.o src/lstrlib.o src/ltablib.o\
++        src/loadlib.o src/linit.o src/lutf8lib.o
++BASE_O= $(CORE_O) $(LIB_O)
++
++OBJS = $(BASE_O)
++#$(BASE_O)
++TARGET_LIB = liblua53.a
++
++include $(PSPSDK)/lib/build.mak
++
++install: all
++	mkdir -p $(PSPDIR)/include/lua53 $(PSPDIR)/lib
++	cp src/lua.h src/luaconf.h src/lualib.h src/lauxlib.h src/lua.hpp $(PSPDIR)/include/lua53
++	cp *.a $(PSPDIR)/lib
+diff --color -Naur lua-5.3.4/README.PSP lua53-psp/README.PSP
+--- lua-5.3.4/README.PSP	1970-01-01 02:00:00.000000000 +0200
++++ lua53-psp/README.PSP	2017-06-27 16:20:47.000000000 +0300
+@@ -0,0 +1,11 @@
++Requirements:
++
++    
++
++To install, run:
++   
++    make -f Makefile.psp
++    make -f Makefile.psp install
++
++
++You'll find a small example how to use it with the PSPSDK in the "sample" directory.
