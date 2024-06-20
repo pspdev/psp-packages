@@ -76,6 +76,10 @@ jobs:
         mv pspdev.db.tar.gz pspdev.db
         mv pspdev.files.tar.gz pspdev.files
         tar -cvf ../repo.tar ./*
+        cd ..
+    - name: Create repo index pages
+      run: |
+        ./make-repo-html.sh
     - name: Upload repo artifact
       uses: actions/upload-artifact@v4
       with:
