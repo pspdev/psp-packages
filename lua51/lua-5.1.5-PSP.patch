@@ -1,0 +1,34 @@
+diff --color -Naur lua-5.1.5/Makefile lua51-psp/Makefile
+--- lua-5.1.5/Makefile	2012-02-10 11:50:23.000000000 +0200
++++ lua51-psp/Makefile	2024-06-20 14:10:51.015685851 +0300
+@@ -38,7 +38,7 @@
+ # == END OF USER SETTINGS. NO NEED TO CHANGE ANYTHING BELOW THIS LINE =========
+ 
+ # Convenience platforms targets.
+-PLATS= aix ansi bsd freebsd generic linux macosx mingw posix solaris
++PLATS= aix ansi bsd freebsd generic linux macosx mingw posix solaris psp
+ 
+ # What to install.
+ TO_BIN= lua luac
+diff --color -Naur lua-5.1.5/src/Makefile lua51-psp/src/Makefile
+--- lua-5.1.5/src/Makefile	2012-02-13 22:41:22.000000000 +0200
++++ lua51-psp/src/Makefile	2024-06-20 14:11:33.399775635 +0300
+@@ -20,7 +20,7 @@
+ 
+ # == END OF USER SETTINGS. NO NEED TO CHANGE ANYTHING BELOW THIS LINE =========
+ 
+-PLATS= aix ansi bsd freebsd generic linux macosx mingw posix solaris
++PLATS= aix ansi bsd freebsd generic linux macosx mingw posix solaris psp
+ 
+ LUA_A=	liblua.a
+ CORE_O=	lapi.o lcode.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o lmem.o \
+@@ -115,6 +115,9 @@
+ solaris:
+ 	$(MAKE) all MYCFLAGS="-DLUA_USE_POSIX -DLUA_USE_DLOPEN" MYLIBS="-ldl"
+ 
++psp:
++	$(MAKE) a CC="psp-gcc" AR="psp-ar rcu" RANLIB="psp-ranlib"
++
+ # list targets that do not create files (but not all makes understand .PHONY)
+ .PHONY: all $(PLATS) default o a clean depend echo none
+ 
