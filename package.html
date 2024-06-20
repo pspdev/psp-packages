@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>${pkgname} - ${GITHUB_REPOSITORY_OWNER}&#39;s package index</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <p><h1>${GITHUB_REPOSITORY_OWNER}&#39;s package index</h1></p>
+        <p><h2>${pkgname} ${pkgver}-${pkgrel}</h2></p>
+        
+        <p>
+            <b>Architecture:</b> ${ARCH}</br>
+            <b>Description:</b> ${pkgdesc}</br>
+            <b>Upstream URL:</b> <a href="${url}">${url}</a></br>
+            <b>License:</b> ${LICENSE}</br>
+            <b>Package Size:</b> ${PKGSIZE}</br>
+            <b>Installed Size:</b> ${INSTSIZE}</br>
+            <b>Download:</b> <a href="${DOWNLOAD_URL}">${DOWNLOAD_URL}</a></br>
+        </p>
+
+        <p><h3>Dependencies</h3></p>
+        <p>${DEPS}</p>
+
+        <p><h3>Contents</h3></p>
+        <p>${CONTENT}</p>
+
+        <p><a href="index.html">Back to index</a></p>
+
+        <p>Source on <a href="https://github.com/${GITHUB_REPOSITORY}/">GitHub</a></p>
+    </body>
+</html>
