@@ -79,6 +79,8 @@ jobs:
         cd ..
     - name: Create repo index pages
       run: |
+        chown -R $(id -nu):$(id -ng) .
+        apk add --no-cache bash
         ./make-repo-html.sh
     - name: Upload repo artifact
       uses: actions/upload-artifact@v4
