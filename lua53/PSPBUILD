@@ -1,5 +1,5 @@
 pkgname=lua53
-pkgver=5.3.4
+pkgver=5.3.6
 pkgrel=1
 pkgdesc="a powerful, efficient, lightweight, embeddable scripting language (version 5.3)"
 arch=('mips')
@@ -13,18 +13,20 @@ source=(
     "lua-${pkgver}-PSP.patch"
 )
 sha256sums=(
-    'f681aa518233bc407e23acf0f5887c884f17436f000d453b2491a9f11a52400c'
+    'fc5fd69bb8736323f026672b1b7235da613d7177e72558893a0bdcd320466d60'
     'SKIP'
 )
 
 prepare() {
     cd "lua-${pkgver}"
     patch -p1 < ../lua-${pkgver}-PSP.patch
+
+    sed -i 's/liblua.a/liblua53.a/' Makefile src/Makefile
 }
 
 build() {
     cd "lua-${pkgver}"
-    make -f Makefile.psp
+    make psp
 
     # extract the license from readme
     grep -A21 Copyright doc/readme.html | \
@@ -35,7 +37,8 @@ build() {
 
 package() {
     cd "lua-${pkgver}"
-    make -f Makefile.psp PSPDIR="${pkgdir}/psp" install
+    make INSTALL_TOP="${pkgdir}/psp" INSTALL_BIN="/tmp" TO_BIN="/dev/null" \
+        INSTALL_INC="${pkgdir}/psp/include/lua53" install
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
