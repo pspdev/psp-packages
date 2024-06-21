@@ -80,7 +80,7 @@ jobs:
         ${PSPDEV}/share/pacman/bin/repo-add pspdev.db.tar.gz *.pkg.tar.gz
         mv pspdev.db.tar.gz pspdev.db
         mv pspdev.files.tar.gz pspdev.files
-        tar -cvf ../repo.tar ./*        
+        tar -cvf ../repo.tar ./*
     - name: Upload repo artifact
       uses: actions/upload-artifact@v4
       with:
