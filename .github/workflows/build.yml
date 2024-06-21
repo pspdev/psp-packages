@@ -65,12 +65,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
     - name: Download artifacts
       uses: actions/download-artifact@v4
     - name: Create repo files
       run: |
+        chown -R $(id -nu):$(id -ng) .
+        apk add --no-cache bash coreutils
         mkdir repo
         cp artifact-*/*.pkg.tar.gz repo/
+        ./make-repo-html.sh
         cd repo
         ${PSPDEV}/share/pacman/bin/repo-add pspdev.db.tar.gz *.pkg.tar.gz
         mv pspdev.db.tar.gz pspdev.db

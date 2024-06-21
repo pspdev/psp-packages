@@ -1,0 +1,24 @@
+body {
+    font-family: sans-serif;
+}
+
+table {
+    border-collapse: collapse;
+    font-size: 0.9em;
+}
+
+table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+table th, td {
+    padding: 12px 15px;
+}
+
+table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+table tbody tr:nth-of-type(uneven) {
+    background-color: #009879;
+}
