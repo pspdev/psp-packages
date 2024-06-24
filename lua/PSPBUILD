@@ -29,7 +29,8 @@ build() {
 
 package() {
     cd "lua-${pkgver}"
-    make INSTALL_TOP="${pkgdir}/psp" INSTALL_BIN="/tmp" TO_BIN="/dev/null" install
+    make INSTALL_TOP="${pkgdir}/psp" INSTALL_BIN="/tmp" TO_BIN="/dev/null" \
+        INSTALL_MAN="/tmp" TO_MAN="/dev/null" install
 
     mkdir -m 755 -p "${pkgdir}/psp/share/licenses/${pkgname}"
     install -m 644 LICENSE "${pkgdir}/psp/share/licenses/${pkgname}"

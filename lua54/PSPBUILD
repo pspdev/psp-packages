@@ -30,6 +30,7 @@ build() {
 package() {
     cd "lua-${pkgver}"
     make INSTALL_TOP="${pkgdir}/psp" INSTALL_BIN="/tmp" TO_BIN="/dev/null" \
+        INSTALL_MAN="/tmp" TO_MAN="/dev/null" \
         INSTALL_INC="${pkgdir}/psp/include/lua54" install
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
