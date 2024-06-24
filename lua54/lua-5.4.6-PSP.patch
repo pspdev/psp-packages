@@ -1,0 +1,35 @@
+diff --color -Naur lua-5.4.6/Makefile lua54-psp/Makefile
+--- lua-5.4.6/Makefile	2023-05-02 23:06:08.000000000 +0300
++++ lua54-psp/Makefile	2024-06-24 10:45:04.321628344 +0300
+@@ -36,7 +36,7 @@
+ # == END OF USER SETTINGS -- NO NEED TO CHANGE ANYTHING BELOW THIS LINE =======
+ 
+ # Convenience platforms targets.
+-PLATS= guess aix bsd c89 freebsd generic ios linux linux-readline macosx mingw posix solaris
++PLATS= guess aix bsd c89 freebsd generic ios linux linux-readline macosx mingw posix solaris psp
+ 
+ # What to install.
+ TO_BIN= lua luac
+diff --color -Naur lua-5.4.6/src/Makefile lua54-psp/src/Makefile
+--- lua-5.4.6/src/Makefile	2023-02-03 12:43:14.000000000 +0200
++++ lua54-psp/src/Makefile	2024-06-24 10:46:48.697748056 +0300
+@@ -30,7 +30,7 @@
+ 
+ # == END OF USER SETTINGS -- NO NEED TO CHANGE ANYTHING BELOW THIS LINE =======
+ 
+-PLATS= guess aix bsd c89 freebsd generic ios linux linux-readline macosx mingw posix solaris
++PLATS= guess aix bsd c89 freebsd generic ios linux linux-readline macosx mingw posix solaris psp
+ 
+ LUA_A=	liblua.a
+ CORE_O=	lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o ltm.o lundump.o lvm.o lzio.o
+@@ -143,6 +143,9 @@
+ SunOS solaris:
+ 	$(MAKE) $(ALL) SYSCFLAGS="-DLUA_USE_POSIX -DLUA_USE_DLOPEN -D_REENTRANT" SYSLIBS="-ldl"
+ 
++psp:
++	$(MAKE) a CC="psp-gcc" AR="psp-ar rcu" RANLIB="psp-ranlib"
++
+ # Targets that do not create files (not all makes understand .PHONY).
+ .PHONY: all $(PLATS) help test clean default o a depend echo
+ 
+ 
