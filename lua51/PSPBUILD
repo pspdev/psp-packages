@@ -9,31 +9,23 @@ groups=('pspdev-default')
 depends=()
 makedepends=()
 optdepends=()
-source=(
-    "https://www.lua.org/ftp/lua-${pkgver}.tar.gz"
-    "lua-${pkgver}-PSP.patch"
-)
-sha256sums=(
-    '2640fc56a795f29d28ef15e13c34a47e223960b0240e8cb0a82d9b0738695333'
-    'SKIP'
-)
+source=("https://www.lua.org/ftp/lua-${pkgver}.tar.gz")
+sha256sums=('2640fc56a795f29d28ef15e13c34a47e223960b0240e8cb0a82d9b0738695333')
 
 prepare() {
     cd "lua-${pkgver}"
-    patch -p1 < ../lua-${pkgver}-PSP.patch
-
     sed -i 's/liblua.a/liblua51.a/' Makefile src/Makefile
-}
-
-build() {
-    cd "lua-${pkgver}"
-    make psp
 
     # extract the license from readme
     grep -A21 Copyright doc/readme.html | \
         sed -e 's/&ndash;/–/g' \
             -e 's/&copy;/©/g' \
             -e '/<P>/d' > LICENSE
+}
+
+build() {
+    cd "lua-${pkgver}/src"
+    make a CC="psp-gcc" AR="psp-ar rcu" RANLIB="psp-ranlib"
 }
 
 package() {
