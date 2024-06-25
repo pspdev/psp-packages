@@ -3,7 +3,7 @@ ARG BASE_DOCKER_IMAGE
 FROM $BASE_DOCKER_IMAGE
 
 RUN psp-pacman -Sy && \
-    yes | psp-pacman -S $(psp-pacman -Slq) && \
+    yes | psp-pacman -S pspdev-default && \
     yes | psp-pacman -Scc && \
     cd /usr/local/pspdev && tree
 
