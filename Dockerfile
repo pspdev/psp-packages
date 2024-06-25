@@ -3,8 +3,8 @@ ARG BASE_DOCKER_IMAGE
 FROM $BASE_DOCKER_IMAGE
 
 RUN psp-pacman -Sy && \
-    yes | psp-pacman -S pspdev-default && \
-    yes | psp-pacman -Scc && \
+    psp-pacman -S --noconfirm pspdev-default && \
+    psp-pacman -Scc --noconfirm && \
     cd /usr/local/pspdev && tree
 
 # Second stage of Dockerfile
