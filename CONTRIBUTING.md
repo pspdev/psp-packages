@@ -30,6 +30,7 @@ For new contributions to be merged, the PSPBUILDs in them should meet the follow
   - The license of the library should be installed in ``$pkgdir/psp/share/licenses/$pkgname/``.
   - PSPBUILDs which use a git repository as source should use a specific tag or commit.
   - ``pkgname`` should not contain capital letters or special characters other than ``-``.
+  - ``groups`` should be set if to ``pspdev-default`` unless the package conflicts with an existing package.
 - For existing packages:
   - Either the ``pkgver`` or ``rel`` has been changed.
 - For all PSPBUILDs:
