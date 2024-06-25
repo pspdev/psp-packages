@@ -1,14 +1,15 @@
-pkgname=lua
+pkgname=lua52
 pkgver=5.2.4
 pkgrel=1
 pkgdesc="a powerful, efficient, lightweight, embeddable scripting language (version 5.2)"
 arch=('mips')
 url="https://lua.org"
 license=('MIT')
-groups=('pspdev-default')
 depends=()
 makedepends=()
 optdepends=()
+conflicts=('lua')
+provides=('lua=5.2')
 source=("https://www.lua.org/ftp/lua-${pkgver}.tar.gz")
 sha256sums=('b9e2e4aad6789b3b63a056d442f7b39f0ecfca3ae0f1fc0ae4e9614401b69f4b')
 
