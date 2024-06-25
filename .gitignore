@@ -5,6 +5,7 @@
 *.zip
 *.bz2
 __pycache__/
+repo/
 
 # do allow github workflow files
 !.github/workflows/

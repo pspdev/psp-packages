@@ -2,6 +2,7 @@
 
 #Change directory to the directory of this script
 cd "$(dirname "$0")"
+mkdir -p repo
 
 # Export all variables
 set -a
@@ -23,6 +24,7 @@ for PSPBUILD in $(find . -name "PSPBUILD" | sort); do
 		# Convert lists to strings
 		ARCH="${arch[*]}"
 		LICENSE="${license[*]}"
+		GROUP_LIST="${groups[*]}"
 
 		# Get file size info
 		FILENAME="repo/${DOWNLOAD_URL}"
@@ -55,7 +57,7 @@ for PSPBUILD in $(find . -name "PSPBUILD" | sort); do
 
 		envsubst < package.html > "repo/${pkgname}.html"
 
-		INDEX_TABLE_CONTENT="${INDEX_TABLE_CONTENT}<tr><td><a href=\"${pkgname}.html\">${pkgname}</a></td><td>${pkgver}-${pkgrel}</td><td>${pkgdesc}</td><td>${UPDATED}</td></tr>"
+		INDEX_TABLE_CONTENT="${INDEX_TABLE_CONTENT}<tr><td><a href=\"${pkgname}.html\">${pkgname}</a></td><td>${pkgver}-${pkgrel}</td><td>${pkgdesc}</td><td>${GROUP_LIST}</td><td>${UPDATED}</td></tr>"
 done
 
 envsubst < index.html > repo/index.html
