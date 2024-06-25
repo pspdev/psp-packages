@@ -1,7 +1,7 @@
-pkgname=lua51
-pkgver=5.1.5
-pkgrel=4
-pkgdesc="a powerful, efficient, lightweight, embeddable scripting language (version 5.1)"
+pkgname=lua53
+pkgver=5.3.6
+pkgrel=1
+pkgdesc="a powerful, efficient, lightweight, embeddable scripting language (version 5.3)"
 arch=('mips')
 url="https://lua.org"
 license=('MIT')
@@ -9,9 +9,9 @@ depends=()
 makedepends=()
 optdepends=()
 conflicts=('lua')
-provides=('lua=5.1')
+provides=('lua=5.3')
 source=("https://www.lua.org/ftp/lua-${pkgver}.tar.gz")
-sha256sums=('2640fc56a795f29d28ef15e13c34a47e223960b0240e8cb0a82d9b0738695333')
+sha256sums=('fc5fd69bb8736323f026672b1b7235da613d7177e72558893a0bdcd320466d60')
 
 prepare() {
     cd "lua-${pkgver}"

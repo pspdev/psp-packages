@@ -1,7 +1,7 @@
-pkgname=lua51
-pkgver=5.1.5
-pkgrel=4
-pkgdesc="a powerful, efficient, lightweight, embeddable scripting language (version 5.1)"
+pkgname=lua52
+pkgver=5.2.4
+pkgrel=1
+pkgdesc="a powerful, efficient, lightweight, embeddable scripting language (version 5.2)"
 arch=('mips')
 url="https://lua.org"
 license=('MIT')
@@ -9,9 +9,9 @@ depends=()
 makedepends=()
 optdepends=()
 conflicts=('lua')
-provides=('lua=5.1')
+provides=('lua=5.2')
 source=("https://www.lua.org/ftp/lua-${pkgver}.tar.gz")
-sha256sums=('2640fc56a795f29d28ef15e13c34a47e223960b0240e8cb0a82d9b0738695333')
+sha256sums=('b9e2e4aad6789b3b63a056d442f7b39f0ecfca3ae0f1fc0ae4e9614401b69f4b')
 
 prepare() {
     cd "lua-${pkgver}"
@@ -33,6 +33,6 @@ package() {
     make INSTALL_TOP="${pkgdir}/psp" INSTALL_BIN="/tmp" TO_BIN="/dev/null" \
         INSTALL_MAN="/tmp" TO_MAN="/dev/null" install
 
-    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
-    install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
+    mkdir -m 755 -p "${pkgdir}/psp/share/licenses/${pkgname}"
+    install -m 644 LICENSE "${pkgdir}/psp/share/licenses/${pkgname}"
 }
