@@ -1,10 +1,11 @@
 pkgname=mini18n
 pkgver=0.2.1
-pkgrel=1
+pkgrel=2
 pkgdesc="mini18n is a translation library under GNU GPL."
 arch=('mips')
 url="https://github.com/bucanero/mini18n/"
 license=('GPL 2.0')
+groups=('pspdev-default')
 depends=()
 makedepends=()
 optdepends=()

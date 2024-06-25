@@ -1,10 +1,11 @@
 pkgname=pspla
 pkgver=2.2.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A VFPU accelerated linear algebra & quaternion library for PSP"
 arch=('mips')
 url="https://github.com/Jayanky/pspla"
 license=('MIT')
+groups=('pspdev-default')
 depends=()
 makedepends=()
 optdepends=()

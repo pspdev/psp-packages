@@ -1,10 +1,11 @@
 pkgname=sdl2-image
 pkgver=2.6.3
-pkgrel=3
+pkgrel=4
 pkgdesc="a simple library to load images of various formats as SDL surfaces"
 arch=('mips')
 url="https://wiki.libsdl.org/SDL2_image/FrontPage"
 license=('ZLIB')
+groups=('pspdev-default')
 depends=('sdl2' 'libpng' 'jpeg')
 makedepends=()
 optdepends=()

@@ -1,10 +1,11 @@
 pkgname=libmodplug
 pkgver=0.8.8.5
-pkgrel=1
+pkgrel=2
 pkgdesc="libmodplug - the library which was part of the Modplug-xmms project"
 arch=('mips')
 url="http://modplug-xmms.sf.net/"
 license=('public domain')
+groups=('pspdev-default')
 depends=()
 makedepends=()
 optdepends=()

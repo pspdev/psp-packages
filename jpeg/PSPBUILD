@@ -1,10 +1,11 @@
 pkgname=jpeg
 pkgver=3.0.3
-pkgrel=4
+pkgrel=5
 pkgdesc="a free library for JPEG image compression"
 arch=('mips')
 url="https://ijg.org/"
 license=('custom')
+groups=('pspdev-default')
 depends=()
 makedepends=()
 optdepends=()

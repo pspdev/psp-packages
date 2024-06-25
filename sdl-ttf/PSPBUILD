@@ -1,10 +1,11 @@
 pkgname=sdl-ttf
 pkgver=2.0.11
-pkgrel=4
+pkgrel=5
 pkgdesc="a companion library to SDL for working with TrueType (tm) fonts"
 arch=('mips')
 url="https://www.libsdl.org/projects/old/SDL_ttf/release-1.2.html"
 license=('ZLIB')
+groups=('pspdev-default')
 depends=('sdl' 'freetype2')
 makedepends=()
 optdepends=()

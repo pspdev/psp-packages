@@ -1,10 +1,11 @@
 pkgname=pspuart
 pkgver=r14.9bb4add
-pkgrel=1
+pkgrel=2
 pkgdesc="Library for PSP UART hardware communication (ex SioDriver)"
 arch=('mips')
 url="https://github.com/Operation-DITTO/psp-uart-library"
 license=('CC-BY-SA-4.0')
+groups=('pspdev-default')
 depends=()
 makedepends=()
 optdepends=()

@@ -1,10 +1,11 @@
 pkgname=mbedtls
 pkgver=2.16.12
-pkgrel=1
+pkgrel=2
 pkgdesc="Secure Socket Layer library"
 arch=('mips')
 url="https://www.trustedfirmware.org/projects/mbed-tls/"
 license=('Apache 2.0 license')
+groups=('pspdev-default')
 depends=()
 optdepends=()
 makedepends=()

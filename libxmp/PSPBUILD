@@ -1,10 +1,11 @@
 pkgname=libxmp
 pkgver=4.5.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Libxmp is a library that renders module files to PCM data"
 arch=('mips')
 url="https://github.com/libxmp/libxmp"
 license=('GPL2')
+groups=('pspdev-default')
 depends=()
 makedepends=()
 optdepends=()

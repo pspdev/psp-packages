@@ -1,10 +1,11 @@
 pkgname=curl
 pkgver=7.64.1
-pkgrel=7
+pkgrel=8
 pkgdesc="A library for transferring data with URL syntax"
 arch=('mips')
 url="https://curl.se/"
 license=('custom')
+groups=('pspdev-default')
 depends=('zlib' 'mbedtls')
 optdepends=()
 makedepends=()

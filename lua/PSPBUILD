@@ -1,10 +1,11 @@
 pkgname=lua
 pkgver=5.2
-pkgrel=2
+pkgrel=3
 pkgdesc="Lua programming language for PSP"
 arch=('mips')
 url="https://lua.org"
 license=('MIT')
+groups=('pspdev-default')
 depends=()
 makedepends=()
 optdepends=()

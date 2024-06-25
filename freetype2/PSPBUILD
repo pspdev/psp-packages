@@ -1,10 +1,11 @@
 pkgname=freetype2
 pkgver=2.11.0
-pkgrel=3
+pkgrel=4
 pkgdesc="a freely available software library to render fonts"
 arch=('mips')
 url="https://www.freetype.org/"
 license=('custom:Freetype' 'GPL2')
+groups=('pspdev-default')
 depends=('zlib' 'bzip2' 'libpng')
 makedepends=()
 optdepends=()

@@ -1,10 +1,11 @@
 pkgname=bzip2
 pkgver=1.0.8
-pkgrel=3
+pkgrel=4
 pkgdesc="A high-quality data compression library"
 arch=('mips')
 url="http://www.sourceware.org/bzip2/"
 license=('custom')
+groups=('pspdev-default')
 depends=()
 makedepends=()
 optdepends=()
