@@ -1,10 +1,11 @@
 pkgname=yaml-cpp
 pkgver=0.8.0git
-pkgrel=1
+pkgrel=2
 pkgdesc=" A YAML parser and emitter in C++ "
 arch=('mips')
 url="https://github.com/jbeder/yaml-cpp"
 license=('MIT')
+groups=('pspdev-default')
 depends=()
 makedepends=()
 optdepends=()

@@ -1,10 +1,11 @@
 pkgname=pspirkeyb
 pkgver=r1
-pkgrel=2
+pkgrel=3
 pkgdesc="a library for using IRDA keyboards with Playstation Portable"
 arch=('mips')
 url="https://github.com/pspdev/pspirkeyb"
 license=('LGPL2.1')
+groups=('pspdev-default')
 depends=()
 makedepends=()
 optdepends=()

@@ -1,9 +1,10 @@
 pkgname=pocketpy
 pkgver=1.4.5
-pkgrel=1
+pkgrel=2
 pkgdesc="Python interpreter for game scripting"
 arch=('mips')
 license=('MIT')
+groups=('pspdev-default')
 url="https://pocketpy.dev/"
 makedepends=()
 source=("https://github.com/pocketpy/pocketpy/archive/refs/tags/v${pkgver}.tar.gz")

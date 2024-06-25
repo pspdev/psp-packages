@@ -1,10 +1,11 @@
 pkgname=sdl-mixer
 pkgver=1.2.14
-pkgrel=5
+pkgrel=6
 pkgdesc="an audio mixer library based on the SDL library"
 arch=('mips')
 url="https://www.libsdl.org/projects/old/SDL_mixer/release-1.2.html"
 license=('ZLIB')
+groups=('pspdev-default')
 depends=('sdl' 'libmikmod' 'libogg' 'libvorbis')
 makedepends=()
 optdepends=()

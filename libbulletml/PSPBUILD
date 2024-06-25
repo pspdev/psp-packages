@@ -1,10 +1,11 @@
 pkgname=libbulletml
 pkgver=0.0.5
-pkgrel=2
+pkgrel=3
 pkgdesc="Bullet Markup Language for PSP"
 arch=('mips')
 url="https://www.asahi-net.or.jp/~cs8k-cyu/bulletml/index_e.html"
 license=('BSD')
+groups=('pspdev-default')
 depends=()
 makedepends=()
 optdepends=()

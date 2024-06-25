@@ -1,10 +1,11 @@
 pkgname=googletest
 pkgver=1.14.0
-pkgrel=1
+pkgrel=2
 pkgdesc="GoogleTest - Google Testing and Mocking Framework"
 arch=('mips')
 url="google.github.io/googletest/"
 license=('BSD-3-Clause')
+groups=('pspdev-default')
 depends=()
 makedepends=()
 optdepends=()

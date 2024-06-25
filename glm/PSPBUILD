@@ -1,10 +1,11 @@
 pkgname=glm
 pkgver=0.9.9
-pkgrel=1
+pkgrel=2
 pkgdesc="OpenGL Mathematics (GLM) is a header only C++ mathematics library for graphics software based on the OpenGL Shading Language (GLSL) specifications."
 arch=('mips')
 url="https://glm.g-truc.net/"
 license=('MIT')
+groups=('pspdev-default')
 depends=()
 makedepends=()
 optdepends=()

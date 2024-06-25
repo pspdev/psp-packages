@@ -1,10 +1,11 @@
 pkgname=theora
 pkgver=1.2.0git
-pkgrel=2
+pkgrel=3
 pkgdesc="Standard encoder and decoder library for the Theora video compression format"
 arch=('mips')
 url="https://www.theora.org/"
 license=('BSD')
+groups=('pspdev-default')
 depends=('libogg')
 makedepends=()
 optdepends=()

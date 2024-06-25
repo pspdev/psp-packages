@@ -1,10 +1,11 @@
 pkgname=expat
 pkgver=2.4.1
-pkgrel=3
+pkgrel=4
 pkgdesc="XML parsing C library"
 arch=('mips')
 url="https://libexpat.github.io/"
 license=('MIT')
+groups=('pspdev-default')
 depends=()
 makedepends=()
 optdepends=()

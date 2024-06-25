@@ -1,10 +1,11 @@
 pkgname=squirrel
 pkgver=3.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Runtime libraries for the Squirrel programming language"
 arch=('mips')
 url="http://squirrel-lang.org/"
 license=('custom')
+groups=('pspdev-default')
 depends=()
 makedepends=()
 optdepends=()

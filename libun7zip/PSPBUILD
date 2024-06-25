@@ -1,9 +1,10 @@
 pkgname=libun7zip
 pkgver=19.00
-pkgrel=2
+pkgrel=3
 pkgdesc="A library that provides 7-Zip (.7z) archive handling and extraction"
 arch=('mips')
 license=('Apache-2.0 license')
+groups=('pspdev-default')
 url="https://github.com/bucanero/libun7zip"
 makedepends=()
 source=("git+https://github.com/bucanero/${pkgname}#commit=23e7cecd979fd893a6a7d3fcc51b2478cd860607")
