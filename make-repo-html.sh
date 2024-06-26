@@ -17,6 +17,11 @@ INDEX_TABLE_CONTENT=""
 
 # Build the html pages
 for PSPBUILD in $(find . -name "PSPBUILD" | sort); do
+  		# Make sure optional variables are from current PSPBUILD
+  		unset groups
+    		unset license
+      		unset depends
+
 		source "${PSPBUILD}"
 		UPDATED=$(git log -1 --format=%cd --date=short -- "${PSPBUILD}")
 		DOWNLOAD_URL="${pkgname}-${pkgver}-${pkgrel}-${arch}.pkg.tar.gz"
