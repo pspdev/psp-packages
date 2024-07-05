@@ -23,8 +23,8 @@ prepare() {
 build() {
     cd "xxHash-$pkgver"
     mkdir -p build && cd build
-    cmake ../cmake_unofficial -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp \
-        -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DXXHASH_BUILD_XXHSUM=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp \
+        -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DXXHASH_BUILD_XXHSUM=OFF "${XTRA_OPTS[@]}" ../cmake_unofficial || { exit 1; }
     cmake --build . || { exit 1; }
 }
 
