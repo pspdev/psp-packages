@@ -1,0 +1,38 @@
+pkgname=xxhash
+pkgver=0.8.2
+pkgrel=1
+pkgdesc="Extremely fast non-cryptographic hash algorithm"
+arch=('mips')
+url="https://xxhash.com/"
+license=('BSD-2-Clause')
+groups=('pspdev-default')
+depends=()
+makedepends=()
+optdepends=()
+source=("https://github.com/Cyan4973/xxHash/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('baee0c6afd4f03165de7a4e67988d16f0f2b257b51d0e3cb91909302a26a79c4')
+
+prepare() {
+    cd "xxHash-$pkgver"
+    sed -i 's#@PREFIX@#${PSPDEV}/psp#' libxxhash.pc.in
+    sed -i 's#@EXECPREFIX@#${prefix}#' libxxhash.pc.in
+    sed -i 's#@LIBDIR@#${prefix}/lib#' libxxhash.pc.in
+    sed -i 's#@INCLUDEDIR@#${prefix}/include#' libxxhash.pc.in
+}
+
+build() {
+    cd "xxHash-$pkgver"
+    mkdir -p build && cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp \
+        -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DXXHASH_BUILD_XXHSUM=OFF "${XTRA_OPTS[@]}" ../cmake_unofficial || { exit 1; }
+    cmake --build . || { exit 1; }
+}
+
+package() {
+    cd "xxHash-$pkgver/build"
+    cmake --install .
+    cd ..
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
+}
