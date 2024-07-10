@@ -1,0 +1,42 @@
+pkgname=lz4
+pkgver=1.9.4
+pkgrel=1
+pkgdesc="Extremely Fast Compression algorithm"
+arch=('mips')
+url="https://lz4.org/"
+license=('BSD-2-Clause')
+groups=('pspdev-default')
+depends=()
+makedepends=()
+optdepends=()
+source=("https://github.com/lz4/lz4/releases/download/v${pkgver}/lz4-${pkgver}.tar.gz")
+sha256sums=('0b0e3aa07c8c063ddf40b082bdf7e37a1562bda40a0ff5272957f3e987e0e54b')
+
+prepare() {
+    cd "$pkgname-$pkgver"
+
+    sed -i 's#@PREFIX@#${PSPDEV}/psp#' lib/liblz4.pc.in
+
+    # can't disable building all the programs, so just delete them
+    rm programs/*.c
+}
+
+build() {
+    cd "$pkgname-$pkgver"
+    mkdir -p build/psp
+    cd build/psp
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
+        -DBUILD_STATIC_LIBS=ON -DLZ4_POSITION_INDEPENDENT_LIB=OFF -DLZ4_BUILD_CLI=OFF -DLZ4_BUILD_LEGACY_LZ4C=OFF \
+        "${XTRA_OPTS[@]}" ../cmake || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package() {
+    cd "$pkgname-$pkgver/build/psp"
+    make --quiet $MAKEFLAGS install
+    cd ../../lib
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
+}
+
