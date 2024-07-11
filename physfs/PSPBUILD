@@ -21,6 +21,11 @@ sha256sums=(
 prepare() {
     cd ${pkgname}-release-${pkgver}
     patch -p1 < ../psp.patch
+
+    sed -e 's#@CMAKE_INSTALL_PREFIX@#${PSPDEV}/psp#' \
+        -e 's#@CMAKE_INSTALL_FULL_LIBDIR@#${prefix}/lib#' \
+        -e 's#@CMAKE_INSTALL_FULL_INCLUDEDIR@#${prefix}/include#' \
+        -i extras/physfs.pc.in
 }
 
 build() {
