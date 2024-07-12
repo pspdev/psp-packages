@@ -1,33 +1,8 @@
-diff --git a/src/physfs.c b/src/physfs.c
-index fdb1405..7eaa5ba 100644
---- a/src/physfs.c
-+++ b/src/physfs.c
-@@ -11,6 +11,10 @@
- #define __PHYSICSFS_INTERNAL__
- #include "physfs_internal.h"
- 
-+#ifdef __PSP__
-+#include <pthread.h>
-+#endif
-+
- #if defined(_MSC_VER)
- #include <stdarg.h>
- 
-@@ -1194,6 +1198,9 @@ static int doDeinit(void);
- 
- int PHYSFS_init(const char *argv0)
- {
-+    #ifdef __PSP__
-+    pthread_init();
-+    #endif
-     BAIL_IF(initialized, PHYSFS_ERR_IS_INITIALIZED, 0);
- 
-     if (!externalAllocator)
 diff --git a/src/physfs_platforms.h b/src/physfs_platforms.h
-index d4e4bfd..fbcb70a 100644
+index 1ac17d9..0a1d70e 100644
 --- a/src/physfs_platforms.h
 +++ b/src/physfs_platforms.h
-@@ -72,6 +72,11 @@
+@@ -72,6 +72,10 @@
  #elif defined(unix) || defined(__unix__)
  #  define PHYSFS_PLATFORM_UNIX 1
  #  define PHYSFS_PLATFORM_POSIX 1
@@ -35,7 +10,6 @@ index d4e4bfd..fbcb70a 100644
 +#  define PHYSFS_NO_CDROM_SUPPORT 1
 +#  define PHYSFS_PLATFORM_UNIX 1
 +#  define PHYSFS_PLATFORM_POSIX 1
-+#  define PHYSFS_PLATFORM_PSP 1
  #else
  #  error Unknown platform.
  #endif
