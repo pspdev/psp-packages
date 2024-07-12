@@ -5,7 +5,7 @@ pkgdesc="Network support for the Lua language"
 arch=('mips')
 url="https://lunarmodules.github.io/luasocket/"
 license=('MIT')
-groups=('pspdev-default')
+groups=()
 depends=('lua51')
 makedepends=()
 optdepends=()
@@ -17,24 +17,23 @@ source=(
 sha256sums=(
     'bf033aeb9e62bcaa8d007df68c119c966418e8c9ef7e4f2d7e96bddeca9cca6e'
     'e4a8870ee6ae39c3965297724e83bfa5af78c6045bccbe2c5e1c1fdd0e6b1b05'
-    '8d5310c3541a649ac60c2819ca260808603df2c741dd2f9bde5f7363454b3be0'
+    'fee0d76da8917f31a85a5fa702d092700057ca5669c07959b3a298153655deeb'
 )
 
 prepare() {
     cd "${pkgname}-${pkgver}"
     patch -p1 < ../de359ea.patch
     patch -p1 < ../425.patch
-    sed -i '41,53d' src/usocket.h
 }
 
 build() {
     cd "${pkgname}-${pkgver}"
-    make -j1 PLAT=psp
+    make PLAT=psp
 }
 
 package() {
     cd "${pkgname}-${pkgver}"
-    make install DESTDIR="$pkgdir" PLAT=psp
+    make install-static DESTDIR="$pkgdir" PLAT=psp
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
