@@ -1,7 +1,7 @@
 pkgname=stb
 pkgver=20240714git
 pkgrel=1
-pkgdesc="a collcation of single-file public domain libraries for C/C++"
+pkgdesc="a collection of single-file public domain libraries for C/C++"
 arch=('mips')
 url="https://github.com/nothings/stb"
 license=('Public Domain' 'MIT')
