@@ -6,6 +6,8 @@ arch=('mips')
 license=('zlib')
 groups=('pspdev-default')
 url="https://github.com/tinygettext/tinygettext"
+depends=('sdl2')
+optdepends=('')
 makedepends=()
 source=("git+https://github.com/tinygettext/tinygettext.git#commit=2e25c91ddb6c180928a6a29d7091f0bdfe5a81bd")
 sha256sums=('SKIP')
