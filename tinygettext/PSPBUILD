@@ -1,0 +1,36 @@
+pkgname=tinygettext
+pkgver=20240715
+pkgrel=1
+pkgdesc="a simple gettext replacement that works directly on .po files"
+arch=('mips')
+license=('zlib')
+groups=('pspdev-default')
+url="https://github.com/tinygettext/tinygettext"
+makedepends=()
+source=("git+https://github.com/tinygettext/tinygettext.git#commit=2e25c91ddb6c180928a6a29d7091f0bdfe5a81bd")
+sha256sums=('SKIP')
+
+prepare() {
+    cd $pkgname
+    git submodule update --init --recursive
+    sed -i 's#@CMAKE_INSTALL_PREFIX@#${PSPDEV}/psp#g' tinygettext.pc.in
+    sed -i 's#@LIB_SUBDIR@#lib#g' tinygettext.pc.in
+}
+
+build() {
+  cd $pkgname
+  mkdir -p build
+  cd build
+  cmake -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
+        -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF -DTINYGETTEXT_WITH_SDL=ON -DCMAKE_INSTALL_LIBDIR=${pkgdir}/psp/lib "${XTRA_OPTS[@]}" .. || { exit 1; }
+  make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package () {
+  cd "$pkgname/build"
+  make --quiet $MAKEFLAGS install
+  cd ..
+
+  mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+  install -m 644 LICENSE.md "$pkgdir/psp/share/licenses/$pkgname"
+}
