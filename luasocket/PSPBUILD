@@ -1,0 +1,41 @@
+pkgname=luasocket
+pkgver=3.1.0
+pkgrel=1
+pkgdesc="Network support for the Lua language"
+arch=('mips')
+url="https://lunarmodules.github.io/luasocket/"
+license=('MIT')
+groups=()
+depends=('lua51')
+makedepends=()
+optdepends=()
+source=(
+    "https://github.com/lunarmodules/luasocket/archive/refs/tags/v${pkgver}.tar.gz"
+    "https://github.com/lunarmodules/luasocket/commit/de359ea.patch"
+    "https://github.com/lunarmodules/luasocket/pull/425.patch"
+)
+sha256sums=(
+    'bf033aeb9e62bcaa8d007df68c119c966418e8c9ef7e4f2d7e96bddeca9cca6e'
+    'e4a8870ee6ae39c3965297724e83bfa5af78c6045bccbe2c5e1c1fdd0e6b1b05'
+    'df4f72a0db78e001aad17a146fef889e246116d4a82a3121852527ba86930dae'
+)
+
+prepare() {
+    cd "${pkgname}-${pkgver}"
+    patch -p1 < ../de359ea.patch
+    patch -p1 < ../425.patch
+}
+
+build() {
+    cd "${pkgname}-${pkgver}"
+    make PLAT=psp
+}
+
+package() {
+    cd "${pkgname}-${pkgver}"
+    make install-static DESTDIR="$pkgdir" PLAT=psp
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
+}
+
