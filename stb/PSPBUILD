@@ -1,0 +1,22 @@
+pkgname=stb
+pkgver=20240714git
+pkgrel=1
+pkgdesc="a collection of single-file public domain libraries for C/C++"
+arch=('any')
+url="https://github.com/nothings/stb"
+license=('Public-Domain or MIT')
+groups=('pspdev-default')
+depends=()
+makedepends=()
+optdepends=()
+source=("git+https://github.com/nothings/stb.git#commit=013ac3beddff3dbffafd5177e7972067cd2b5083")
+sha256sums=('SKIP')
+
+package() {
+    cd "stb"
+    mkdir -m 755 -p "$pkgdir/psp/include/"
+    install -m 644 *.h "$pkgdir/psp/include/"
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
+}
