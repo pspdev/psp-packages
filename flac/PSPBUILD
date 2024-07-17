@@ -1,0 +1,49 @@
+pkgname=flac
+pkgver=1.4.3
+pkgrel=1
+pkgdesc="Free Lossless Audio Codec"
+arch=('mips')
+url="https://xiph.org/flac/"
+license=('GFDL-1.2 AND GPL-2.0 AND LGPL-2.1 AND BSD-3-Clause')
+groups=('pspdev-default')
+depends=()
+makedepends=()
+optdepends=()
+source=("https://github.com/xiph/flac/releases/download/${pkgver}/flac-${pkgver}.tar.xz")
+sha256sums=('6c58e69cd22348f441b861092b825e591d0b822e106de6eb0ee4d05d27205b70')
+
+prepare() {
+    cd "${pkgname}-${pkgver}/src/libFLAC"
+    sed -i 's#@prefix@#${PSPDEV}/psp#' flac.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' flac.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' flac.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' flac.pc.in
+
+    cd "../libFLAC++"
+    sed -i 's#@prefix@#${PSPDEV}/psp#' flac++.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' flac++.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' flac++.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' flac++.pc.in
+}
+
+build() {
+    cd "${pkgname}-${pkgver}"
+    CFLAGS="-Wno-error=incompatible-pointer-types" ./configure --build=$(uname -m) --target=psp --host=psp --prefix=${pkgdir}/psp --disable-thorough-tests \
+    --disable-avx --disable-64-bit-words --disable-doxygen-docs --disable-oggtest --disable-programs --disable-examples \
+    --disable-stack-smash-protection --enable-static=yes --enable-shared=no "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package() {
+    cd "${pkgname}-${pkgver}"
+    make --quiet $MAKEFLAGS install
+
+    rm -rf "${pkgdir}/psp/share/doc"
+    rm -rf "${pkgdir}/psp/share/man"
+    rm -rf "${pkgdir}/psp/share/aclocal"
+    rm -rf "${pkgdir}"/psp/lib/lib{FLAC,FLAC++}.la
+
+    mkdir -m 755 -p "${pkgdir}/psp/share/licenses/${pkgname}"
+    install -m 644 COPYING.* "${pkgdir}/psp/share/licenses/${pkgname}"
+}
+
