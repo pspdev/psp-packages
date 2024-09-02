@@ -1,6 +1,6 @@
 pkgname=sdl2
-pkgver=2.30.4
-pkgrel=2
+pkgver=2.30.7
+pkgrel=1
 pkgdesc="a library designed to provide low level access to audio, input, and graphics hardware"
 arch=('mips')
 url="https://wiki.libsdl.org/SDL2/FrontPage"
@@ -16,7 +16,7 @@ source=(
     "main.c.sample"
 )
 sha256sums=(
-    "59c89d0ed40d4efb23b7318aa29fe7039dbbc098334b14f17f1e7e561da31a26"
+    "2508c80438cd5ff3bbeb8fe36b8f3ce7805018ff30303010b61b03bb83ab9694"
     "SKIP"
     "SKIP"
 )
