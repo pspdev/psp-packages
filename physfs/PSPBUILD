@@ -5,6 +5,7 @@ pkgdesc="PhysicsFS; a portable, flexible file i/o abstraction."
 arch=('mips')
 url="https://icculus.org/physfs/"
 license=('Zlib')
+groups=('pspdev-default')
 depends=()
 makedepends=()
 optdepends=()
