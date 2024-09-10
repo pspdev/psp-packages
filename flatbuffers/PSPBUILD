@@ -1,0 +1,40 @@
+pkgname=flatbuffers
+pkgver=24.3.25
+pkgrel=1
+pkgdesc="Memory Efficient Serialization Library"
+arch=('mips')
+url="https://flatbuffers.dev"
+license=('Apache-2.0 license')
+groups=('pspdev-default')
+source=("https://github.com/google/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('4157c5cacdb59737c5d627e47ac26b140e9ee28b1102f812b36068aab728c1ed')
+
+prepare() {
+    cd "$pkgname-${pkgver}/CMake"
+
+    sed -i '1 s/^/prefix=@CMAKE_INSTALL_PREFIX@\n/' flatbuffers.pc.in
+
+    sed -i 's#@CMAKE_INSTALL_FULL_LIBDIR@#${prefix}/lib#' flatbuffers.pc.in
+    sed -i 's#@CMAKE_INSTALL_FULL_INCLUDEDIR@#${prefix}/include#' flatbuffers.pc.in
+
+    cd ..
+    sed -i 's/CMAKE_CXX_EXTENSIONS OFF/CMAKE_CXX_EXTENSIONS ON/' CMakeLists.txt
+}
+
+build() {
+    cd "$pkgname-${pkgver}"
+    mkdir -p build
+    cd build
+    psp-cmake -Wno-dev -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp \
+        -DFLATBUFFERS_BUILD_FLATC=OFF -DFLATBUFFERS_BUILD_TESTS=OFF \
+        -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package() {
+    cd "$pkgname-${pkgver}/build"
+    make --quiet $MAKEFLAGS install
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 ../LICENSE "$pkgdir/psp/share/licenses/$pkgname"
+}
