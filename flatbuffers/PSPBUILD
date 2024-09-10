@@ -12,7 +12,7 @@ sha256sums=('4157c5cacdb59737c5d627e47ac26b140e9ee28b1102f812b36068aab728c1ed')
 prepare() {
     cd "$pkgname-${pkgver}/CMake"
 
-    sed -i '1 s/^/prefix=${PSPDEV}\n/' flatbuffers.pc.in
+    sed -i '1 s/^/prefix=${PSPDEV}/psp\n/' flatbuffers.pc.in
 
     sed -i 's#@CMAKE_INSTALL_FULL_LIBDIR@#${prefix}/lib#' flatbuffers.pc.in
     sed -i 's#@CMAKE_INSTALL_FULL_INCLUDEDIR@#${prefix}/include#' flatbuffers.pc.in
