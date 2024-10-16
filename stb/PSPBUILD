@@ -1,5 +1,5 @@
 pkgname=stb
-pkgver=20240714git
+pkgver=20241015git
 pkgrel=1
 pkgdesc="a collection of single-file public domain libraries for C/C++"
 arch=('any')
@@ -9,7 +9,7 @@ groups=('pspdev-default')
 depends=()
 makedepends=()
 optdepends=()
-source=("git+https://github.com/nothings/stb.git#commit=013ac3beddff3dbffafd5177e7972067cd2b5083")
+source=("git+https://github.com/nothings/stb.git#commit=31707d14fdb75da66b3eed52a2236a70af0d0960")
 sha256sums=('SKIP')
 
 package() {
