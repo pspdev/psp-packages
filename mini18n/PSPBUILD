@@ -1,6 +1,6 @@
 pkgname=mini18n
 pkgver=0.2.1
-pkgrel=2
+pkgrel=3
 pkgdesc="mini18n is a translation library under GNU GPL."
 arch=('mips')
 url="https://github.com/bucanero/mini18n/"
@@ -19,7 +19,7 @@ prepare() {
 build() {
     cd "$pkgname/build"
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp \
-        -DBUILD_SHARED_LIBS=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
+        -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS mini18n-static || { exit 1; }
 }
 

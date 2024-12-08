@@ -1,6 +1,6 @@
 pkgname=sdl2-image
 pkgver=2.6.3
-pkgrel=4
+pkgrel=5
 pkgdesc="a simple library to load images of various formats as SDL surfaces"
 arch=('mips')
 url="https://wiki.libsdl.org/SDL2_image/FrontPage"
@@ -28,7 +28,8 @@ build() {
     mkdir -p build && cd build
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE="${PSPDEV}/psp/share/pspdev.cmake" -DCMAKE_INSTALL_PREFIX=/psp \
         -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=OFF -DSDL2IMAGE_DEPS_SHARED=OFF \
-        -DSDL2IMAGE_INSTALL=ON -DSDL2IMAGE_SAMPLES=OFF -DSDL2IMAGE_BACKEND_STB=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
+        -DSDL2IMAGE_INSTALL=ON -DSDL2IMAGE_SAMPLES=OFF -DSDL2IMAGE_BACKEND_STB=OFF -DCMAKE_BUILD_TYPE=Release \
+        "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 

@@ -1,6 +1,6 @@
 pkgname=sdl2-mixer
 pkgver=2.6.3
-pkgrel=8
+pkgrel=9
 pkgdesc="an audio mixer library based on the SDL2 library"
 arch=('mips')
 url="https://wiki.libsdl.org/SDL2_mixer/FrontPage"
@@ -39,7 +39,7 @@ build() {
         -DSDL2MIXER_MIDI=OFF -DSDL2MIXER_VORBIS=VORBISFILE -DSDL2MIXER_VORBIS_VORBISFILE_SHARED=OFF \
         -DSDL2MIXER_MOD=ON -DSDL2MIXER_MOD_MODPLUG=ON -DSDL2MIXER_MOD_MODPLUG_SHARED=OFF \
         -DSDL2MIXER_MOD_XMP=OFF -DSDL2MIXER_MP3=ON -DSDL2MIXER_MP3_DRMP3=ON -DSDL2MIXER_MP3_MPG123=OFF \
-        .. "${XTRA_OPTS[@]}" || { exit 1; }
+        -DCMAKE_BUILD_TYPE=Release .. "${XTRA_OPTS[@]}" || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 

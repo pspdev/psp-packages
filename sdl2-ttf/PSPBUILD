@@ -1,6 +1,6 @@
 pkgname=sdl2-ttf
 pkgver=2.20.2
-pkgrel=4
+pkgrel=5
 pkgdesc="a companion library to SDL2 for working with TrueType (tm) fonts"
 arch=('mips')
 url="https://wiki.libsdl.org/SDL2_ttf/FrontPage"
@@ -38,7 +38,8 @@ build() {
     cd build
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE="${PSPDEV}/psp/share/pspdev.cmake" -DCMAKE_INSTALL_PREFIX=/psp \
         -DSDL2TTF_HARFBUZZ=ON -DBUILD_SHARED_LIBS=OFF -DSDL2TTF_SAMPLES=OFF -DSDL2TTF_VENDORED=OFF \
-        -DCMAKE_POSITION_INDEPENDENT_CODE=OFF -DSDL2TTF_INSTALL=ON "${XTRA_OPTS[@]}" .. || { exit 1; }
+        -DCMAKE_POSITION_INDEPENDENT_CODE=OFF -DSDL2TTF_INSTALL=ON -DCMAKE_BUILD_TYPE=Release \
+        "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 

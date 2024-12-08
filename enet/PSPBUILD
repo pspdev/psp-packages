@@ -1,6 +1,6 @@
 pkgname=enet
 pkgver=1.3.18
-pkgrel=2
+pkgrel=3
 pkgdesc="ENet reliable UDP networking library"
 arch=('mips')
 url="http://enet.bespin.org/"
@@ -23,7 +23,7 @@ build() {
     mkdir -p build
     cd build
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
-        "${XTRA_OPTS[@]}" .. || { exit 1; }
+        -DCMAKE_BUILD_TYPE=Release "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 

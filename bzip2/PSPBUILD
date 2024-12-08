@@ -1,6 +1,6 @@
 pkgname=bzip2
 pkgver=1.0.8
-pkgrel=4
+pkgrel=5
 pkgdesc="A high-quality data compression library"
 arch=('mips')
 url="http://www.sourceware.org/bzip2/"
@@ -26,7 +26,7 @@ build() {
     mkdir -p build
     cd build
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
-        -DENABLE_SHARED_LIB=OFF -DENABLE_STATIC_LIB=ON -DENABLE_LIB_ONLY=ON "${XTRA_OPTS[@]}" .. || { exit 1; }
+        -DENABLE_SHARED_LIB=OFF -DENABLE_STATIC_LIB=ON -DENABLE_LIB_ONLY=ON -DCMAKE_BUILD_TYPE=Release "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 

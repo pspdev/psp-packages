@@ -1,6 +1,6 @@
 pkgname=yaml-cpp
 pkgver=0.8.0git
-pkgrel=2
+pkgrel=3
 pkgdesc=" A YAML parser and emitter in C++ "
 arch=('mips')
 url="https://github.com/jbeder/yaml-cpp"
@@ -24,7 +24,7 @@ build() {
     cd "yaml-cpp"
     mkdir -p build && cd build
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE="${PSPDEV}/psp/share/pspdev.cmake" -DCMAKE_INSTALL_PREFIX=/psp \
-        -DBUILD_SHARED_LIBS=OFF -DYAML_ENABLE_PIC=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
+        -DBUILD_SHARED_LIBS=OFF -DYAML_ENABLE_PIC=OFF -DCMAKE_BUILD_TYPE=Release "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 

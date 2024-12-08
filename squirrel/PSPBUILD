@@ -1,6 +1,6 @@
 pkgname=squirrel
 pkgver=3.1.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Runtime libraries for the Squirrel programming language"
 arch=('mips')
 url="http://squirrel-lang.org/"
@@ -17,7 +17,7 @@ build() {
     mkdir -p build
     cd build
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
-        "${XTRA_OPTS[@]}" .. || { exit 1; }
+        -DCMAKE_BUILD_TYPE=Release "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 
