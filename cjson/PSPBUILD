@@ -1,6 +1,6 @@
 pkgname=cjson
 pkgver=1.7.16
-pkgrel=2
+pkgrel=3
 pkgdesc="Ultralightweight JSON parser in ANSI C."
 arch=('mips')
 url="https://github.com/DaveGamble/cJSON/"
@@ -24,7 +24,8 @@ prepare() {
 build() {
     cd "cJSON-$pkgver/build"
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
-        -DENABLE_CJSON_UTILS=On -DENABLE_LOCALES=OFF -DENABLE_CJSON_TEST=OFF -DENABLE_TARGET_EXPORT=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
+        -DENABLE_CJSON_UTILS=On -DENABLE_LOCALES=OFF -DENABLE_CJSON_TEST=OFF -DENABLE_TARGET_EXPORT=OFF -DCMAKE_BUILD_TYPE=Release \
+        "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 

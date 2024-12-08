@@ -1,6 +1,6 @@
 pkgname=minizip
 pkgver=3.0.4
-pkgrel=3
+pkgrel=4
 pkgdesc="fork of the popular zip manipulation library found in the zlib distribution"
 arch=('mips')
 url="https://github.com/zlib-ng/minizip-ng"
@@ -25,7 +25,7 @@ build() {
   mkdir -p build
   cd build
   cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=/psp -DBUILD_SHARED_LIBS=OFF \
-      -DMZ_COMPAT=OFF -DMZ_LZMA=OFF -DMZ_OPENSSL=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
+      -DMZ_COMPAT=OFF -DMZ_LZMA=OFF -DMZ_OPENSSL=OFF "${XTRA_OPTS[@]}" -DCMAKE_BUILD_TYPE=Release .. || { exit 1; }
   make --quiet $MAKEFLAGS || { exit 1; }
 }
 
