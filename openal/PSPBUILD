@@ -1,5 +1,5 @@
 pkgname=openal
-pkgver=1.23.1
+pkgver=1.6.372
 pkgrel=2
 pkgdesc="a cross-platform 3D audio API"
 arch=('mips')
@@ -7,32 +7,37 @@ license=('LGPL-2.0')
 groups=('pspdev-default')
 url="https://openal-soft.org/"
 makedepends=()
-source=("https://github.com/kcat/openal-soft/releases/download/${pkgver}/openal-soft-${pkgver}.tar.bz2")
-sha256sums=('796f4b89134c4e57270b7f0d755f0fa3435b90da437b745160a49bd41c845b21')
+source=("https://github.com/illteteka/openal-soft-psp/archive/refs/tags/${pkgver}.${pkgrel}.tar.gz")
+sha256sums=('2dd94abc457906203c03e87fd2c513077bde0d7344b377f09ec535f3b7cb0a91')
 
 prepare() {
-    cd $pkgname-soft-$pkgver
-    sed -i 's#@prefix@#${PSPDEV}/psp#' openal.pc.in
-    sed -i 's#@exec_prefix@#${prefix}#' openal.pc.in
-    sed -i 's#@libdir@#${prefix}/lib#' openal.pc.in
-    sed -i 's#@includedir@#${prefix}/include#' openal.pc.in
+  cd $pkgname-soft-psp-$pkgver.${pkgrel}
+  sed -i 's#@prefix@#${PSPDEV}/psp#' openal.pc.in
+  sed -i 's#@exec_prefix@#${prefix}#' openal.pc.in
+  sed -i 's#@libdir@#${prefix}/lib#' openal.pc.in
+  sed -i 's#@includedir@#${prefix}/include#' openal.pc.in
+
+  sed -i "s#@PKG_CONFIG_REQUIRES@##" openal.pc.in
+  sed -i "s#@PACKAGE_VERSION@#${pkgver}#" openal.pc.in
+  sed -i "s#@LIBNAME@#${pkgname}#" openal.pc.in
+  sed -i "s#@PKG_CONFIG_LIBS@##" openal.pc.in
 }
 
 build() {
-  cd $pkgname-soft-$pkgver
-  mkdir -p build
-  cd build
-  cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=/psp -DCMAKE_BUILD_TYPE=Release \
-        -DALSOFT_UTILS=OFF -DALSOFT_EXAMPLES=OFF -DLIBTYPE=STATIC "${XTRA_OPTS[@]}" .. || { exit 1; }
+  cd $pkgname-soft-psp-$pkgver.${pkgrel}
   make --quiet $MAKEFLAGS || { exit 1; }
 }
 
 package () {
-  cd "$pkgname-soft-$pkgver/build"
-  make --quiet DESTDIR=$pkgdir $MAKEFLAGS install
-  cd ..
+  cd $pkgname-soft-psp-$pkgver.${pkgrel}
+  mkdir -m 755 -p "$pkgdir/psp/lib" "$pkgdir/psp/include/AL" "$pkgdir/psp/include/OpenAL"
+  install -m 644 libopenal.a "$pkgdir/psp/lib/libopenal.a"
+  install -m 644 src/include/AL/*.h "$pkgdir/psp/include/AL/"
+  install -m 644 src/OpenAL/include/*.h "$pkgdir/psp/include/OpenAL/"
 
   mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
   install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"
-  install -m 644 BSD-3Clause "$pkgdir/psp/share/licenses/$pkgname"
+
+  mkdir -m 755 -p "$pkgdir/psp/lib/pkgconfig"
+  install -m 644 openal.pc.in "$pkgdir/psp/lib/pkgconfig/openal.pc"
 }
