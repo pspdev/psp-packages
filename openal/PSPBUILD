@@ -12,6 +12,10 @@ sha256sums=('a185d9c1eea9782eaca8bf18a0b1af25bcadb9df147a06dafb31a4975510c97e')
 
 prepare() {
     cd $pkgname-soft-psp-$pkgver
+    sed -i 's#@prefix@#${PSPDEV}/psp#' admin/pkgconfig/openal.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' admin/pkgconfig/openal.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' admin/pkgconfig/openal.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' admin/pkgconfig/openal.pc.in
 }
 
 build() {
@@ -28,4 +32,7 @@ package () {
 
   mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
   install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"
+
+  mkdir -m 755 -p "$pkgdir/psp/lib/pkgconfig"
+  install -m 644 admin/pkgconfig/openal.pc.in "$pkgdir/psp/lib/pkgconfig/openal.pc"
 }
