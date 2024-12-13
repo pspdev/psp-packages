@@ -1,5 +1,5 @@
 pkgname=openal
-pkgver=1.6.372
+pkgver=1.6.372.2
 pkgrel=1
 pkgdesc="a cross-platform 3D audio API"
 arch=('mips')
@@ -8,14 +8,14 @@ groups=('pspdev-default')
 url="https://openal-soft.org/"
 makedepends=()
 source=("https://github.com/illteteka/openal-soft-psp/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('a185d9c1eea9782eaca8bf18a0b1af25bcadb9df147a06dafb31a4975510c97e')
+sha256sums=('2dd94abc457906203c03e87fd2c513077bde0d7344b377f09ec535f3b7cb0a91')
 
 prepare() {
     cd $pkgname-soft-psp-$pkgver
-    sed -i 's#@prefix@#${PSPDEV}/psp#' admin/pkgconfig/openal.pc.in
-    sed -i 's#@exec_prefix@#${prefix}#' admin/pkgconfig/openal.pc.in
-    sed -i 's#@libdir@#${prefix}/lib#' admin/pkgconfig/openal.pc.in
-    sed -i 's#@includedir@#${prefix}/include#' admin/pkgconfig/openal.pc.in
+    sed -i 's#@prefix@#${PSPDEV}/psp#' openal.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' openal.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' openal.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' openal.pc.in
 }
 
 build() {
@@ -28,11 +28,11 @@ package () {
   mkdir -m 755 -p "$pkgdir/psp/lib" "$pkgdir/psp/include/AL" "$pkgdir/psp/include/OpenAL"
   install -m 644 libopenal.a "$pkgdir/psp/lib/libopenal.a"
   install -m 644 src/include/AL/*.h "$pkgdir/psp/include/AL/"
-  install -m 644 src/OpenAL32/include/*.h "$pkgdir/psp/include/OpenAL/"
+  install -m 644 src/OpenAL/include/*.h "$pkgdir/psp/include/OpenAL/"
 
   mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
   install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"
 
   mkdir -m 755 -p "$pkgdir/psp/lib/pkgconfig"
-  install -m 644 admin/pkgconfig/openal.pc.in "$pkgdir/psp/lib/pkgconfig/openal.pc"
+  install -m 644 openal.pc.in "$pkgdir/psp/lib/pkgconfig/openal.pc"
 }
