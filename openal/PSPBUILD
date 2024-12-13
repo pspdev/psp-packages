@@ -1,30 +1,35 @@
 pkgname=openal
-pkgver=1.6.372.2
-pkgrel=1
+pkgver=1.6.372
+pkgrel=2
 pkgdesc="a cross-platform 3D audio API"
 arch=('mips')
 license=('LGPL-2.0')
 groups=('pspdev-default')
 url="https://openal-soft.org/"
 makedepends=()
-source=("https://github.com/illteteka/openal-soft-psp/archive/refs/tags/${pkgver}.tar.gz")
+source=("https://github.com/illteteka/openal-soft-psp/archive/refs/tags/${pkgver}.${pkgrel}.tar.gz")
 sha256sums=('2dd94abc457906203c03e87fd2c513077bde0d7344b377f09ec535f3b7cb0a91')
 
 prepare() {
-    cd $pkgname-soft-psp-$pkgver
-    sed -i 's#@prefix@#${PSPDEV}/psp#' openal.pc.in
-    sed -i 's#@exec_prefix@#${prefix}#' openal.pc.in
-    sed -i 's#@libdir@#${prefix}/lib#' openal.pc.in
-    sed -i 's#@includedir@#${prefix}/include#' openal.pc.in
+  cd $pkgname-soft-psp-$pkgver.${pkgrel}
+  sed -i 's#@prefix@#${PSPDEV}/psp#' openal.pc.in
+  sed -i 's#@exec_prefix@#${prefix}#' openal.pc.in
+  sed -i 's#@libdir@#${prefix}/lib#' openal.pc.in
+  sed -i 's#@includedir@#${prefix}/include#' openal.pc.in
+
+  sed -i "s#@PKG_CONFIG_REQUIRES@##" openal.pc.in
+  sed -i "s#@PACKAGE_VERSION@#${pkgver}#" openal.pc.in
+  sed -i "s#@LIBNAME@#${pkgname}#" openal.pc.in
+  sed -i "s#@PKG_CONFIG_LIBS@##" openal.pc.in
 }
 
 build() {
-  cd $pkgname-soft-psp-$pkgver
+  cd $pkgname-soft-psp-$pkgver.${pkgrel}
   make --quiet $MAKEFLAGS || { exit 1; }
 }
 
 package () {
-  cd $pkgname-soft-psp-$pkgver
+  cd $pkgname-soft-psp-$pkgver.${pkgrel}
   mkdir -m 755 -p "$pkgdir/psp/lib" "$pkgdir/psp/include/AL" "$pkgdir/psp/include/OpenAL"
   install -m 644 libopenal.a "$pkgdir/psp/lib/libopenal.a"
   install -m 644 src/include/AL/*.h "$pkgdir/psp/include/AL/"
