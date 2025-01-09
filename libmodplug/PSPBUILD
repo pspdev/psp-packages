@@ -17,6 +17,14 @@ sha256sums=(
 "SKIP"
 )
 
+prepare() {
+    cd libmodplug
+    sed -i 's#@prefix@#${PSPDEV}/psp#' libmodplug.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' libmodplug.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' libmodplug.pc.in
+    sed -i '/configure_file/{s/)/ @ONLY)/;}' CMakeLists.txt
+}
+
 build() {
     cd libmodplug
     mkdir pspbuild
