@@ -1,0 +1,49 @@
+pkgname=mpg123
+pkgver=1.32.10
+pkgrel=1
+pkgdesc="MPEG audio decoder library"
+arch=('mips')
+url="http://www.mpg123.org/"
+license=('LGPL-2.1')
+groups=('pspdev-default')
+depends=()
+makedepends=()
+optdepends=()
+source=(
+    "https://sourceforge.net/projects/mpg123/files/mpg123/${pkgver}/mpg123-${pkgver}.tar.bz2"
+    "https://github.com/madebr/mpg123/pull/17.patch"
+    "https://github.com/madebr/mpg123/pull/18.patch"
+)
+sha256sums=(
+    "87b2c17fe0c979d3ef38eeceff6362b35b28ac8589fbf1854b5be75c9ab6557c"
+    "SKIP"
+    "SKIP"
+)
+
+prepare() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    sed -i 's#@prefix@#${PSPDEV}/psp#' *.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' *.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' *.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' *.pc.in
+    patch -Np1 -i "${srcdir}/17.patch"
+    patch -Np1 -i "${srcdir}/18.patch"
+}
+
+build() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    mkdir -p build && cd build
+    cmake -DCMAKE_TOOLCHAIN_FILE="${PSPDEV}/psp/share/pspdev.cmake" -DCMAKE_INSTALL_PREFIX=/psp \
+        -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=OFF -DBUILD_PROGRAMS=OFF \
+        -DCMAKE_BUILD_TYPE=Release ../ports/cmake "${XTRA_OPTS[@]}" || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package() {
+    cd "${srcdir}/${pkgname}-${pkgver}/build"
+    make --quiet DESTDIR="${pkgdir}" ${MAKEFLAGS} install
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 ../COPYING "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 ../AUTHORS "$pkgdir/psp/share/licenses/$pkgname"
+}
