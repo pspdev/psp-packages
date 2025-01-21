@@ -1,0 +1,37 @@
+pkgname=sdl3
+pkgver=3.2.0
+pkgrel=1
+pkgdesc="a library designed to provide low level access to audio, input, and graphics hardware"
+arch=('mips')
+url="https://wiki.libsdl.org/SDL3/FrontPage"
+license=('ZLIB')
+groups=('pspdev-default')
+depends=('libpspvram' 'pspgl')
+makedepends=()
+optdepends=()
+provides=()
+source=("https://github.com/libsdl-org/SDL/releases/download/release-${pkgver}/SDL3-${pkgver}.tar.gz")
+sha256sums=("bf308f92c5688b1479faf5cfe24af72f3cd4ce08d0c0670d6ce55bc2ec1e9a5e")
+
+prepare() {
+    cd "${srcdir}/SDL3-${pkgver}"
+    sed -i 's#@SDL_PKGCONFIG_PREFIX@#${PSPDEV}/psp#' cmake/sdl3.pc.in
+    sed -i 's#@LIBDIR_FOR_PKG_CONFIG@#${prefix}/lib#' cmake/sdl3.pc.in
+    sed -i 's#@INCLUDEDIR_FOR_PKG_CONFIG@#${prefix}\/include#' cmake/sdl3.pc.in
+}
+
+build() {
+    cd "${srcdir}/SDL3-${pkgver}"
+    mkdir -p build && cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE="${PSPDEV}/psp/share/pspdev.cmake" -DCMAKE_INSTALL_PREFIX=/psp \
+        -DBUILD_SHARED_LIBS=OFF -DSDL_TEST_LIBRARY=OFF "${XTRA_OPTS[@]}" -DCMAKE_BUILD_TYPE=Release \
+        .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package() {
+    cd "${srcdir}/SDL3-${pkgver}/build"
+    make --quiet DESTDIR="${pkgdir}" $MAKEFLAGS install
+
+    mv "${pkgdir}/psp/share/licenses/SDL3" "${pkgdir}/psp/share/licenses/${pkgname}"
+}
