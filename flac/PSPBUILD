@@ -1,10 +1,10 @@
 pkgname=flac
 pkgver=1.4.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Free Lossless Audio Codec"
 arch=('mips')
 url="https://xiph.org/flac/"
-license=('GFDL-1.2 AND GPL-2.0 AND LGPL-2.1 AND BSD-3-Clause')
+license=('BSD-3-Clause')
 groups=('pspdev-default')
 depends=('libogg')
 makedepends=()
@@ -44,6 +44,6 @@ package() {
     rm -rf "${pkgdir}"/psp/lib/lib{FLAC,FLAC++}.la
 
     mkdir -m 755 -p "${pkgdir}/psp/share/licenses/${pkgname}"
-    install -m 644 COPYING.* "${pkgdir}/psp/share/licenses/${pkgname}"
+    install -m 644 COPYING.Xiph "${pkgdir}/psp/share/licenses/${pkgname}"
 }
 
