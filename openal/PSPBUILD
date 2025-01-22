@@ -1,9 +1,9 @@
 pkgname=openal
 pkgver=1.6.372
-pkgrel=2
+pkgrel=3
 pkgdesc="a cross-platform 3D audio API"
 arch=('mips')
-license=('LGPL-2.0')
+license=('LGPL-2.0-only')
 groups=('pspdev-default')
 url="https://openal-soft.org/"
 makedepends=()

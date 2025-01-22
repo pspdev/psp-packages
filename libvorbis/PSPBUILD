@@ -1,10 +1,10 @@
 pkgname=libvorbis
 pkgver=1.3.7
-pkgrel=4
+pkgrel=5
 pkgdesc="Vorbis audio compression reference implementation"
 arch=('mips')
 url="https://gitlab.xiph.org/xiph/vorbis"
-license=('BSD')
+license=('BSD-3-Clause')
 groups=('pspdev-default')
 depends=('libogg')
 makedepends=()

@@ -1,10 +1,10 @@
 pkgname=tremor
 pkgver=1.2.1git
-pkgrel=2
+pkgrel=3
 pkgdesc="Integer-only, fully Ogg Vorbis compliant software decoder library"
 arch=('mips')
 url="https://wiki.xiph.org/Tremor"
-license=('BSD')
+license=('BSD-3-Clause')
 groups=('pspdev-default')
 depends=('libogg')
 makedepends=()

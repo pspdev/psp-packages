@@ -1,10 +1,10 @@
 pkgname=flatbuffers
 pkgver=24.3.25
-pkgrel=1
+pkgrel=2
 pkgdesc="Memory Efficient Serialization Library"
 arch=('mips')
 url="https://flatbuffers.dev"
-license=('Apache-2.0 license')
+license=('Apache-2.0')
 groups=('pspdev-default')
 source=("https://github.com/google/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz")
 sha256sums=('4157c5cacdb59737c5d627e47ac26b140e9ee28b1102f812b36068aab728c1ed')

@@ -1,10 +1,10 @@
 pkgname=sdl2-mixer
 pkgver=2.8.0
-pkgrel=1
+pkgrel=2
 pkgdesc="an audio mixer library based on the SDL2 library"
 arch=('mips')
 url="https://wiki.libsdl.org/SDL2_mixer/FrontPage"
-license=('ZLIB')
+license=('Zlib')
 groups=('pspdev-default')
 depends=('sdl2' 'libmodplug' 'libvorbis' 'libogg')
 makedepends=()
