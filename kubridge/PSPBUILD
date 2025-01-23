@@ -1,9 +1,9 @@
 pkgname=kubridge
 pkgver=20240427
-pkgrel=2
+pkgrel=3
 pkgdesc="a bridging library to provide Kernel functions for PSPs in User Mode"
 arch=('mips')
-license=('GPL2')
+license=('GPL-2.0-only')
 groups=('pspdev-default')
 url="https://github.com/pspdev/kubridge"
 makedepends=()

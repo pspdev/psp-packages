@@ -1,10 +1,10 @@
 pkgname=libmikmod
 pkgver=3.3.11.1
-pkgrel=6
+pkgrel=7
 pkgdesc="a portable sound library capable of playing samples as well as module files"
 arch=('mips')
 url="http://mikmod.sourceforge.net/"
-license=('GPL2.1')
+license=('LGPL-2.1-only')
 groups=('pspdev-default')
 depends=()
 makedepends=()
@@ -35,7 +35,6 @@ package () {
     cd ..
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname/"
-    install -m 644 COPYING.LIB "$pkgdir/psp/share/licenses/$pkgname/"
     install -m 644 COPYING.LESSER "$pkgdir/psp/share/licenses/$pkgname/"
     install -m 644 AUTHORS "$pkgdir/psp/share/licenses/$pkgname/"
 }

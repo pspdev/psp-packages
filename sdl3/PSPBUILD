@@ -1,10 +1,10 @@
 pkgname=sdl3
 pkgver=3.2.0
-pkgrel=1
+pkgrel=2
 pkgdesc="a library designed to provide low level access to audio, input, and graphics hardware"
 arch=('mips')
 url="https://wiki.libsdl.org/SDL3/FrontPage"
-license=('ZLIB')
+license=('Zlib')
 groups=('pspdev-default')
 depends=('libpspvram' 'pspgl')
 makedepends=()

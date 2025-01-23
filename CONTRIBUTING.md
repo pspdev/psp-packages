@@ -31,6 +31,7 @@ For new contributions to be merged, the PSPBUILDs in them should meet the follow
   - PSPBUILDs which use a git repository as source should use a specific tag or commit.
   - ``pkgname`` should not contain capital letters or special characters other than ``-``.
   - ``groups`` should be set if to ``pspdev-default`` unless the package conflicts with an existing package.
+  - Be specific in the license field and follow the [spdx](https://spdx.org/licenses/) formatting for the license name.
 - For existing packages:
   - Either the ``pkgver`` or ``rel`` has been changed.
 - For all PSPBUILDs:
