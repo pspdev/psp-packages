@@ -12,11 +12,11 @@ set -e
 
 # Set global variables
 GITHUB_REPOSITORY_OWNER="${GITHUB_REPOSITORY_OWNER:-pspdev}"
-GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-pspdev/pspdev}"
+GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-pspdev/psp-packages}"
 INDEX_TABLE_CONTENT=""
 
 # Build the html pages
-for PSPBUILD in $(find . -name "PSPBUILD" | sort); do
+for PSPBUILD in $(find . -maxdepth 2 -name "PSPBUILD"  | sort); do
   		# Make sure optional variables are from current PSPBUILD
   		unset groups
     		unset license
