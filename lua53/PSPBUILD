@@ -1,6 +1,6 @@
 pkgname=lua53
 pkgver=5.3.6
-pkgrel=1
+pkgrel=2
 pkgdesc="a powerful, efficient, lightweight, embeddable scripting language (version 5.3)"
 arch=('mips')
 url="https://lua.org"
@@ -21,6 +21,7 @@ prepare() {
         sed -e 's/&ndash;/–/g' \
             -e 's/&copy;/©/g' \
             -e '/<P>/d' > LICENSE
+    sed -i '/#define LUA_32BITS/s/[/*]//g' src/luaconf.h
 }
 
 build() {
