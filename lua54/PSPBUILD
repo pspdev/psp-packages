@@ -1,6 +1,6 @@
 pkgname=lua54
 pkgver=5.4.6
-pkgrel=1
+pkgrel=2
 pkgdesc="a powerful, efficient, lightweight, embeddable scripting language (version 5.4)"
 arch=('mips')
 url="https://lua.org"
@@ -22,6 +22,7 @@ prepare() {
         sed -e 's/&ndash;/–/g' \
             -e 's/&copy;/©/g' \
             -e '/<P>/d' > LICENSE
+    sed -i '/#define LUA_32BITS/s/0/1/g' src/luaconf.h
 }
 
 build() {
