@@ -1,5 +1,5 @@
 pkgname=sdl3
-pkgver=3.2.2
+pkgver=3.2.4
 pkgrel=1
 pkgdesc="a library designed to provide low level access to audio, input, and graphics hardware"
 arch=('mips')
@@ -11,7 +11,7 @@ makedepends=()
 optdepends=()
 provides=()
 source=("https://github.com/libsdl-org/SDL/releases/download/release-${pkgver}/SDL3-${pkgver}.tar.gz")
-sha256sums=("d3dcf1b2f64746be0f248ef27b35aec4f038dafadfb83491f98a7fecdaf6efec")
+sha256sums=("2938328317301dfbe30176d79c251733aa5e7ec5c436c800b99ed4da7adcb0f0")
 
 prepare() {
     cd "${srcdir}/SDL3-${pkgver}"
