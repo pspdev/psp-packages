@@ -1,6 +1,6 @@
 pkgname=mbedtls
 pkgver=2.16.12
-pkgrel=3
+pkgrel=4
 pkgdesc="Secure Socket Layer library"
 arch=('mips')
 url="https://www.trustedfirmware.org/projects/mbed-tls/"
@@ -10,34 +10,34 @@ depends=()
 optdepends=()
 makedepends=()
 source=(
-    "http://sources.buildroot.net/mbedtls/${pkgname}-${pkgver}.tar.gz"
+    "git+https://github.com/Mbed-TLS/mbedtls.git#commit=cf4667126010c665341f9e50ef691b7ef8294188"
     "${pkgname}-${pkgver}-PSP.patch"
 )
 sha256sums=(
-    "294871ab1864a65d0b74325e9219d5bcd6e91c34a3c59270c357bb9ae4d5c393"
+    "SKIP"
     "SKIP"
 )
 
 prepare() {
-    cd "${pkgname}-${pkgver}"
+    cd "${pkgname}"
     patch -p1 < ../${pkgname}-${pkgver}-PSP.patch || { exit 1; }
 }
 
 build() {
-    cd "$pkgname-$pkgver"
+    cd "${pkgname}"
     mkdir -p build
     cd build
-    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp \
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE="${PSPDEV}/psp/share/pspdev.cmake" -DCMAKE_INSTALL_PREFIX="${pkgdir}/psp" \
         -DCMAKE_C_FLAGS="-Wno-error=incompatible-pointer-types" \
         -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTING=FALSE -DENABLE_PROGRAMS=FALSE "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 
 package() {
-    cd "$pkgname-$pkgver/build"
+    cd "${pkgname}/build"
     make --quiet $MAKEFLAGS install
     cd ..
-    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
-    install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
-    install -m 644 apache-2.0.txt "$pkgdir/psp/share/licenses/$pkgname"
+    mkdir -m 755 -p "${pkgdir}/psp/share/licenses/${pkgname}"
+    install -m 644 LICENSE "${pkgdir}/psp/share/licenses/${pkgname}"
+    install -m 644 apache-2.0.txt "${pkgdir}/psp/share/licenses/${pkgname}"
 }
