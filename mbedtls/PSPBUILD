@@ -10,21 +10,21 @@ depends=()
 optdepends=()
 makedepends=()
 source=(
-    "git+https://github.com/Mbed-TLS/mbedtls.git#commit=cf4667126010c665341f9e50ef691b7ef8294188"
+    "https://src.fedoraproject.org/repo/pkgs/mbedtls/mbedtls-2.16.12.tar.gz/sha512/8d96d8cd906cc0999134320e4e1f550631426d166eab5da6e65469ee7286093810fcc6ac4bd5500ee55972d159f8bef7f9e53245f7f0eec72f72c35265b4313b/${pkgname}-${pkgver}.tar.gz"
     "${pkgname}-${pkgver}-PSP.patch"
 )
 sha256sums=(
-    "SKIP"
+    "294871ab1864a65d0b74325e9219d5bcd6e91c34a3c59270c357bb9ae4d5c393"
     "SKIP"
 )
 
 prepare() {
-    cd "${pkgname}"
+    cd "${pkgname}-${pkgver}"
     patch -p1 < ../${pkgname}-${pkgver}-PSP.patch || { exit 1; }
 }
 
 build() {
-    cd "${pkgname}"
+    cd "${pkgname}-${pkgver}"
     mkdir -p build
     cd build
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE="${PSPDEV}/psp/share/pspdev.cmake" -DCMAKE_INSTALL_PREFIX="${pkgdir}/psp" \
@@ -34,7 +34,7 @@ build() {
 }
 
 package() {
-    cd "${pkgname}/build"
+    cd "${pkgname}-${pkgver}/build"
     make --quiet $MAKEFLAGS install
     cd ..
     mkdir -m 755 -p "${pkgdir}/psp/share/licenses/${pkgname}"
