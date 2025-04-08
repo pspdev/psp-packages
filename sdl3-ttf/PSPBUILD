@@ -1,0 +1,39 @@
+pkgname=sdl3-ttf
+pkgver=3.2.2
+pkgrel=1
+pkgdesc="a companion library to SDL3 for working with TrueType (tm) fonts"
+arch=('mips')
+url="https://wiki.libsdl.org/SDL3_ttf/FrontPage"
+license=('Zlib')
+groups=('pspdev-default')
+depends=('sdl3' 'harfbuzz')
+makedepends=()
+optdepends=()
+source=(
+    "https://github.com/libsdl-org/SDL_ttf/releases/download/release-${pkgver}/SDL3_ttf-${pkgver}.tar.gz"
+)
+sha256sums=(
+    "63547d58d0185c833213885b635a2c0548201cc8f301e6587c0be1a67e1e045d"
+)
+
+prepare() {
+    cd "${srcdir}/SDL3_ttf-${pkgver}"
+    sed -i '/^prefix=/s/=.*$/=${PSPDEV}\/psp/' cmake/sdl3-ttf.pc.in
+}
+
+build() {
+    cd "${srcdir}/SDL3_ttf-${pkgver}"
+    mkdir -p build
+    cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE="${PSPDEV}/psp/share/pspdev.cmake" -DCMAKE_INSTALL_PREFIX=/psp \
+        -DSDLTTF_VENDORED=OFF -DSDLTTF_STRICT=ON -DSDLTTF_SAMPLES=OFF -DSDLTTF_PLUTOSVG=OFF -DCMAKE_BUILD_TYPE=Release \
+        "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package() {
+    cd "${srcdir}/SDL3_ttf-${pkgver}/build"
+    make --quiet DESTDIR="${pkgdir}" ${MAKEFLAGS} install
+
+    mv "${pkgdir}/psp/share/licenses/SDL3_ttf" "${pkgdir}/psp/share/licenses/${pkgname}"
+}
