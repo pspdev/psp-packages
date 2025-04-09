@@ -1,7 +1,7 @@
 pkgname=liblzma
 pkgver=5.2.10
 pkgrel=1
-pkgdesc="LZMA provide a general-purpose data-compression library"
+pkgdesc="LZMA provides a general-purpose data-compression library"
 arch=('mips')
 url="https://github.com/tukaani-project/xz"
 license=('BSD-0-Clause')
@@ -20,13 +20,16 @@ prepare() {
     cd "xz-${pkgver}/src/${pkgname}"
 
     sed -i 's#@prefix@#${PSPDEV}/psp#' liblzma.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' liblzma.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' liblzma.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' liblzma.pc.in
 }
 
 build() {
     cd "xz-${pkgver}"
 
     ./autogen.sh --no-po4a --host=psp
-    ./configure --host=psp --disable-shared --enable-static
+    ./configure --host=psp --disable-shared --enable-static --prefix=/psp
 
     cd "src/${pkgname}"
     make --quiet $MAKEFLAGS || { exit 1; }
