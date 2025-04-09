@@ -25,7 +25,7 @@ prepare() {
 build() {
     cd "xz-${pkgver}"
 
-    ./autogen.sh --host=psp
+    ./autogen.sh --no-po4a --host=psp
     ./configure --host=psp --disable-shared --enable-static
 
     cd "src/${pkgname}"
