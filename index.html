@@ -6,6 +6,16 @@
     </head>
     <body>
         <p><h1>${GITHUB_REPOSITORY_OWNER}&#39;s package index</h1></p>
+        <p>
+            This is the repository of third party libraries for Playstation Portable development that is part of the PSP SDK called <a href="https://pspdev.github.io">PSPDEV</a>.<br>
+            The packages which are in the group <b>pspdev-default</b> come bundled with the SDK.<br>
+            <br>
+            Packages which are not in the pspdev-default group can be installed using the following command:
+            <br><b># psp-pacman -Sy package-name</b><br>
+            <br>
+            Updating the packages installed can be done using the following command: <br>
+            <b># psp-pacman -Syu</b>
+        </p>
         <table>
             <tr><th>Name</th><th>Version</th><th>Description</th><th>Groups</th><th>Last Updated</th></tr>
             ${INDEX_TABLE_CONTENT}
