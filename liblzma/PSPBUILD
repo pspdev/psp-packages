@@ -18,7 +18,7 @@ sha256sums=(
 
 prepare() {
     cd "xz-${pkgver}"
-    sed -i '94s/.*/const long cpus=1;/' src/common/tuklib_cpucores.c
+    sed -i '94s/sysconf(_SC_NPROCESSORS_ONLN)/1/' src/common/tuklib_cpucores.c
 
     cd "src/${pkgname}"
     sed -i 's#@prefix@#${PSPDEV}/psp#' liblzma.pc.in
