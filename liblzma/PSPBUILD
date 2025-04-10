@@ -1,6 +1,6 @@
 pkgname=liblzma
 pkgver=5.2.10
-pkgrel=1
+pkgrel=2
 pkgdesc="LZMA provides a general-purpose data-compression library"
 arch=('mips')
 url="https://github.com/tukaani-project/xz/"
@@ -17,8 +17,10 @@ sha256sums=(
 )
 
 prepare() {
-    cd "xz-${pkgver}/src/${pkgname}"
+    cd "xz-${pkgver}"
+    sed -i '94s/sysconf(_SC_NPROCESSORS_ONLN)/1/' src/common/tuklib_cpucores.c
 
+    cd "src/${pkgname}"
     sed -i 's#@prefix@#${PSPDEV}/psp#' liblzma.pc.in
     sed -i 's#@exec_prefix@#${prefix}#' liblzma.pc.in
     sed -i 's#@libdir@#${prefix}/lib#' liblzma.pc.in
