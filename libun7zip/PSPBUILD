@@ -7,7 +7,7 @@ license=('Apache-2.0')
 groups=('pspdev-default')
 url="https://github.com/bucanero/libun7zip"
 makedepends=()
-source=("git+https://github.com/bucanero/${pkgname}#commit=23e7cecd979fd893a6a7d3fcc51b2478cd860607")
+source=("git+https://github.com/bucanero/${pkgname}#commit=1aafddf38432644873ee99a0a7466877f58da48b")
 sha256sums=('SKIP')
 
 build() {
