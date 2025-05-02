@@ -1,12 +1,12 @@
 pkgname=libzip
 pkgver=1.9.2
-pkgrel=4
+pkgrel=5
 pkgdesc="libzip is a C library for reading, creating, and modifying zip archives."
 arch=('mips')
 url="https://libzip.org/"
 license=('BSD-3-Clause')
 groups=('pspdev-default')
-depends=('zlib' 'bzip2')
+depends=('zlib' 'bzip2' 'liblzma')
 makedepends=()
 optdepends=()
 source=("https://libzip.org/download/libzip-1.9.2.tar.xz")
