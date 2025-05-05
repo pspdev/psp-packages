@@ -1,0 +1,29 @@
+pkgname=unrar
+pkgver=5.90.0
+pkgrel=1
+pkgdesc="UnRAR is a library which provides file extraction from RAR archives."
+arch=('mips')
+license=('custom')
+groups=('pspdev-default')
+url="https://github.com/bucanero/libunrar-ps3"
+makedepends=()
+source=("git+https://github.com/bucanero/lib${pkgname}-ps3#commit=43ded7b024b75ad08c5e3f56d41942fc950e0b95")
+sha256sums=('SKIP')
+
+build() {
+  cd "lib${pkgname}-ps3"
+  make -f Makefile.psp
+}
+
+package () {
+  cd "lib${pkgname}-ps3"
+  mkdir -m 755 -p "$pkgdir/psp/lib" "$pkgdir/psp/include"
+  install -m 644 psp-libunrar.a "$pkgdir/psp/lib/libunrar.a"
+  install -m 644 include/dll.hpp "$pkgdir/psp/include/unrar.h"
+
+  mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+  install -m 644 license.txt "$pkgdir/psp/share/licenses/$pkgname"
+
+  mkdir -m 755 -p "$pkgdir/psp/share/doc/$pkgname"
+  install -m 644 manual.txt "$pkgdir/psp/share/doc/$pkgname"
+}
