@@ -1,0 +1,22 @@
+From b67f4213948dd83298a57ab1dfc8e355b2cf7e8f Mon Sep 17 00:00:00 2001
+From: Wouter Wijsman <wwijsman@live.nl>
+Date: Fri, 17 Jan 2025 22:10:35 +0100
+Subject: [PATCH] compat: do not rely on signal.h on PSP
+
+---
+ src/compat/compat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/compat/compat.c b/src/compat/compat.c
+index 09983ca4..78900128 100644
+--- a/src/compat/compat.c
++++ b/src/compat/compat.c
+@@ -512,7 +512,7 @@ size_t INT123_unintr_fwrite(const void *ptr, size_t size, size_t nmemb, FILE *st
+ }
+ 
+ #ifndef NO_CATCHSIGNAL
+-#if (!defined(WIN32) || defined (__CYGWIN__)) && defined(HAVE_SIGNAL_H)
++#if (!defined(WIN32) || defined (__CYGWIN__)) && !defined(__PSP__) && defined(HAVE_SIGNAL_H)
+ void (*INT123_catchsignal(int signum, void(*handler)(int)))(int)
+ {
+ 	struct sigaction new_sa;

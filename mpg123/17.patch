@@ -1,0 +1,36 @@
+From 324d307f08a4041c1ce56a917a9f4514a43c9105 Mon Sep 17 00:00:00 2001
+From: Wouter Wijsman <wouter@gridscale.io>
+Date: Tue, 14 Jan 2025 17:56:14 +0100
+Subject: [PATCH] CMake: Only build shared libraries with position independent
+ code
+
+---
+ ports/cmake/src/compat/CMakeLists.txt | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/ports/cmake/src/compat/CMakeLists.txt b/ports/cmake/src/compat/CMakeLists.txt
+index a98eccca..c4b2ec11 100644
+--- a/ports/cmake/src/compat/CMakeLists.txt
++++ b/ports/cmake/src/compat/CMakeLists.txt
+@@ -2,12 +2,18 @@ set(TARGET compat)
+ add_library(${TARGET} OBJECT
+     "${CMAKE_CURRENT_SOURCE_DIR}/../../../../src/compat/compat.c"
+     "${CMAKE_CURRENT_SOURCE_DIR}/../../../../src/compat/compat_str.c")
+-set_target_properties(${TARGET} PROPERTIES POSITION_INDEPENDENT_CODE ON)
++if(BUILD_SHARED_LIBS)
++    set_target_properties(${TARGET} PROPERTIES POSITION_INDEPENDENT_CODE ON)
++endif()
+ 
+ add_library(${TARGET}_dl OBJECT
+     "${CMAKE_CURRENT_SOURCE_DIR}/../../../../src/compat/compat_dl.c")
+-set_target_properties(${TARGET}_dl PROPERTIES POSITION_INDEPENDENT_CODE ON)
++if(BUILD_SHARED_LIBS)
++    set_target_properties(${TARGET}_dl PROPERTIES POSITION_INDEPENDENT_CODE ON)
++endif()
+ 
+ add_library(${TARGET}_str OBJECT
+     "${CMAKE_CURRENT_SOURCE_DIR}/../../../../src/compat/compat_str.c")
+-set_target_properties(${TARGET}_str PROPERTIES POSITION_INDEPENDENT_CODE ON)
++if(BUILD_SHARED_LIBS)
++    set_target_properties(${TARGET}_str PROPERTIES POSITION_INDEPENDENT_CODE ON)
++endif()
