@@ -1,5 +1,5 @@
 pkgname=sdl2
-pkgver=2.32.2
+pkgver=2.32.6
 pkgrel=1
 pkgdesc="a library designed to provide low level access to audio, input, and graphics hardware"
 arch=('mips')
@@ -16,7 +16,7 @@ source=(
     "main.c.sample"
 )
 sha256sums=(
-    "c5f30c427fd8107ee4a400c84d4447dd211352512eaf0b6e89cc6a50a2821922"
+    "6a7a40d6c2e00016791815e1a9f4042809210bdf10cc78d2c75b45c4f52f93ad"
     "SKIP"
     "SKIP"
 )
