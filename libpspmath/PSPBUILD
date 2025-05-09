@@ -24,10 +24,9 @@ build() {
 }
 
 package() {
-    cd "$pkgname/build"
+    cd "$pkgname"
     make --quiet $MAKEFLAGS install
 
-    cd ..
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 "$pkgdir/psp/share/licenses/pspsdk/LICENSE" "$pkgdir/psp/share/licenses/$pkgname"
 }
