@@ -1,6 +1,6 @@
 pkgname=sdl-mixer
 pkgver=1.2.14
-pkgrel=7
+pkgrel=8
 pkgdesc="an audio mixer library based on the SDL library"
 arch=('mips')
 url="https://www.libsdl.org/projects/old/SDL_mixer/release-1.2.html"
@@ -9,13 +9,19 @@ groups=('pspdev-default')
 depends=('sdl' 'libmikmod' 'libogg' 'libvorbis')
 makedepends=()
 optdepends=()
-source=("git+https://github.com/libsdl-org/SDL_mixer.git#commit=78cde6dd63222f9345dda38e8b7dca836aa55803")
+source=(
+    "git+https://github.com/libsdl-org/SDL_mixer.git#commit=78cde6dd63222f9345dda38e8b7dca836aa55803"
+    "config.sub"
+)
 
-sha256sums=('SKIP')
+sha256sums=(
+    "SKIP"
+    "fe3a2f32fbaff57848732549f48d983fd6526024ec2f0f5a9dc75c2f4359a3a6"
+)
 
 prepare() {
     cd "SDL_mixer"
-    wget -O build-scripts/config.sub "http://git.savannah.gnu.org/gitweb/?p=autoconf.git;a=blob_plain;f=build-aux/config.sub"
+    cp "../config.sub" build-scripts/
     sed -i 's#@prefix@#${PSPDEV}/psp#' SDL_mixer.pc.in
     sed -i 's#@exec_prefix@#${prefix}#' SDL_mixer.pc.in
     sed -i 's#@libdir@#${prefix}/lib#' SDL_mixer.pc.in
