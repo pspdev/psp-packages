@@ -13,6 +13,8 @@
 
 set -e
 
+BLACKLIST="lua51|lua52|lua53|pocketpy"
+
 doinstall=""
 if [ "$1" == "--install" ]; then
   doinstall="true"
@@ -23,6 +25,8 @@ if [ -z "$1" ]
 then
   # By default build them all
   PKG_LIST=$(find . -name "PSPBUILD" -exec sh -c 'echo $(basename $(dirname $0))' {} \;)
+  PKG_LIST=$(printf "%s\n" $PKG_LIST | grep -Ev "^($BLACKLIST)$")
+  echo "Will build packages: ${PKG_LIST}" | tr '\n' ' '
 else
   PKG_LIST=$1
 fi
