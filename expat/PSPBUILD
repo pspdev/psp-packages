@@ -1,5 +1,5 @@
 pkgname=expat
-pkgver=2.4.1
+pkgver=2.7.1
 pkgrel=4
 pkgdesc="XML parsing C library"
 arch=('mips')
@@ -10,7 +10,7 @@ depends=()
 makedepends=()
 optdepends=()
 source=("https://github.com/libexpat/libexpat/releases/download/R_${pkgver//./_}/expat-${pkgver}.tar.gz")
-sha256sums=('a00ae8a6b96b63a3910ddc1100b1a7ef50dc26dceb65ced18ded31ab392f132b')
+sha256sums=('0cce2e6e69b327fc607b8ff264f4b66bdf71ead55a87ffd5f3143f535f15cfa2')
 
 prepare() {
     cd "$pkgname-${pkgver}"
@@ -24,8 +24,9 @@ build() {
     cd "$pkgname-${pkgver}"
     mkdir -p build
     cd build
-    cmake -Wno-dev -DCMAKE_C_FLAGS="-DHAVE_ARC4RANDOM " -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
-        "${XTRA_OPTS[@]}" .. || { exit 1; }
+    cmake -Wno-dev -DCMAKE_C_FLAGS="-DXML_POOR_ENTROPY " -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp \
+        -DEXPAT_BUILD_EXAMPLES=OFF -DEXPAT_BUILD_DOCS=OFF -DEXPAT_BUILD_TESTS=OFF -DEXPAT_BUILD_TOOLS=OFF \
+        -DEXPAT_SHARED_LIBS=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 
