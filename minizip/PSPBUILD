@@ -1,6 +1,6 @@
 pkgname=minizip
-pkgver=3.0.4
-pkgrel=5
+pkgver=4.0.10
+pkgrel=1
 pkgdesc="fork of the popular zip manipulation library found in the zlib distribution"
 arch=('mips')
 url="https://github.com/zlib-ng/minizip-ng"
@@ -9,8 +9,13 @@ groups=('pspdev-default')
 depends=('zlib' 'bzip2')
 makedepends=()
 optdepends=()
-source=("https://github.com/zlib-ng/minizip-ng/archive/$pkgver.zip")
-sha256sums=('cf4ae0dc0334266c710dfd1de188b575348ae2dfbbba2dccd7392f14bdb206f2')
+source=(
+  "https://github.com/zlib-ng/minizip-ng/archive/$pkgver.zip"
+)
+
+sha256sums=(
+  "ac021b601fdad87e1031b6c0acb34a9ee9ebd3078552e22323f1db021c739aad"
+)
 
 prepare() {
   cd minizip-ng-$pkgver
