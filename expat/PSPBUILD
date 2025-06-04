@@ -1,6 +1,6 @@
 pkgname=expat
 pkgver=2.7.1
-pkgrel=4
+pkgrel=1
 pkgdesc="XML parsing C library"
 arch=('mips')
 url="https://libexpat.github.io/"
