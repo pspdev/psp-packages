@@ -1,20 +1,20 @@
 pkgname=jsoncpp
-pkgver=1.9.5
-pkgrel=4
+pkgver=1.9.6
+pkgrel=1
 pkgdesc="a C++ library for interacting with JSON"
 arch=('mips')
 license=('Unlicense')
 groups=('pspdev-default')
 url="https://github.com/open-source-parsers/jsoncpp"
 makedepends=()
-source=("git+https://github.com/open-source-parsers/jsoncpp#commit=5defb4ed1a4293b8e2bf641e16b156fb9de498cc")
+source=("git+https://github.com/open-source-parsers/jsoncpp#commit=89e2973c754a9c02a49974d839779b151e95afd6")
 sha256sums=('SKIP')
 
 prepare() {
-    cd "$pkgname/pkg-config"
-    sed -i 's#@CMAKE_INSTALL_PREFIX@#${PSPDEV}/psp#g' jsoncpp.pc.in
-    sed -i 's#@libdir_for_pc_file@#${prefix}/lib#' jsoncpp.pc.in
-    sed -i 's#@includedir_for_pc_file@#${prefix}/include#' jsoncpp.pc.in
+    cd "$pkgname"
+    sed -i 's#@CMAKE_INSTALL_PREFIX@#${PSPDEV}/psp#g' pkg-config/jsoncpp.pc.in
+    sed -i 's#@libdir_for_pc_file@#${prefix}/lib#' pkg-config/jsoncpp.pc.in
+    sed -i 's#@includedir_for_pc_file@#${prefix}/include#' pkg-config/jsoncpp.pc.in
 }
 
 build() {
@@ -22,7 +22,7 @@ build() {
   mkdir -p build
   cd build
   cmake -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
-        -DCMAKE_BUILD_TYPE=Release -DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF -DJSONCPP_WITH_TESTS=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
+        -DCMAKE_BUILD_TYPE=Release -DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF -DJSONCPP_WITH_TESTS=OFF -DBUILD_OBJECT_LIBS=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
   make --quiet $MAKEFLAGS || { exit 1; }
 }
 
