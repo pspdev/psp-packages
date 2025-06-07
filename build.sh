@@ -13,7 +13,7 @@
 
 set -e
 
-BLACKLIST="lua51|lua52|lua53|pocketpy"
+BLACKLIST="lua51|lua52|lua53|pocketpy|luasocket"
 
 doinstall=""
 if [ "$1" == "--install" ]; then
