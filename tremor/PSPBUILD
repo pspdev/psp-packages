@@ -1,6 +1,6 @@
 pkgname=tremor
 pkgver=1.2.1git
-pkgrel=3
+pkgrel=4
 pkgdesc="Integer-only, fully Ogg Vorbis compliant software decoder library"
 arch=('mips')
 url="https://wiki.xiph.org/Tremor"
@@ -11,7 +11,7 @@ makedepends=()
 optdepends=()
 source=(
     "git+https://gitlab.xiph.org/xiph/tremor.git#commit=7c30a66346199f3f09017a09567c6c8a3a0eedc8"
-    "https://github.com/sezero/tremor/compare/master...sezero.patch"
+    "master...sezero.patch"
     "platform-allegrex.patch"
 )
 sha256sums=(

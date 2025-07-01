@@ -1,0 +1,2586 @@
+From f2f94d9682db9a5a2c493f8a995f80eebad0f0a6 Mon Sep 17 00:00:00 2001
+From: sezero <sezero@users.sourceforge.net>
+Date: Tue, 20 Mar 2018 11:20:02 +0300
+Subject: [PATCH 01/37] os.h: change elif _WIN32 to elif defined(_WIN32)
+
+This symbol is only defined (with the value 1) when building
+for the Windows target, so we need to ifdef, not if.
+
+(vorbis.git commit e3230ddc86f7164db1e310b7e7275e90a3556e3b)
+---
+ os.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/os.h b/os.h
+index 130d27d..12ba684 100644
+--- a/os.h
++++ b/os.h
+@@ -25,7 +25,7 @@
+ 
+ #  ifdef __GNUC__
+ #    define STIN static __inline__
+-#  elif _WIN32
++#  elif defined(_WIN32)
+ #    define STIN static __inline
+ #  endif
+ #else
+
+From 8fea0414f6a754f31221ff3fa291f20ba85a9907 Mon Sep 17 00:00:00 2001
+From: sezero <sezero@users.sourceforge.net>
+Date: Tue, 20 Mar 2018 11:20:10 +0300
+Subject: [PATCH 02/37] mapping0.c (mapping0_unpack): kill a useless memset()
+
+info is allocated with calloc() already.
+
+(vorbis.git commit 8a8f8589e19c5016f6548d877a8fda231fce4f93)
+
+Signed-off-by: Ralph Giles <giles@thaumas.net>
+---
+ mapping0.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/mapping0.c b/mapping0.c
+index aa03e85..17aa60b 100644
+--- a/mapping0.c
++++ b/mapping0.c
+@@ -129,7 +129,6 @@ static vorbis_info_mapping *mapping0_unpack(vorbis_info *vi,oggpack_buffer *opb)
+   int i,b;
+   vorbis_info_mapping0 *info=(vorbis_info_mapping0 *)_ogg_calloc(1,sizeof(*info));
+   codec_setup_info     *ci=(codec_setup_info *)vi->codec_setup;
+-  memset(info,0,sizeof(*info));
+ 
+   b=oggpack_read(opb,1);
+   if(b<0)goto err_out;
+
+From 45de67aa9d15102546d1956bbf2c0e770072e595 Mon Sep 17 00:00:00 2001
+From: Monty <xiphmont@xiph.org>
+Date: Tue, 20 Mar 2018 11:21:50 +0300
+Subject: [PATCH 03/37] Add return code check to _initial_pcmoffset as
+ vorbis_packet_blocksize can fail. Closes Trac #2142
+
+(backport from vorbis svn r19434)
+---
+ vorbisfile.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/vorbisfile.c b/vorbisfile.c
+index cd4814d..ca583c8 100644
+--- a/vorbisfile.c
++++ b/vorbisfile.c
+@@ -433,9 +433,11 @@ static ogg_int64_t _initial_pcmoffset(OggVorbis_File *vf, vorbis_info *vi){
+     while((result=ogg_stream_packetout(&vf->os,&op))){
+       if(result>0){ /* ignore holes */
+         long thisblock=vorbis_packet_blocksize(vi,&op);
+-        if(lastblock!=-1)
+-          accumulated+=(lastblock+thisblock)>>2;
+-        lastblock=thisblock;
++        if(thisblock>=0){
++          if(lastblock!=-1)
++            accumulated+=(lastblock+thisblock)>>2;
++          lastblock=thisblock;
++        }
+       }
+     }
+ 
+
+From 1a72827e1ad990b09f252c4f643b762b8070e8f5 Mon Sep 17 00:00:00 2001
+From: sezero <sezero@users.sourceforge.net>
+Date: Tue, 20 Mar 2018 11:24:24 +0300
+Subject: [PATCH 04/37] configury: do AC_LIBTOOL_WIN32_DLL for win32 dll builds
+
+---
+ configure.in | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/configure.in b/configure.in
+index e7f5690..152cb04 100644
+--- a/configure.in
++++ b/configure.in
+@@ -36,7 +36,8 @@ AC_PROG_CC
+ AC_PROG_CPP
+ CFLAGS="$cflags_save"
+ 
+-AM_PROG_LIBTOOL
++AC_LIBTOOL_WIN32_DLL
++AC_PROG_LIBTOOL
+ 
+ dnl --------------------------------------------------
+ dnl Set build flags based on environment
+
+From f016bee5e8682cdb387434c1ff83c8274a8e4578 Mon Sep 17 00:00:00 2001
+From: sezero <sezero@users.sourceforge.net>
+Date: Tue, 20 Mar 2018 11:27:00 +0300
+Subject: [PATCH 05/37] configury: add Version_script to LDFLAGS after all
+ checks
+
+because Version_script won't be generated yet.
+---
+ configure.in | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/configure.in b/configure.in
+index 152cb04..98d5395 100644
+--- a/configure.in
++++ b/configure.in
+@@ -79,10 +79,6 @@ LDFLAGS="$LDFLAGS $ldflags_save"
+ # Test whenever ld supports -version-script
+ AC_PROG_LD
+ AC_PROG_LD_GNU
+-if test "x$lt_cv_prog_gnu_ld" = "xyes"; then
+-   SHLIB_VERSION_ARG="-Wl,--version-script=Version_script"
+-   LDFLAGS="$LDFLAGS $SHLIB_VERSION_ARG"
+-fi
+ 
+ dnl --------------------------------------------------
+ dnl Options 
+@@ -134,6 +130,12 @@ dnl --------------------------------------------------
+ AC_FUNC_ALLOCA
+ AC_FUNC_MEMCMP
+ 
++# do this last after all checks, because Version_script is not generated yet.
++if test "x$lt_cv_prog_gnu_ld" = "xyes"; then
++   SHLIB_VERSION_ARG="-Wl,--version-script=Version_script"
++   LDFLAGS="$LDFLAGS $SHLIB_VERSION_ARG"
++fi
++
+ dnl --------------------------------------------------
+ dnl Do substitutions
+ dnl --------------------------------------------------
+
+From 35994da5e574e7e0c256ca1fc3cb903a9afe7eff Mon Sep 17 00:00:00 2001
+From: sezero <sezero@users.sourceforge.net>
+Date: Tue, 20 Mar 2018 11:29:10 +0300
+Subject: [PATCH 06/37] configury: add -no-undefined to
+ libvorbisidec_la_LDFLAGS
+
+---
+ Makefile.am | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 0a4bb2c..60c39fa 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,6 +1,6 @@
+ AUTOMAKE_OPTIONS = foreign
+ 
+-INCLUDES = -I./ @OGG_CFLAGS@
++INCLUDES = -I. @OGG_CFLAGS@
+ 
+ pkgconfigdir = $(libdir)/pkgconfig
+ pkgconfig_DATA = vorbisidec.pc
+@@ -17,7 +17,7 @@ libvorbisidec_la_SOURCES = mdct.c block.c window.c \
+                         registry.h window.h window_lookup.h\
+                         codec_internal.h backends.h \
+ 			asm_arm.h ivorbiscodec.h
+-libvorbisidec_la_LDFLAGS = -version-info @V_LIB_CURRENT@:@V_LIB_REVISION@:@V_LIB_AGE@
++libvorbisidec_la_LDFLAGS = -no-undefined -version-info @V_LIB_CURRENT@:@V_LIB_REVISION@:@V_LIB_AGE@
+ libvorbisidec_la_LIBADD = @OGG_LIBS@
+ 
+ EXTRA_PROGRAMS = ivorbisfile_example iseeking_example
+
+From a31174f922504f54acf47b2088f75c37d1f2cfa1 Mon Sep 17 00:00:00 2001
+From: sezero <sezero@users.sourceforge.net>
+Date: Tue, 20 Mar 2018 11:30:00 +0300
+Subject: [PATCH 07/37] os.h: include config.h
+
+---
+ os.h | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/os.h b/os.h
+index 12ba684..69dc200 100644
+--- a/os.h
++++ b/os.h
+@@ -17,6 +17,10 @@
+ 
+  ********************************************************************/
+ 
++#ifdef HAVE_CONFIG_H
++#include "config.h"
++#endif
++
+ #include <math.h>
+ #include <ogg/os_types.h>
+ 
+
+From b9773c676623706fcd1a9446b97662821c62f83c Mon Sep 17 00:00:00 2001
+From: sezero <sezero@users.sourceforge.net>
+Date: Tue, 20 Mar 2018 11:33:28 +0300
+Subject: [PATCH 08/37] remove const from LOOKUP_T definition to avoid 'double
+ const' warnings
+
+---
+ mdct.c   | 10 +++++-----
+ misc.h   |  4 ++--
+ window.c |  5 ++++-
+ 3 files changed, 11 insertions(+), 8 deletions(-)
+
+diff --git a/mdct.c b/mdct.c
+index 2aed62c..3ad4483 100644
+--- a/mdct.c
++++ b/mdct.c
+@@ -147,7 +147,7 @@ STIN void mdct_butterfly_32(DATA_TYPE *x){
+ /* N/stage point generic N stage butterfly (in place, 2 register) */
+ STIN void mdct_butterfly_generic(DATA_TYPE *x,int points,int step){
+ 
+-  LOOKUP_T *T   = sincos_lookup0;
++  const LOOKUP_T *T   = sincos_lookup0;
+   DATA_TYPE *x1        = x + points      - 8;
+   DATA_TYPE *x2        = x + (points>>1) - 8;
+   REG_TYPE   r0;
+@@ -257,8 +257,8 @@ STIN void mdct_bitreverse(DATA_TYPE *x,int n,int step,int shift){
+   int          bit   = 0;
+   DATA_TYPE   *w0    = x;
+   DATA_TYPE   *w1    = x = w0+(n>>1);
+-  LOOKUP_T    *T = (step>=4)?(sincos_lookup0+(step>>1)):sincos_lookup1;
+-  LOOKUP_T    *Ttop  = T+1024;
++  const LOOKUP_T *T = (step>=4)?(sincos_lookup0+(step>>1)):sincos_lookup1;
++  const LOOKUP_T *Ttop  = T+1024;
+   DATA_TYPE    r2;
+ 
+   do{
+@@ -342,8 +342,8 @@ void mdct_backward(int n, DATA_TYPE *in, DATA_TYPE *out){
+   int n4=n>>2;
+   DATA_TYPE *iX;
+   DATA_TYPE *oX;
+-  LOOKUP_T *T;
+-  LOOKUP_T *V;
++  const LOOKUP_T *T;
++  const LOOKUP_T *V;
+   int shift;
+   int step;
+ 
+diff --git a/misc.h b/misc.h
+index 1ae4d2e..ee5660d 100644
+--- a/misc.h
++++ b/misc.h
+@@ -22,10 +22,10 @@
+ 
+ #ifdef _LOW_ACCURACY_
+ #  define X(n) (((((n)>>22)+1)>>1) - ((((n)>>22)+1)>>9))
+-#  define LOOKUP_T const unsigned char
++#  define LOOKUP_T unsigned char
+ #else
+ #  define X(n) (n)
+-#  define LOOKUP_T const ogg_int32_t
++#  define LOOKUP_T ogg_int32_t
+ #endif
+ 
+ #include "asm_arm.h"
+diff --git a/window.c b/window.c
+index 006a1ee..3f2917f 100644
+--- a/window.c
++++ b/window.c
+@@ -56,7 +56,7 @@ void _vorbis_apply_window(ogg_int32_t *d,const void *window_p[2],
+ 			  long *blocksizes,
+ 			  int lW,int W,int nW){
+   
+-  LOOKUP_T *window[2]={window_p[0],window_p[1]};
++  const LOOKUP_T *window[2];
+   long n=blocksizes[W];
+   long ln=blocksizes[lW];
+   long rn=blocksizes[nW];
+@@ -69,6 +69,9 @@ void _vorbis_apply_window(ogg_int32_t *d,const void *window_p[2],
+   
+   int i,p;
+ 
++  window[0] = (const LOOKUP_T *)window_p[0];
++  window[1] = (const LOOKUP_T *)window_p[1];
++
+   for(i=0;i<leftbegin;i++)
+     d[i]=0;
+ 
+
+From 82765a73afc63fd87464f1fc9791ea2b2c82c4d1 Mon Sep 17 00:00:00 2001
+From: sezero <sezero@users.sourceforge.net>
+Date: Tue, 20 Mar 2018 11:35:40 +0300
+Subject: [PATCH 09/37] make Tremor to build with compilers which doesn't have
+ alloca() but has VAR_ARRAYS
+
+e.g.: VBCC..
+
+alloca() is still the default, so there is no behavior change.
+---
+ codebook.c   |  6 +++---
+ configure.in |  9 +++++++++
+ floor0.c     |  2 +-
+ info.c       |  8 ++++----
+ mapping0.c   |  8 ++++----
+ os.h         | 23 +++++++++++++++++++++--
+ res012.c     |  2 +-
+ sharedbook.c |  8 ++++----
+ 8 files changed, 47 insertions(+), 19 deletions(-)
+
+diff --git a/codebook.c b/codebook.c
+index 1e1ae8a..271a52a 100644
+--- a/codebook.c
++++ b/codebook.c
+@@ -245,9 +245,9 @@ long vorbis_book_decode(codebook *book, oggpack_buffer *b){
+ long vorbis_book_decodevs_add(codebook *book,ogg_int32_t *a,
+ 			      oggpack_buffer *b,int n,int point){
+   if(book->used_entries>0){  
+-    int step=n/book->dim;
+-    long *entry = (long *)alloca(sizeof(*entry)*step);
+-    ogg_int32_t **t = (ogg_int32_t **)alloca(sizeof(*t)*step);
++    const int step=n/book->dim;
++    VAR_STACK(long, entry, step);
++    VAR_STACK(ogg_int32_t *, t, step);
+     int i,j,o;
+     int shift=point-book->binarypoint;
+     
+diff --git a/configure.in b/configure.in
+index 98d5395..4e853dc 100644
+--- a/configure.in
++++ b/configure.in
+@@ -130,6 +130,15 @@ dnl --------------------------------------------------
+ AC_FUNC_ALLOCA
+ AC_FUNC_MEMCMP
+ 
++AC_MSG_CHECKING(for C99 variable-size arrays)
++AC_TRY_COMPILE( [], [static int x; char a[++x]; a[sizeof a - 1] = 0; int N; return a[0];],
++[has_var_arrays=yes;AC_DEFINE([VAR_ARRAYS], [], [Use C99 variable-size arrays])
++],
++has_var_arrays=no
++)
++AC_MSG_RESULT($has_var_arrays)
++
++
+ # do this last after all checks, because Version_script is not generated yet.
+ if test "x$lt_cv_prog_gnu_ld" = "xyes"; then
+    SHLIB_VERSION_ARG="-Wl,--version-script=Version_script"
+diff --git a/floor0.c b/floor0.c
+index 964383e..3380df4 100644
+--- a/floor0.c
++++ b/floor0.c
+@@ -145,7 +145,7 @@ void vorbis_lsp_to_curve(ogg_int32_t *curve,int *map,int n,int ln,
+   int i;
+   int ampoffseti=ampoffset*4096;
+   int ampi=amp;
+-  ogg_int32_t *ilsp=(ogg_int32_t *)alloca(m*sizeof(*ilsp));
++  VAR_STACK(ogg_int32_t, ilsp, m);
+   /* lsp is in 8.24, range 0 to PI; coslook wants it in .16 0 to 1*/
+   for(i=0;i<m;i++){
+ #ifndef _LOW_ACCURACY_
+diff --git a/info.c b/info.c
+index 24e24ac..71e879a 100644
+--- a/info.c
++++ b/info.c
+@@ -56,8 +56,8 @@ static int tagcompare(const char *s1, const char *s2, int n){
+ char *vorbis_comment_query(vorbis_comment *vc, char *tag, int count){
+   long i;
+   int found = 0;
+-  int taglen = strlen(tag)+1; /* +1 for the = we append */
+-  char *fulltag = (char *)alloca(taglen+ 1);
++  const int taglen = strlen(tag)+1; /* +1 for the = we append */
++  VAR_STACK(char, fulltag, taglen+1);
+ 
+   strcpy(fulltag, tag);
+   strcat(fulltag, "=");
+@@ -76,8 +76,8 @@ char *vorbis_comment_query(vorbis_comment *vc, char *tag, int count){
+ 
+ int vorbis_comment_query_count(vorbis_comment *vc, char *tag){
+   int i,count=0;
+-  int taglen = strlen(tag)+1; /* +1 for the = we append */
+-  char *fulltag = (char *)alloca(taglen+1);
++  const int taglen = strlen(tag)+1; /* +1 for the = we append */
++  VAR_STACK(char, fulltag, taglen+1);
+   strcpy(fulltag,tag);
+   strcat(fulltag, "=");
+ 
+diff --git a/mapping0.c b/mapping0.c
+index 17aa60b..631ab90 100644
+--- a/mapping0.c
++++ b/mapping0.c
+@@ -193,11 +193,11 @@ static int mapping0_inverse(vorbis_block *vb,vorbis_look_mapping *l){
+   int                   i,j;
+   long                  n=vb->pcmend=ci->blocksizes[vb->W];
+ 
+-  ogg_int32_t **pcmbundle=(ogg_int32_t **)alloca(sizeof(*pcmbundle)*vi->channels);
+-  int    *zerobundle=(int *)alloca(sizeof(*zerobundle)*vi->channels);
++  VAR_STACK(ogg_int32_t *, pcmbundle, vi->channels);
++  VAR_STACK(int, zerobundle, vi->channels);
+   
+-  int   *nonzero  =(int *)alloca(sizeof(*nonzero)*vi->channels);
+-  void **floormemo=(void **)alloca(sizeof(*floormemo)*vi->channels);
++  VAR_STACK(int, nonzero, vi->channels);
++  VAR_STACK(void *, floormemo, vi->channels);
+   
+   /* time domain information decode (note that applying the
+      information would have to happen later; we'll probably add a
+diff --git a/os.h b/os.h
+index 69dc200..2fdbe08 100644
+--- a/os.h
++++ b/os.h
+@@ -49,8 +49,27 @@
+ #  define BYTE_ORDER LITTLE_ENDIAN
+ #endif
+ 
+-#ifdef HAVE_ALLOCA_H
+-#  include <alloca.h>
++#if defined HAVE_ALLOCA
++
++# ifdef _WIN32
++#  include <malloc.h>
++#  define VAR_STACK(type, var, size) type *var = ((type*)_alloca(sizeof(type)*(size)))
++# else
++#  ifdef HAVE_ALLOCA_H
++#   include <alloca.h>
++#  else
++#   include <stdlib.h>
++#  endif
++#  define VAR_STACK(type, var, size) type *var = ((type*) alloca(sizeof(type)*(size)))
++# endif
++
++#elif defined VAR_ARRAYS
++
++#  define VAR_STACK(type, var, size) type var[size]
++
++#else
++
++#error "Either VAR_ARRAYS or HAVE_ALLOCA must be defined to select the stack allocation mode"
+ #endif
+ 
+ #ifdef USE_MEMORY_H
+diff --git a/res012.c b/res012.c
+index f036caa..5afdf84 100644
+--- a/res012.c
++++ b/res012.c
+@@ -226,7 +226,7 @@ static int _01inverse(vorbis_block *vb,vorbis_look_residue *vl,
+   if(n>0){
+     int partvals=n/samples_per_partition;
+     int partwords=(partvals+partitions_per_word-1)/partitions_per_word;
+-    int ***partword=(int ***)alloca(ch*sizeof(*partword));
++    VAR_STACK(int **, partword, ch);
+     
+     for(j=0;j<ch;j++)
+       partword[j]=(int **)_vorbis_block_alloc(vb,partwords*sizeof(*partword[j]));
+diff --git a/sharedbook.c b/sharedbook.c
+index 188485e..a35aef5 100644
+--- a/sharedbook.c
++++ b/sharedbook.c
+@@ -330,7 +330,7 @@ static int sort32a(const void *a,const void *b){
+ /* decode codebook arrangement is more heavily optimized than encode */
+ int vorbis_book_init_decode(codebook *c,const static_codebook *s){
+   int i,j,n=0,tabn;
+-  int *sortindex;
++
+   memset(c,0,sizeof(*c));
+   
+   /* count actually used entries */
+@@ -355,7 +355,7 @@ int vorbis_book_init_decode(codebook *c,const static_codebook *s){
+     
+     /* perform sort */
+     ogg_uint32_t *codes=_make_words(s->lengthlist,s->entries,c->used_entries);
+-    ogg_uint32_t **codep=(ogg_uint32_t **)alloca(sizeof(*codep)*n);
++    VAR_STACK(ogg_uint32_t *, codep, n);
+     
+     if(codes==NULL)goto err_out;
+ 
+@@ -366,7 +366,7 @@ int vorbis_book_init_decode(codebook *c,const static_codebook *s){
+ 
+     qsort(codep,n,sizeof(*codep),sort32a);
+ 
+-    sortindex=(int *)alloca(n*sizeof(*sortindex));
++  { VAR_STACK(int, sortindex, n);
+     c->codelist=(ogg_uint32_t *)_ogg_malloc(n*sizeof(*c->codelist));
+     /* the index is a reverse index */
+     for(i=0;i<n;i++){
+@@ -391,7 +391,7 @@ int vorbis_book_init_decode(codebook *c,const static_codebook *s){
+     for(n=0,i=0;i<s->entries;i++)
+       if(s->lengthlist[i]>0)
+ 	c->dec_codelengths[sortindex[n++]]=s->lengthlist[i];
+-    
++  }
+     c->dec_firsttablen=_ilog(c->used_entries)-4; /* this is magic */
+     if(c->dec_firsttablen<5)c->dec_firsttablen=5;
+     if(c->dec_firsttablen>8)c->dec_firsttablen=8;
+
+From ab95d17c021abc7f1752b6eb50e5947ceb65bcf1 Mon Sep 17 00:00:00 2001
+From: sezero <sezero@users.sourceforge.net>
+Date: Tue, 20 Mar 2018 11:37:04 +0300
+Subject: [PATCH 10/37] remove non-existing vorbis_comment_add and
+ vorbis_comment_add_tag
+
+---
+ Version_script.in | 2 --
+ ivorbiscodec.h    | 3 ---
+ 2 files changed, 5 deletions(-)
+
+diff --git a/Version_script.in b/Version_script.in
+index 7f22f2f..3f9f093 100644
+--- a/Version_script.in
++++ b/Version_script.in
+@@ -38,8 +38,6 @@
+ 		vorbis_info_clear;
+ 		vorbis_info_blocksize;
+ 		vorbis_comment_init;
+-		vorbis_comment_add;
+-		vorbis_comment_add_tag;
+ 		vorbis_comment_query;
+ 		vorbis_comment_query_count;
+ 		vorbis_comment_clear;
+diff --git a/ivorbiscodec.h b/ivorbiscodec.h
+index 17eab58..46d1c4d 100644
+--- a/ivorbiscodec.h
++++ b/ivorbiscodec.h
+@@ -153,9 +153,6 @@ extern void     vorbis_info_init(vorbis_info *vi);
+ extern void     vorbis_info_clear(vorbis_info *vi);
+ extern int      vorbis_info_blocksize(vorbis_info *vi,int zo);
+ extern void     vorbis_comment_init(vorbis_comment *vc);
+-extern void     vorbis_comment_add(vorbis_comment *vc, char *comment); 
+-extern void     vorbis_comment_add_tag(vorbis_comment *vc, 
+-				       char *tag, char *contents);
+ extern char    *vorbis_comment_query(vorbis_comment *vc, char *tag, int count);
+ extern int      vorbis_comment_query_count(vorbis_comment *vc, char *tag);
+ extern void     vorbis_comment_clear(vorbis_comment *vc);
+
+From 272746693f5a74efdfe44a7c2e406531707c72b2 Mon Sep 17 00:00:00 2001
+From: sezero <sezero@users.sourceforge.net>
+Date: Tue, 20 Mar 2018 11:39:10 +0300
+Subject: [PATCH 11/37] os.h: remove irrelevant compatibility defs.
+
+---
+ os.h | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/os.h b/os.h
+index 2fdbe08..7e049c7 100644
+--- a/os.h
++++ b/os.h
+@@ -36,15 +36,8 @@
+ #  define STIN static
+ #endif
+ 
+-#ifndef M_PI
+-#  define M_PI (3.1415926536f)
+-#endif
+-
+ #ifdef _WIN32
+ #  include <malloc.h>
+-#  define rint(x)   (floor((x)+0.5f)) 
+-#  define NO_FLOAT_MATH_LIB
+-#  define FAST_HYPOT(a, b) sqrt((a)*(a) + (b)*(b))
+ #  define LITTLE_ENDIAN 1
+ #  define BYTE_ORDER LITTLE_ENDIAN
+ #endif
+
+From f8920f6f9e95de012885ba40f55b4c9d0e382f0e Mon Sep 17 00:00:00 2001
+From: sezero <sezero@users.sourceforge.net>
+Date: Tue, 20 Mar 2018 11:40:28 +0300
+Subject: [PATCH 12/37] remove an unused local variable.
+
+---
+ codebook.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/codebook.c b/codebook.c
+index 271a52a..1bbba8f 100644
+--- a/codebook.c
++++ b/codebook.c
+@@ -336,7 +336,7 @@ long vorbis_book_decodev_set(codebook *book,ogg_int32_t *a,
+     }
+   }else{
+ 
+-    int i,j;
++    int i;
+     for(i=0;i<n;){
+       a[i++]=0;
+     }
+
+From eacd3e78513734a230934ea70c7d0f857824eb7a Mon Sep 17 00:00:00 2001
+From: sezero <sezero@users.sourceforge.net>
+Date: Tue, 20 Mar 2018 11:41:50 +0300
+Subject: [PATCH 13/37] os.h: add STIN defines for Watcom and VBCC compilers
+
+---
+ os.h | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/os.h b/os.h
+index 7e049c7..31400de 100644
+--- a/os.h
++++ b/os.h
+@@ -29,8 +29,12 @@
+ 
+ #  ifdef __GNUC__
+ #    define STIN static __inline__
++#  elif defined(__VBCC__)
++#    define STIN static inline
+ #  elif defined(_WIN32)
+ #    define STIN static __inline
++#  elif defined(__WATCOMC__)
++#    define STIN static __inline
+ #  endif
+ #else
+ #  define STIN static
+
+From 5d48fcab6d955a2f8b41c460d6cec3b858894ec7 Mon Sep 17 00:00:00 2001
+From: sezero <sezero@users.sourceforge.net>
+Date: Tue, 20 Mar 2018 11:50:50 +0300
+Subject: [PATCH 14/37] use autoconf AC_C_BIGENDIAN / WORDS_BIGENDIAN checks
+
+because BYTE_ORDER, LITTLE_ENDIAN and BIG_ENDIAN are
+not very portable..
+---
+ configure.in |  3 +++
+ misc.h       | 17 +++++------------
+ os.h         |  2 --
+ 3 files changed, 8 insertions(+), 14 deletions(-)
+
+diff --git a/configure.in b/configure.in
+index 4e853dc..ade6f21 100644
+--- a/configure.in
++++ b/configure.in
+@@ -80,6 +80,9 @@ LDFLAGS="$LDFLAGS $ldflags_save"
+ AC_PROG_LD
+ AC_PROG_LD_GNU
+ 
++# check endianism
++AC_C_BIGENDIAN
++
+ dnl --------------------------------------------------
+ dnl Options 
+ dnl --------------------------------------------------
+diff --git a/misc.h b/misc.h
+index ee5660d..77cb2e2 100644
+--- a/misc.h
++++ b/misc.h
+@@ -41,25 +41,18 @@
+ #include <sys/types.h>
+ #endif
+ 
+-#if BYTE_ORDER==LITTLE_ENDIAN
+-union magic {
+-  struct {
+-    ogg_int32_t lo;
+-    ogg_int32_t hi;
+-  } halves;
+-  ogg_int64_t whole;
+-};
+-#endif 
+-
+-#if BYTE_ORDER==BIG_ENDIAN
+ union magic {
+   struct {
++#ifdef WORDS_BIGENDIAN
+     ogg_int32_t hi;
+     ogg_int32_t lo;
++#else /* little endian */
++    ogg_int32_t lo;
++    ogg_int32_t hi;
++#endif
+   } halves;
+   ogg_int64_t whole;
+ };
+-#endif
+ 
+ STIN ogg_int32_t MULT32(ogg_int32_t x, ogg_int32_t y) {
+   union magic magic;
+diff --git a/os.h b/os.h
+index 31400de..329c5d0 100644
+--- a/os.h
++++ b/os.h
+@@ -42,8 +42,6 @@
+ 
+ #ifdef _WIN32
+ #  include <malloc.h>
+-#  define LITTLE_ENDIAN 1
+-#  define BYTE_ORDER LITTLE_ENDIAN
+ #endif
+ 
+ #if defined HAVE_ALLOCA
+
+From 9224d1f8b594ae4e08c51708cd7484ec6c0a8594 Mon Sep 17 00:00:00 2001
+From: sezero <sezero@users.sourceforge.net>
+Date: Tue, 20 Mar 2018 15:01:02 +0300
+Subject: [PATCH 15/37] os h: fix misplaced _V_IFDEFJAIL_H_ #else
+
+I don't see the need for _V_IFDEFJAIL_H_ ifdef'ery, but libvorbis still
+has it, so...
+---
+ os.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/os.h b/os.h
+index 329c5d0..06e3612 100644
+--- a/os.h
++++ b/os.h
+@@ -35,9 +35,9 @@
+ #    define STIN static __inline
+ #  elif defined(__WATCOMC__)
+ #    define STIN static __inline
++#  else
++#    define STIN static
+ #  endif
+-#else
+-#  define STIN static
+ #endif
+ 
+ #ifdef _WIN32
+
+From e5c7aca046394f605c0749c78a7b0e24499324c9 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?J=C3=B6rn=20Heusipp?= <osmanx@problemloesungsmaschine.de>
+Date: Tue, 20 Mar 2018 17:55:10 +0300
+Subject: [PATCH 16/37] Fix reading maximum, nominal, minimum bitrate in
+ _vorbis_unpack_info().
+
+(vorbis.git commit 68ebc894325f56ae1d860d49626419cf66ea171b)
+
+https://xiph.org/vorbis/doc/Vorbis_I_spec.html#x1-630004.2.2 specifies
+these fields as 32bit signed. oggpack_read(opb,32), which is used to
+read these fields, returns 32 bits stored in a long. On architectures
+where long is 64bit, this results in a positive value being returned.
+This value is then stored in struct vorbis_info in bitrate_upper,
+bitrate_nominal and bitrate_lower, also as long. ogginfo relies on
+these values in order to display the respective header fields and thus
+misrepresented the stored value -1 (which has the intended meaning of
+"bitrate not set") as 2**32-1 on architectures where long is 64bit.
+
+Explicitly cast the return value of oggpack_read() to a signed 32bit
+integer type.
+
+A nominal bitrate value of -1 is valid as per specification, and is
+written by libvorbis for VBR files with samplerate >= 50000Hz.
+
+Signed-off-by: Timothy B. Terriberry <tterribe@xiph.org>
+---
+ info.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/info.c b/info.c
+index 71e879a..11cfbb6 100644
+--- a/info.c
++++ b/info.c
+@@ -166,9 +166,9 @@ static int _vorbis_unpack_info(vorbis_info *vi,oggpack_buffer *opb){
+   vi->channels=oggpack_read(opb,8);
+   vi->rate=oggpack_read(opb,32);
+ 
+-  vi->bitrate_upper=oggpack_read(opb,32);
+-  vi->bitrate_nominal=oggpack_read(opb,32);
+-  vi->bitrate_lower=oggpack_read(opb,32);
++  vi->bitrate_upper=(ogg_int32_t)oggpack_read(opb,32);
++  vi->bitrate_nominal=(ogg_int32_t)oggpack_read(opb,32);
++  vi->bitrate_lower=(ogg_int32_t)oggpack_read(opb,32);
+ 
+   ci->blocksizes[0]=1<<oggpack_read(opb,4);
+   ci->blocksizes[1]=1<<oggpack_read(opb,4);
+
+From 9b37078eb965e12591017af69d1ece37612e2d7e Mon Sep 17 00:00:00 2001
+From: sezero <sezero@users.sourceforge.net>
+Date: Sat, 10 Nov 2018 00:56:55 +0300
+Subject: [PATCH 17/37] autofoo: use m4 as macro dir.
+
+---
+ Makefile.am  |   1 +
+ configure.in |   1 +
+ m4/ogg.m4    | 116 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 118 insertions(+)
+ create mode 100644 m4/ogg.m4
+
+diff --git a/Makefile.am b/Makefile.am
+index 60c39fa..f5eab65 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,4 +1,5 @@
+ AUTOMAKE_OPTIONS = foreign
++ACLOCAL_AMFLAGS = -I m4
+ 
+ INCLUDES = -I. @OGG_CFLAGS@
+ 
+diff --git a/configure.in b/configure.in
+index ade6f21..de2d23e 100644
+--- a/configure.in
++++ b/configure.in
+@@ -5,6 +5,7 @@ dnl Initialization and Versioning
+ dnl ------------------------------------------------
+ 
+ AC_INIT(mdct.c)
++AC_CONFIG_MACRO_DIR([m4])
+ 
+ AC_CANONICAL_HOST
+ AC_CANONICAL_TARGET
+diff --git a/m4/ogg.m4 b/m4/ogg.m4
+new file mode 100644
+index 0000000..77d663b
+--- /dev/null
++++ b/m4/ogg.m4
+@@ -0,0 +1,116 @@
++# Configure paths for libogg
++# Jack Moffitt <jack@icecast.org> 10-21-2000
++# Shamelessly stolen from Owen Taylor and Manish Singh
++
++dnl XIPH_PATH_OGG([ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]])
++dnl Test for libogg, and define OGG_CFLAGS and OGG_LIBS
++dnl
++AC_DEFUN([XIPH_PATH_OGG],
++[dnl
++dnl Get the cflags and libraries
++dnl
++AC_ARG_WITH(ogg,AC_HELP_STRING([--with-ogg=PFX],[Prefix where libogg is installed (optional)]), ogg_prefix="$withval", ogg_prefix="")
++AC_ARG_WITH(ogg-libraries,AC_HELP_STRING([--with-ogg-libraries=DIR],[Directory where libogg library is installed (optional)]), ogg_libraries="$withval", ogg_libraries="")
++AC_ARG_WITH(ogg-includes,AC_HELP_STRING([--with-ogg-includes=DIR],[Directory where libogg header files are installed (optional)]), ogg_includes="$withval", ogg_includes="")
++AC_ARG_ENABLE(oggtest,AC_HELP_STRING([--disable-oggtest],[Do not try to compile and run a test Ogg program]),, enable_oggtest=yes)
++
++  if test "x$ogg_libraries" != "x" ; then
++    OGG_LIBS="-L$ogg_libraries"
++  elif test "x$ogg_prefix" = "xno" || test "x$ogg_prefix" = "xyes" ; then
++    OGG_LIBS=""
++  elif test "x$ogg_prefix" != "x" ; then
++    OGG_LIBS="-L$ogg_prefix/lib"
++  elif test "x$prefix" != "xNONE" ; then
++    OGG_LIBS="-L$prefix/lib"
++  fi
++
++  if test "x$ogg_prefix" != "xno" ; then
++    OGG_LIBS="$OGG_LIBS -logg"
++  fi
++
++  if test "x$ogg_includes" != "x" ; then
++    OGG_CFLAGS="-I$ogg_includes"
++  elif test "x$ogg_prefix" = "xno" || test "x$ogg_prefix" = "xyes" ; then
++    OGG_CFLAGS=""
++  elif test "x$ogg_prefix" != "x" ; then
++    OGG_CFLAGS="-I$ogg_prefix/include"
++  elif test "x$prefix" != "xNONE"; then
++    OGG_CFLAGS="-I$prefix/include"
++  fi
++
++  AC_MSG_CHECKING(for Ogg)
++  if test "x$ogg_prefix" = "xno" ; then
++    no_ogg="disabled"
++    enable_oggtest="no"
++  else
++    no_ogg=""
++  fi
++
++
++  if test "x$enable_oggtest" = "xyes" ; then
++    ac_save_CFLAGS="$CFLAGS"
++    ac_save_LIBS="$LIBS"
++    CFLAGS="$CFLAGS $OGG_CFLAGS"
++    LIBS="$LIBS $OGG_LIBS"
++dnl
++dnl Now check if the installed Ogg is sufficiently new.
++dnl
++      rm -f conf.oggtest
++      AC_TRY_RUN([
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <ogg/ogg.h>
++
++int main ()
++{
++  system("touch conf.oggtest");
++  return 0;
++}
++
++],, no_ogg=yes,[echo $ac_n "cross compiling; assumed OK... $ac_c"])
++       CFLAGS="$ac_save_CFLAGS"
++       LIBS="$ac_save_LIBS"
++  fi
++
++  if test "x$no_ogg" = "xdisabled" ; then
++     AC_MSG_RESULT(no)
++     ifelse([$2], , :, [$2])
++  elif test "x$no_ogg" = "x" ; then
++     AC_MSG_RESULT(yes)
++     ifelse([$1], , :, [$1])
++  else
++     AC_MSG_RESULT(no)
++     if test -f conf.oggtest ; then
++       :
++     else
++       echo "*** Could not run Ogg test program, checking why..."
++       CFLAGS="$CFLAGS $OGG_CFLAGS"
++       LIBS="$LIBS $OGG_LIBS"
++       AC_TRY_LINK([
++#include <stdio.h>
++#include <ogg/ogg.h>
++],     [ return 0; ],
++       [ echo "*** The test program compiled, but did not run. This usually means"
++       echo "*** that the run-time linker is not finding Ogg or finding the wrong"
++       echo "*** version of Ogg. If it is not finding Ogg, you'll need to set your"
++       echo "*** LD_LIBRARY_PATH environment variable, or edit /etc/ld.so.conf to point"
++       echo "*** to the installed location  Also, make sure you have run ldconfig if that"
++       echo "*** is required on your system"
++       echo "***"
++       echo "*** If you have an old version installed, it is best to remove it, although"
++       echo "*** you may also be able to get things to work by modifying LD_LIBRARY_PATH"],
++       [ echo "*** The test program failed to compile or link. See the file config.log for the"
++       echo "*** exact error that occured. This usually means Ogg was incorrectly installed"
++       echo "*** or that you have moved Ogg since it was installed." ])
++       CFLAGS="$ac_save_CFLAGS"
++       LIBS="$ac_save_LIBS"
++     fi
++     OGG_CFLAGS=""
++     OGG_LIBS=""
++     ifelse([$2], , :, [$2])
++  fi
++  AC_SUBST(OGG_CFLAGS)
++  AC_SUBST(OGG_LIBS)
++  rm -f conf.oggtest
++])
+
+From 94d91cd1b67eadbd0cb2bad23af6fc79487d2cc1 Mon Sep 17 00:00:00 2001
+From: sezero <sezero@users.sourceforge.net>
+Date: Sat, 10 Nov 2018 00:58:02 +0300
+Subject: [PATCH 18/37] info.c: remove ctype.h dependency, add a generic
+ toupper
+
+---
+ info.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/info.c b/info.c
+index 11cfbb6..dd5b7ad 100644
+--- a/info.c
++++ b/info.c
+@@ -20,7 +20,6 @@
+ 
+ #include <stdlib.h>
+ #include <string.h>
+-#include <ctype.h>
+ #include <limits.h>
+ #include <ogg/ogg.h>
+ #include "ivorbiscodec.h"
+@@ -37,6 +36,10 @@ static void _v_readstring(oggpack_buffer *o,char *buf,int bytes){
+   }
+ }
+ 
++static int _v_toupper(int c) {
++  return (c >= 'a' && c <= 'z') ? (c & ~('a' - 'A')) : c;
++}
++
+ void vorbis_comment_init(vorbis_comment *vc){
+   memset(vc,0,sizeof(*vc));
+ }
+@@ -46,7 +49,7 @@ void vorbis_comment_init(vorbis_comment *vc){
+ static int tagcompare(const char *s1, const char *s2, int n){
+   int c=0;
+   while(c < n){
+-    if(toupper(s1[c]) != toupper(s2[c]))
++    if(_v_toupper(s1[c]) != _v_toupper(s2[c]))
+       return !0;
+     c++;
+   }
+
+From fd42a699d1f5b99719e913068f51063203bf4401 Mon Sep 17 00:00:00 2001
+From: sezero <sezero@users.sourceforge.net>
+Date: Sat, 10 Nov 2018 00:59:02 +0300
+Subject: [PATCH 19/37] bypass __alloca_get_stack_limit() call in alloca.h from
+ old AROS SDKs.
+
+---
+ os.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/os.h b/os.h
+index 06e3612..c33ecdf 100644
+--- a/os.h
++++ b/os.h
+@@ -55,6 +55,12 @@
+ #  else
+ #   include <stdlib.h>
+ #  endif
++#  if defined(__AROS__) && defined(__GNUC__)
++ /* bypass __alloca_get_stack_limit() call in alloca.h
++   from old AROS SDKs, directly use __builtin_alloca(). */
++#   undef alloca
++#   define alloca __builtin_alloca
++#  endif
+ #  define VAR_STACK(type, var, size) type *var = ((type*) alloca(sizeof(type)*(size)))
+ # endif
+ 
+
+From 848eb69a896cfc6538808012388934350474ccb4 Mon Sep 17 00:00:00 2001
+From: sezero <sezero@users.sourceforge.net>
+Date: Sat, 10 Nov 2018 01:01:50 +0300
+Subject: [PATCH 20/37] added some standalone makefiles for amiga, os2, etc
+
+---
+ Makefile.aos3    | 25 +++++++++++++++++++++++++
+ Makefile.emx     | 23 +++++++++++++++++++++++
+ Makefile.os2     | 34 ++++++++++++++++++++++++++++++++++
+ Makefile.vbcc    | 25 +++++++++++++++++++++++++
+ OWMakefile.win32 | 34 ++++++++++++++++++++++++++++++++++
+ 5 files changed, 141 insertions(+)
+ create mode 100644 Makefile.aos3
+ create mode 100644 Makefile.emx
+ create mode 100644 Makefile.os2
+ create mode 100644 Makefile.vbcc
+ create mode 100644 OWMakefile.win32
+
+diff --git a/Makefile.aos3 b/Makefile.aos3
+new file mode 100644
+index 0000000..1efbce0
+--- /dev/null
++++ b/Makefile.aos3
+@@ -0,0 +1,25 @@
++INCLUDE = -I.
++CFLAGS  = -noixemul -O2 -m68020-60 -Wall $(INCLUDE)
++CFLAGS += -DHAVE_ALLOCA=1 -DWORDS_BIGENDIAN=1
++CFLAGS += -D_LOW_ACCURACY_
++LIBNAME =  libvorbisidec.a
++
++CC      = m68k-amigaos-gcc
++AR      = m68k-amigaos-ar
++RANLIB  = m68k-amigaos-ranlib
++
++LIBOBJ = mdct.o block.o window.o synthesis.o info.o floor1.o floor0.o vorbisfile.o res012.o mapping0.o registry.o codebook.o sharedbook.o
++
++all: $(LIBNAME)
++
++$(LIBNAME): $(LIBOBJ)
++	$(AR) cru $(LIBNAME) $(LIBOBJ)
++	$(RANLIB) $(LIBNAME)
++
++%.o: %.c
++	$(CC) $(CFLAGS) -c -o $@ $<
++
++clean:
++	$(RM) *.o
++distclean: clean
++	$(RM) $(LIBNAME)
+diff --git a/Makefile.emx b/Makefile.emx
+new file mode 100644
+index 0000000..934ff28
+--- /dev/null
++++ b/Makefile.emx
+@@ -0,0 +1,23 @@
++CFLAGS  = -Zmt -O2 -march=i586 -Wall -I.
++CFLAGS += -DHAVE_ALLOCA -DHAVE_ALLOCA_H -D_LOW_ACCURACY_
++LIBNAME =  vorbisidec.a
++
++CC      = gcc
++AR      = ar
++RANLIB  = ranlib
++
++LIBOBJ = mdct.o block.o window.o synthesis.o info.o floor1.o floor0.o vorbisfile.o res012.o mapping0.o registry.o codebook.o sharedbook.o
++
++all: $(LIBNAME)
++
++$(LIBNAME): $(LIBOBJ)
++	$(AR) cru $(LIBNAME) $(LIBOBJ)
++	$(RANLIB) $(LIBNAME)
++
++%.o: %.c
++	$(CC) $(CFLAGS) -c -o $@ $<
++
++clean:
++	$(RM) *.o
++distclean: clean
++	$(RM) $(LIBNAME)
+diff --git a/Makefile.os2 b/Makefile.os2
+new file mode 100644
+index 0000000..612a953
+--- /dev/null
++++ b/Makefile.os2
+@@ -0,0 +1,34 @@
++# build tremor (libvorbisidec) using OpenWatcom for OS/2 as a static libary
++#
++
++CFLAGS  = -bt=os2 -bm -fp5 -fpi87 -mf -oeatxh -w4 -ei -zp8
++# -5s  :  Pentium stack calling conventions.
++# -5r  :  Pentium register calling conventions.
++CFLAGS += -5s
++CFLAGS += -I.
++CPPFLAGS= -DHAVE_ALLOCA -DHAVE_ALLOCA_H -D_LOW_ACCURACY_
++LIBNAME = vorbisidec.lib
++
++COMPILE = wcc386 -q $(CFLAGS) $(CPPFLAGS)
++
++OBJ = mdct.obj block.obj window.obj synthesis.obj info.obj floor1.obj floor0.obj vorbisfile.obj res012.obj mapping0.obj registry.obj codebook.obj sharedbook.obj
++
++all: $(LIBNAME)
++
++$(LIBNAME): $(OBJ)
++	wlib -q -b -n -c -pa -s -t -zld -ii -io $@ $(OBJ)
++
++.c.obj:
++	$(COMPILE) -fo=$^@ $<
++
++!ifndef __UNIX__
++distclean: clean .symbolic
++	@if exist *.lib del *.lib
++clean: .symbolic
++	@if exist *.obj del *.obj
++!else
++distclean: clean .symbolic
++	rm -f *.lib
++clean: .symbolic
++	rm -f *.obj
++!endif
+diff --git a/Makefile.vbcc b/Makefile.vbcc
+new file mode 100644
+index 0000000..af61121
+--- /dev/null
++++ b/Makefile.vbcc
+@@ -0,0 +1,25 @@
++INCLUDE = -I.
++CFLAGS  = -O1 -speed -c99 -cpu=68060 -fpu=68060 -D__AMIGA__ $(INCLUDE)
++CFLAGS += -DVAR_ARRAYS=1 -DWORDS_BIGENDIAN=1
++CFLAGS += -D_LOW_ACCURACY_
++LIBNAME =  vorbisidec.lib
++
++CC      = vc
++# +m68kdb
++#MKLIB   = join $(LIBOBJ) as $(LIBNAME)
++MKLIB   = cat $(LIBOBJ) > $(LIBNAME)
++
++LIBOBJ = mdct.o block.o window.o synthesis.o info.o floor1.o floor0.o vorbisfile.o res012.o mapping0.o registry.o codebook.o sharedbook.o
++
++all: $(LIBNAME)
++
++$(LIBNAME): $(LIBOBJ)
++	$(MKLIB)
++
++%.o: %.c
++	$(CC) $(CFLAGS) -c -o $@ $<
++
++clean:
++	$(RM) *.o
++distclean: clean
++	$(RM) $(LIBNAME)
+diff --git a/OWMakefile.win32 b/OWMakefile.win32
+new file mode 100644
+index 0000000..006f1be
+--- /dev/null
++++ b/OWMakefile.win32
+@@ -0,0 +1,34 @@
++# build tremor (libvorbisidec) using OpenWatcom for Win32 as a static libary
++#
++
++CFLAGS  = -bt=nt -bm -fp5 -fpi87 -mf -oeatxh -w4 -ei -zp8
++# -5s  :  Pentium stack calling conventions.
++# -5r  :  Pentium register calling conventions.
++CFLAGS += -5s
++CFLAGS += -I.
++CPPFLAGS= -DHAVE_ALLOCA -DHAVE_ALLOCA_H -D_LOW_ACCURACY_
++LIBNAME = vorbisidec.lib
++
++COMPILE = wcc386 -q $(CFLAGS) $(CPPFLAGS)
++
++OBJ = mdct.obj block.obj window.obj synthesis.obj info.obj floor1.obj floor0.obj vorbisfile.obj res012.obj mapping0.obj registry.obj codebook.obj sharedbook.obj
++
++all: $(LIBNAME)
++
++$(LIBNAME): $(OBJ)
++	wlib -q -b -n -c -pa -s -t -zld -ii -io $@ $(OBJ)
++
++.c.obj:
++	$(COMPILE) -fo=$^@ $<
++
++!ifndef __UNIX__
++distclean: clean .symbolic
++	@if exist *.lib del *.lib
++clean: .symbolic
++	@if exist *.obj del *.obj
++!else
++distclean: clean .symbolic
++	rm -f *.lib
++clean: .symbolic
++	rm -f *.obj
++!endif
+
+From a76e41f6ece93d10deac5f9ef3a84dce5b9c2a84 Mon Sep 17 00:00:00 2001
+From: James Cowgill <jcowgill@debian.org>
+Date: Tue, 13 Jun 2017 13:39:52 +0100
+Subject: [PATCH 21/37] Fix free of uninitialized memory if seek fails in
+ ov_raw_seek
+
+https://github.com/SFML/SFML/issues/1241
+https://trac.xiph.org/ticket/2327
+https://gitlab.xiph.org/xiph/vorbis/issues/2327
+
+If _seek_helper fails in ov_raw_seek, control jumps to the seek_error
+label which calls ogg_stream_clear on work_os. However, at this point
+in the function, work_os is not initialized so we end up attempting to
+free some uninitialized memory and crashing.
+
+Fix by removing the call to ogg_stream_clear. This is safe because the
+only code path to seek_error happens before work_os is initialized (so
+there is never anything to free anyway).
+
+I also refactor the code a bit:
+- Remove the ret variable which is unnessesary since we can just pass
+  the result of _seek_helper directly to the if.
+- Since seek_error is only used once, move the contents of that block
+  to the if statement so we can remove a goto.
+---
+ vorbisfile.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
+
+diff --git a/vorbisfile.c b/vorbisfile.c
+index ca583c8..afb4f05 100644
+--- a/vorbisfile.c
++++ b/vorbisfile.c
+@@ -1185,7 +1185,6 @@ ogg_int64_t ov_time_total(OggVorbis_File *vf,int i){
+ 
+ int ov_raw_seek(OggVorbis_File *vf,ogg_int64_t pos){
+   ogg_stream_state work_os;
+-  int ret;
+ 
+   if(vf->ready_state<OPENED)return(OV_EINVAL);
+   if(!vf->seekable)
+@@ -1208,8 +1207,12 @@ int ov_raw_seek(OggVorbis_File *vf,ogg_int64_t pos){
+                             vf->current_serialno); /* must set serialno */
+   vorbis_synthesis_restart(&vf->vd);
+ 
+-  ret=_seek_helper(vf,pos);
+-  if(ret)goto seek_error;
++  if(_seek_helper(vf,pos)) {
++    /* dump the machine so we're in a known state */
++    vf->pcm_offset=-1;
++    _decode_clear(vf);
++    return OV_EBADLINK;
++  }
+ 
+   /* we need to make sure the pcm_offset is set, but we don't want to
+      advance the raw cursor past good packets just to get to the first
+@@ -1343,13 +1346,6 @@ int ov_raw_seek(OggVorbis_File *vf,ogg_int64_t pos){
+   vf->bittrack=0;
+   vf->samptrack=0;
+   return(0);
+-
+- seek_error:
+-  /* dump the machine so we're in a known state */
+-  vf->pcm_offset=-1;
+-  ogg_stream_clear(&work_os);
+-  _decode_clear(vf);
+-  return OV_EBADLINK;
+ }
+ 
+ /* rescales the number x from the range of [0,from] to [0,to]
+
+From 6dd05824351db6037d9e1bdd949766212cc40667 Mon Sep 17 00:00:00 2001
+From: sezero <sezero@users.sourceforge.net>
+Date: Fri, 15 Nov 2019 11:11:10 +0300
+Subject: [PATCH 22/37] autogen.sh: update as it is done in the vorbis source
+ tree.
+
+---
+ autogen.sh | 118 +++--------------------------------------------------
+ 1 file changed, 5 insertions(+), 113 deletions(-)
+
+diff --git a/autogen.sh b/autogen.sh
+index 73c8fca..b634701 100755
+--- a/autogen.sh
++++ b/autogen.sh
+@@ -1,120 +1,12 @@
+ #!/bin/sh
+ # Run this to set up the build system: configure, makefiles, etc.
+-# (based on the version in enlightenment's cvs)
++set -e
+ 
+-package="vorbisdec"
++package="vorbisidec"
+ 
+-olddir=`pwd`
+ srcdir=`dirname $0`
+-test -z "$srcdir" && srcdir=.
++test -n "$srcdir" && cd "$srcdir"
+ 
+-cd "$srcdir"
+-DIE=0
++echo "Updating build configuration files for $package, please wait.."
+ 
+-echo "checking for autoconf... "
+-(autoconf --version) < /dev/null > /dev/null 2>&1 || {
+-        echo
+-        echo "You must have autoconf installed to compile $package."
+-        echo "Download the appropriate package for your distribution,"
+-        echo "or get the source tarball at ftp://ftp.gnu.org/pub/gnu/"
+-        DIE=1
+-}
+-
+-VERSIONGREP="sed -e s/.*[^0-9\.]\([0-9]\.[0-9]\).*/\1/"
+-VERSIONMKINT="sed -e s/[^0-9]//"
+-                                                                                
+-# do we need automake?
+-if test -r Makefile.am; then
+-  AM_OPTIONS=`fgrep AUTOMAKE_OPTIONS Makefile.am`
+-  AM_NEEDED=`echo $AM_OPTIONS | $VERSIONGREP`
+-  if test x"$AM_NEEDED" = "x$AM_OPTIONS"; then
+-    AM_NEEDED=""
+-  fi
+-  if test -z $AM_NEEDED; then
+-    echo -n "checking for automake... "
+-    AUTOMAKE=automake
+-    ACLOCAL=aclocal
+-    if ($AUTOMAKE --version < /dev/null > /dev/null 2>&1); then
+-      echo "yes"
+-    else
+-      echo "no"
+-      AUTOMAKE=
+-    fi
+-  else
+-    echo -n "checking for automake $AM_NEEDED or later... "
+-    for am in automake-$AM_NEEDED automake$AM_NEEDED automake; do
+-      ($am --version < /dev/null > /dev/null 2>&1) || continue
+-      ver=`$am --version < /dev/null | head -n 1 | $VERSIONGREP | $VERSIONMKINT`
+-      verneeded=`echo $AM_NEEDED | $VERSIONMKINT`
+-      if test $ver -ge $verneeded; then
+-        AUTOMAKE=$am
+-        echo $AUTOMAKE
+-        break
+-      fi
+-    done
+-    test -z $AUTOMAKE &&  echo "no"
+-    echo -n "checking for aclocal $AM_NEEDED or later... "
+-    for ac in aclocal-$AM_NEEDED aclocal$AM_NEEDED aclocal; do
+-      ($ac --version < /dev/null > /dev/null 2>&1) || continue
+-      ver=`$ac --version < /dev/null | head -n 1 | $VERSIONGREP | $VERSIONMKINT`
+-      verneeded=`echo $AM_NEEDED | $VERSIONMKINT`
+-      if test $ver -ge $verneeded; then
+-        ACLOCAL=$ac
+-        echo $ACLOCAL
+-        break
+-      fi
+-    done
+-    test -z $ACLOCAL && echo "no"
+-  fi
+-  test -z $AUTOMAKE || test -z $ACLOCAL && {
+-        echo
+-        echo "You must have automake installed to compile $package."
+-        echo "Download the appropriate package for your distribution,"
+-        echo "or get the source tarball at ftp://ftp.gnu.org/pub/gnu/"
+-        exit 1
+-  }
+-fi
+-
+-echo -n "checking for libtool... "
+-for LIBTOOLIZE in libtoolize glibtoolize nope; do
+-  ($LIBTOOLIZE --version) < /dev/null > /dev/null 2>&1 && break
+-done
+-if test x$LIBTOOLIZE = xnope; then
+-  echo "nope."
+-  LIBTOOLIZE=libtoolize
+-else
+-  echo $LIBTOOLIZE
+-fi
+-($LIBTOOLIZE --version) < /dev/null > /dev/null 2>&1 || {
+-	echo
+-	echo "You must have libtool installed to compile $package."
+-	echo "Download the appropriate package for your system,"
+-	echo "or get the source from one of the GNU ftp sites"
+-	echo "listed in http://www.gnu.org/order/ftp.html"
+-	DIE=1
+-}
+-
+-if test "$DIE" -eq 1; then
+-        exit 1
+-fi
+-
+-if test -z "$*"; then
+-        echo "I am going to run ./configure with no arguments - if you wish "
+-        echo "to pass any to it, please specify them on the $0 command line."
+-fi
+-
+-echo "Generating configuration files for $package, please wait...."
+-
+-echo "  $ACLOCAL $ACLOCAL_FLAGS"
+-$ACLOCAL $ACLOCAL_FLAGS || exit 1
+-echo "  $LIBTOOLIZE --automake"
+-$LIBTOOLIZE --automake || exit 1
+-echo "  autoheader"
+-autoheader || exit 1
+-echo "  $AUTOMAKE --add-missing $AUTOMAKE_FLAGS"
+-$AUTOMAKE --add-missing $AUTOMAKE_FLAGS || exit 1
+-echo "  autoconf"
+-autoconf || exit 1
+-
+-cd $olddir
+-$srcdir/configure --enable-maintainer-mode "$@" && echo
++autoreconf -if
+
+From 0c78c42575eac17a45ae8b946e4821230d96e99e Mon Sep 17 00:00:00 2001
+From: sezero <sezero@users.sourceforge.net>
+Date: Thu, 28 Nov 2019 11:01:10 +0300
+Subject: [PATCH 23/37] minor style adjustment
+
+---
+ os.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/os.h b/os.h
+index c33ecdf..0af6eee 100644
+--- a/os.h
++++ b/os.h
+@@ -18,7 +18,7 @@
+  ********************************************************************/
+ 
+ #ifdef HAVE_CONFIG_H
+-#include "config.h"
++#  include "config.h"
+ #endif
+ 
+ #include <math.h>
+
+From 5662c2be4df7aae5aa86b2a72c784c171906c684 Mon Sep 17 00:00:00 2001
+From: sezero <sezero@users.sourceforge.net>
+Date: Thu, 28 Nov 2019 11:01:50 +0300
+Subject: [PATCH 24/37] fix newer autofoo erroring with AM_CONFIG_HEADER
+
+---
+ configure.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.in b/configure.in
+index de2d23e..5020786 100644
+--- a/configure.in
++++ b/configure.in
+@@ -10,7 +10,7 @@ AC_CONFIG_MACRO_DIR([m4])
+ AC_CANONICAL_HOST
+ AC_CANONICAL_TARGET
+ 
+-AM_CONFIG_HEADER([config.h])
++AC_CONFIG_HEADERS([config.h])
+ 
+ AM_INIT_AUTOMAKE(libvorbisidec,1.2.1)
+ 
+
+From c83a0a5c55216997dd02878cf566b3a10ebe522f Mon Sep 17 00:00:00 2001
+From: Ozkan Sezer <sezeroz@gmail.com>
+Date: Sat, 13 Feb 2021 14:40:50 +0300
+Subject: [PATCH 25/37] ran dos2unix on Version_script
+
+---
+ Version_script.in | 100 +++++++++++++++++++++++-----------------------
+ 1 file changed, 50 insertions(+), 50 deletions(-)
+
+diff --git a/Version_script.in b/Version_script.in
+index 3f9f093..1a4d6d7 100644
+--- a/Version_script.in
++++ b/Version_script.in
+@@ -1,48 +1,48 @@
+-#
+-# Export file for libvorbisidec
+-#
+-# Only the symbols listed in the global section will be callable from
+-# applications linking to libvorbisidec.
+-#
+-
+-@PACKAGE@.so.1
+-{
+-	global:
+-		ov_clear;
+-		ov_open;
+-		ov_open_callbacks;
+-		ov_test;
+-		ov_test_callbacks;
+-		ov_test_open;
+-		ov_bitrate;
+-		ov_bitrate_instant;
+-		ov_streams;
+-		ov_seekable;
+-		ov_serialnumber;
+-		ov_raw_total;
+-		ov_pcm_total;
+-		ov_time_total;
+-		ov_raw_seek;
+-		ov_pcm_seek;
+-		ov_pcm_seek_page;
+-		ov_time_seek;
+-		ov_time_seek_page;
+-		ov_raw_tell;
+-		ov_pcm_tell;
+-		ov_time_tell;
+-		ov_info;
+-		ov_comment;
+-		ov_read;
+-
+-		vorbis_info_init;
+-		vorbis_info_clear;
+-		vorbis_info_blocksize;
+-		vorbis_comment_init;
+-		vorbis_comment_query;
+-		vorbis_comment_query_count;
+-		vorbis_comment_clear;
+-		vorbis_block_init;
+-		vorbis_block_clear;
++#
++# Export file for libvorbisidec
++#
++# Only the symbols listed in the global section will be callable from
++# applications linking to libvorbisidec.
++#
++
++@PACKAGE@.so.1
++{
++	global:
++		ov_clear;
++		ov_open;
++		ov_open_callbacks;
++		ov_test;
++		ov_test_callbacks;
++		ov_test_open;
++		ov_bitrate;
++		ov_bitrate_instant;
++		ov_streams;
++		ov_seekable;
++		ov_serialnumber;
++		ov_raw_total;
++		ov_pcm_total;
++		ov_time_total;
++		ov_raw_seek;
++		ov_pcm_seek;
++		ov_pcm_seek_page;
++		ov_time_seek;
++		ov_time_seek_page;
++		ov_raw_tell;
++		ov_pcm_tell;
++		ov_time_tell;
++		ov_info;
++		ov_comment;
++		ov_read;
++
++		vorbis_info_init;
++		vorbis_info_clear;
++		vorbis_info_blocksize;
++		vorbis_comment_init;
++		vorbis_comment_query;
++		vorbis_comment_query_count;
++		vorbis_comment_clear;
++		vorbis_block_init;
++		vorbis_block_clear;
+ 		vorbis_dsp_clear;
+ 		vorbis_synthesis_idheader;
+ 		vorbis_synthesis_headerin;
+@@ -53,8 +53,8 @@
+ 		vorbis_synthesis_blockin;
+ 		vorbis_synthesis_pcmout;
+ 		vorbis_synthesis_read;
+-		vorbis_packet_blocksize;
+-
+-	local:
+-		*;
+-};
++		vorbis_packet_blocksize;
++
++	local:
++		*;
++};
+
+From f6b1c49e694c3ba0f206d2cc8e8caeaaf41dcb55 Mon Sep 17 00:00:00 2001
+From: Ozkan Sezer <sezeroz@gmail.com>
+Date: Sat, 13 Feb 2021 14:41:50 +0300
+Subject: [PATCH 26/37] simplifications to watcom makefiles
+
+---
+ Makefile.os2     | 7 -------
+ OWMakefile.win32 | 7 -------
+ 2 files changed, 14 deletions(-)
+
+diff --git a/Makefile.os2 b/Makefile.os2
+index 612a953..2d03f21 100644
+--- a/Makefile.os2
++++ b/Makefile.os2
+@@ -21,14 +21,7 @@ $(LIBNAME): $(OBJ)
+ .c.obj:
+ 	$(COMPILE) -fo=$^@ $<
+ 
+-!ifndef __UNIX__
+-distclean: clean .symbolic
+-	@if exist *.lib del *.lib
+-clean: .symbolic
+-	@if exist *.obj del *.obj
+-!else
+ distclean: clean .symbolic
+ 	rm -f *.lib
+ clean: .symbolic
+ 	rm -f *.obj
+-!endif
+diff --git a/OWMakefile.win32 b/OWMakefile.win32
+index 006f1be..24d5ddc 100644
+--- a/OWMakefile.win32
++++ b/OWMakefile.win32
+@@ -21,14 +21,7 @@ $(LIBNAME): $(OBJ)
+ .c.obj:
+ 	$(COMPILE) -fo=$^@ $<
+ 
+-!ifndef __UNIX__
+-distclean: clean .symbolic
+-	@if exist *.lib del *.lib
+-clean: .symbolic
+-	@if exist *.obj del *.obj
+-!else
+ distclean: clean .symbolic
+ 	rm -f *.lib
+ clean: .symbolic
+ 	rm -f *.obj
+-!endif
+
+From 164774696e32cc74ec40f5aab2f4b08b5f8a80ff Mon Sep 17 00:00:00 2001
+From: Ozkan Sezer <sezeroz@gmail.com>
+Date: Sat, 13 Feb 2021 14:44:24 +0300
+Subject: [PATCH 27/37] renamed configure.in to configure.ac
+
+---
+ configure.in => configure.ac | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ rename configure.in => configure.ac (100%)
+
+diff --git a/configure.in b/configure.ac
+similarity index 100%
+rename from configure.in
+rename to configure.ac
+
+From e37cfb922c6c49d3281698de5bf73da8f70f8e56 Mon Sep 17 00:00:00 2001
+From: Ozkan Sezer <sezeroz@gmail.com>
+Date: Sat, 13 Feb 2021 14:45:28 +0300
+Subject: [PATCH 28/37] added latest version of pkg.m4 under m4/
+
+---
+ m4/pkg.m4 | 275 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 275 insertions(+)
+ create mode 100644 m4/pkg.m4
+
+diff --git a/m4/pkg.m4 b/m4/pkg.m4
+new file mode 100644
+index 0000000..13a8890
+--- /dev/null
++++ b/m4/pkg.m4
+@@ -0,0 +1,275 @@
++# pkg.m4 - Macros to locate and utilise pkg-config.   -*- Autoconf -*-
++# serial 12 (pkg-config-0.29.2)
++
++dnl Copyright © 2004 Scott James Remnant <scott@netsplit.com>.
++dnl Copyright © 2012-2015 Dan Nicholson <dbn.lists@gmail.com>
++dnl
++dnl This program is free software; you can redistribute it and/or modify
++dnl it under the terms of the GNU General Public License as published by
++dnl the Free Software Foundation; either version 2 of the License, or
++dnl (at your option) any later version.
++dnl
++dnl This program is distributed in the hope that it will be useful, but
++dnl WITHOUT ANY WARRANTY; without even the implied warranty of
++dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
++dnl General Public License for more details.
++dnl
++dnl You should have received a copy of the GNU General Public License
++dnl along with this program; if not, write to the Free Software
++dnl Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
++dnl 02111-1307, USA.
++dnl
++dnl As a special exception to the GNU General Public License, if you
++dnl distribute this file as part of a program that contains a
++dnl configuration script generated by Autoconf, you may include it under
++dnl the same distribution terms that you use for the rest of that
++dnl program.
++
++dnl PKG_PREREQ(MIN-VERSION)
++dnl -----------------------
++dnl Since: 0.29
++dnl
++dnl Verify that the version of the pkg-config macros are at least
++dnl MIN-VERSION. Unlike PKG_PROG_PKG_CONFIG, which checks the user's
++dnl installed version of pkg-config, this checks the developer's version
++dnl of pkg.m4 when generating configure.
++dnl
++dnl To ensure that this macro is defined, also add:
++dnl m4_ifndef([PKG_PREREQ],
++dnl     [m4_fatal([must install pkg-config 0.29 or later before running autoconf/autogen])])
++dnl
++dnl See the "Since" comment for each macro you use to see what version
++dnl of the macros you require.
++m4_defun([PKG_PREREQ],
++[m4_define([PKG_MACROS_VERSION], [0.29.2])
++m4_if(m4_version_compare(PKG_MACROS_VERSION, [$1]), -1,
++    [m4_fatal([pkg.m4 version $1 or higher is required but ]PKG_MACROS_VERSION[ found])])
++])dnl PKG_PREREQ
++
++dnl PKG_PROG_PKG_CONFIG([MIN-VERSION])
++dnl ----------------------------------
++dnl Since: 0.16
++dnl
++dnl Search for the pkg-config tool and set the PKG_CONFIG variable to
++dnl first found in the path. Checks that the version of pkg-config found
++dnl is at least MIN-VERSION. If MIN-VERSION is not specified, 0.9.0 is
++dnl used since that's the first version where most current features of
++dnl pkg-config existed.
++AC_DEFUN([PKG_PROG_PKG_CONFIG],
++[m4_pattern_forbid([^_?PKG_[A-Z_]+$])
++m4_pattern_allow([^PKG_CONFIG(_(PATH|LIBDIR|SYSROOT_DIR|ALLOW_SYSTEM_(CFLAGS|LIBS)))?$])
++m4_pattern_allow([^PKG_CONFIG_(DISABLE_UNINSTALLED|TOP_BUILD_DIR|DEBUG_SPEW)$])
++AC_ARG_VAR([PKG_CONFIG], [path to pkg-config utility])
++AC_ARG_VAR([PKG_CONFIG_PATH], [directories to add to pkg-config's search path])
++AC_ARG_VAR([PKG_CONFIG_LIBDIR], [path overriding pkg-config's built-in search path])
++
++if test "x$ac_cv_env_PKG_CONFIG_set" != "xset"; then
++	AC_PATH_TOOL([PKG_CONFIG], [pkg-config])
++fi
++if test -n "$PKG_CONFIG"; then
++	_pkg_min_version=m4_default([$1], [0.9.0])
++	AC_MSG_CHECKING([pkg-config is at least version $_pkg_min_version])
++	if $PKG_CONFIG --atleast-pkgconfig-version $_pkg_min_version; then
++		AC_MSG_RESULT([yes])
++	else
++		AC_MSG_RESULT([no])
++		PKG_CONFIG=""
++	fi
++fi[]dnl
++])dnl PKG_PROG_PKG_CONFIG
++
++dnl PKG_CHECK_EXISTS(MODULES, [ACTION-IF-FOUND], [ACTION-IF-NOT-FOUND])
++dnl -------------------------------------------------------------------
++dnl Since: 0.18
++dnl
++dnl Check to see whether a particular set of modules exists. Similar to
++dnl PKG_CHECK_MODULES(), but does not set variables or print errors.
++dnl
++dnl Please remember that m4 expands AC_REQUIRE([PKG_PROG_PKG_CONFIG])
++dnl only at the first occurence in configure.ac, so if the first place
++dnl it's called might be skipped (such as if it is within an "if", you
++dnl have to call PKG_CHECK_EXISTS manually
++AC_DEFUN([PKG_CHECK_EXISTS],
++[AC_REQUIRE([PKG_PROG_PKG_CONFIG])dnl
++if test -n "$PKG_CONFIG" && \
++    AC_RUN_LOG([$PKG_CONFIG --exists --print-errors "$1"]); then
++  m4_default([$2], [:])
++m4_ifvaln([$3], [else
++  $3])dnl
++fi])
++
++dnl _PKG_CONFIG([VARIABLE], [COMMAND], [MODULES])
++dnl ---------------------------------------------
++dnl Internal wrapper calling pkg-config via PKG_CONFIG and setting
++dnl pkg_failed based on the result.
++m4_define([_PKG_CONFIG],
++[if test -n "$$1"; then
++    pkg_cv_[]$1="$$1"
++ elif test -n "$PKG_CONFIG"; then
++    PKG_CHECK_EXISTS([$3],
++                     [pkg_cv_[]$1=`$PKG_CONFIG --[]$2 "$3" 2>/dev/null`
++		      test "x$?" != "x0" && pkg_failed=yes ],
++		     [pkg_failed=yes])
++ else
++    pkg_failed=untried
++fi[]dnl
++])dnl _PKG_CONFIG
++
++dnl _PKG_SHORT_ERRORS_SUPPORTED
++dnl ---------------------------
++dnl Internal check to see if pkg-config supports short errors.
++AC_DEFUN([_PKG_SHORT_ERRORS_SUPPORTED],
++[AC_REQUIRE([PKG_PROG_PKG_CONFIG])
++if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
++        _pkg_short_errors_supported=yes
++else
++        _pkg_short_errors_supported=no
++fi[]dnl
++])dnl _PKG_SHORT_ERRORS_SUPPORTED
++
++
++dnl PKG_CHECK_MODULES(VARIABLE-PREFIX, MODULES, [ACTION-IF-FOUND],
++dnl   [ACTION-IF-NOT-FOUND])
++dnl --------------------------------------------------------------
++dnl Since: 0.4.0
++dnl
++dnl Note that if there is a possibility the first call to
++dnl PKG_CHECK_MODULES might not happen, you should be sure to include an
++dnl explicit call to PKG_PROG_PKG_CONFIG in your configure.ac
++AC_DEFUN([PKG_CHECK_MODULES],
++[AC_REQUIRE([PKG_PROG_PKG_CONFIG])dnl
++AC_ARG_VAR([$1][_CFLAGS], [C compiler flags for $1, overriding pkg-config])dnl
++AC_ARG_VAR([$1][_LIBS], [linker flags for $1, overriding pkg-config])dnl
++
++pkg_failed=no
++AC_MSG_CHECKING([for $2])
++
++_PKG_CONFIG([$1][_CFLAGS], [cflags], [$2])
++_PKG_CONFIG([$1][_LIBS], [libs], [$2])
++
++m4_define([_PKG_TEXT], [Alternatively, you may set the environment variables $1[]_CFLAGS
++and $1[]_LIBS to avoid the need to call pkg-config.
++See the pkg-config man page for more details.])
++
++if test $pkg_failed = yes; then
++        AC_MSG_RESULT([no])
++        _PKG_SHORT_ERRORS_SUPPORTED
++        if test $_pkg_short_errors_supported = yes; then
++	        $1[]_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "$2" 2>&1`
++        else
++	        $1[]_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "$2" 2>&1`
++        fi
++	# Put the nasty error message in config.log where it belongs
++	echo "$$1[]_PKG_ERRORS" >&AS_MESSAGE_LOG_FD
++
++	m4_default([$4], [AC_MSG_ERROR(
++[Package requirements ($2) were not met:
++
++$$1_PKG_ERRORS
++
++Consider adjusting the PKG_CONFIG_PATH environment variable if you
++installed software in a non-standard prefix.
++
++_PKG_TEXT])[]dnl
++        ])
++elif test $pkg_failed = untried; then
++        AC_MSG_RESULT([no])
++	m4_default([$4], [AC_MSG_FAILURE(
++[The pkg-config script could not be found or is too old.  Make sure it
++is in your PATH or set the PKG_CONFIG environment variable to the full
++path to pkg-config.
++
++_PKG_TEXT
++
++To get pkg-config, see <http://pkg-config.freedesktop.org/>.])[]dnl
++        ])
++else
++	$1[]_CFLAGS=$pkg_cv_[]$1[]_CFLAGS
++	$1[]_LIBS=$pkg_cv_[]$1[]_LIBS
++        AC_MSG_RESULT([yes])
++	$3
++fi[]dnl
++])dnl PKG_CHECK_MODULES
++
++
++dnl PKG_CHECK_MODULES_STATIC(VARIABLE-PREFIX, MODULES, [ACTION-IF-FOUND],
++dnl   [ACTION-IF-NOT-FOUND])
++dnl ---------------------------------------------------------------------
++dnl Since: 0.29
++dnl
++dnl Checks for existence of MODULES and gathers its build flags with
++dnl static libraries enabled. Sets VARIABLE-PREFIX_CFLAGS from --cflags
++dnl and VARIABLE-PREFIX_LIBS from --libs.
++dnl
++dnl Note that if there is a possibility the first call to
++dnl PKG_CHECK_MODULES_STATIC might not happen, you should be sure to
++dnl include an explicit call to PKG_PROG_PKG_CONFIG in your
++dnl configure.ac.
++AC_DEFUN([PKG_CHECK_MODULES_STATIC],
++[AC_REQUIRE([PKG_PROG_PKG_CONFIG])dnl
++_save_PKG_CONFIG=$PKG_CONFIG
++PKG_CONFIG="$PKG_CONFIG --static"
++PKG_CHECK_MODULES($@)
++PKG_CONFIG=$_save_PKG_CONFIG[]dnl
++])dnl PKG_CHECK_MODULES_STATIC
++
++
++dnl PKG_INSTALLDIR([DIRECTORY])
++dnl -------------------------
++dnl Since: 0.27
++dnl
++dnl Substitutes the variable pkgconfigdir as the location where a module
++dnl should install pkg-config .pc files. By default the directory is
++dnl $libdir/pkgconfig, but the default can be changed by passing
++dnl DIRECTORY. The user can override through the --with-pkgconfigdir
++dnl parameter.
++AC_DEFUN([PKG_INSTALLDIR],
++[m4_pushdef([pkg_default], [m4_default([$1], ['${libdir}/pkgconfig'])])
++m4_pushdef([pkg_description],
++    [pkg-config installation directory @<:@]pkg_default[@:>@])
++AC_ARG_WITH([pkgconfigdir],
++    [AS_HELP_STRING([--with-pkgconfigdir], pkg_description)],,
++    [with_pkgconfigdir=]pkg_default)
++AC_SUBST([pkgconfigdir], [$with_pkgconfigdir])
++m4_popdef([pkg_default])
++m4_popdef([pkg_description])
++])dnl PKG_INSTALLDIR
++
++
++dnl PKG_NOARCH_INSTALLDIR([DIRECTORY])
++dnl --------------------------------
++dnl Since: 0.27
++dnl
++dnl Substitutes the variable noarch_pkgconfigdir as the location where a
++dnl module should install arch-independent pkg-config .pc files. By
++dnl default the directory is $datadir/pkgconfig, but the default can be
++dnl changed by passing DIRECTORY. The user can override through the
++dnl --with-noarch-pkgconfigdir parameter.
++AC_DEFUN([PKG_NOARCH_INSTALLDIR],
++[m4_pushdef([pkg_default], [m4_default([$1], ['${datadir}/pkgconfig'])])
++m4_pushdef([pkg_description],
++    [pkg-config arch-independent installation directory @<:@]pkg_default[@:>@])
++AC_ARG_WITH([noarch-pkgconfigdir],
++    [AS_HELP_STRING([--with-noarch-pkgconfigdir], pkg_description)],,
++    [with_noarch_pkgconfigdir=]pkg_default)
++AC_SUBST([noarch_pkgconfigdir], [$with_noarch_pkgconfigdir])
++m4_popdef([pkg_default])
++m4_popdef([pkg_description])
++])dnl PKG_NOARCH_INSTALLDIR
++
++
++dnl PKG_CHECK_VAR(VARIABLE, MODULE, CONFIG-VARIABLE,
++dnl [ACTION-IF-FOUND], [ACTION-IF-NOT-FOUND])
++dnl -------------------------------------------
++dnl Since: 0.28
++dnl
++dnl Retrieves the value of the pkg-config variable for the given module.
++AC_DEFUN([PKG_CHECK_VAR],
++[AC_REQUIRE([PKG_PROG_PKG_CONFIG])dnl
++AC_ARG_VAR([$1], [value of $3 for $2, overriding pkg-config])dnl
++
++_PKG_CONFIG([$1], [variable="][$3]["], [$2])
++AS_VAR_COPY([$1], [pkg_cv_][$1])
++
++AS_VAR_IF([$1], [""], [$5], [$4])dnl
++])dnl PKG_CHECK_VAR
+
+From 97c22455b100968bfcee4c4322dd2a95cd8c7bc1 Mon Sep 17 00:00:00 2001
+From: Ozkan Sezer <sezeroz@gmail.com>
+Date: Sat, 13 Feb 2021 15:50:02 +0300
+Subject: [PATCH 29/37] configury updates.
+
+---
+ Makefile.am  |  4 ++--
+ configure.ac | 61 ++++++++++++++++++++++++++++++----------------------
+ 2 files changed, 37 insertions(+), 28 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index f5eab65..f506adf 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,7 +1,7 @@
+ AUTOMAKE_OPTIONS = foreign
+ ACLOCAL_AMFLAGS = -I m4
+ 
+-INCLUDES = -I. @OGG_CFLAGS@
++AM_CPPFLAGS = -I. @OGG_CFLAGS@
+ 
+ pkgconfigdir = $(libdir)/pkgconfig
+ pkgconfig_DATA = vorbisidec.pc
+@@ -18,7 +18,7 @@ libvorbisidec_la_SOURCES = mdct.c block.c window.c \
+                         registry.h window.h window_lookup.h\
+                         codec_internal.h backends.h \
+ 			asm_arm.h ivorbiscodec.h
+-libvorbisidec_la_LDFLAGS = -no-undefined -version-info @V_LIB_CURRENT@:@V_LIB_REVISION@:@V_LIB_AGE@
++libvorbisidec_la_LDFLAGS = -no-undefined -version-info @V_LIB_CURRENT@:@V_LIB_REVISION@:@V_LIB_AGE@ $(SHLIB_VERSION_ARG)
+ libvorbisidec_la_LIBADD = @OGG_LIBS@
+ 
+ EXTRA_PROGRAMS = ivorbisfile_example iseeking_example
+diff --git a/configure.ac b/configure.ac
+index 5020786..a2276a1 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -4,7 +4,8 @@ dnl ------------------------------------------------
+ dnl Initialization and Versioning
+ dnl ------------------------------------------------
+ 
+-AC_INIT(mdct.c)
++AC_INIT
++AC_CONFIG_SRCDIR([mdct.c])
+ AC_CONFIG_MACRO_DIR([m4])
+ 
+ AC_CANONICAL_HOST
+@@ -26,9 +27,9 @@ AC_SUBST(V_LIB_CURRENT)
+ AC_SUBST(V_LIB_REVISION)
+ AC_SUBST(V_LIB_AGE)
+ 
+-dnl --------------------------------------------------  
++dnl --------------------------------------------------
+ dnl Check for programs
+-dnl --------------------------------------------------  
++dnl --------------------------------------------------
+ 
+ dnl save $CFLAGS since AC_PROG_CC likes to insert "-g -O2"
+ dnl if $CFLAGS is blank
+@@ -37,8 +38,18 @@ AC_PROG_CC
+ AC_PROG_CPP
+ CFLAGS="$cflags_save"
+ 
+-AC_LIBTOOL_WIN32_DLL
+-AC_PROG_LIBTOOL
++dnl AC_LIBTOOL_WIN32_DLL
++dnl AC_PROG_LIBTOOL
++LT_INIT([win32-dll])
++
++# Test whenever ld supports -version-script
++dnl AC_PROG_LD
++dnl AC_PROG_LD_GNU
++LT_PATH_LD
++
++dnl check endianism
++AC_C_BIGENDIAN
++
+ 
+ dnl --------------------------------------------------
+ dnl Set build flags based on environment
+@@ -49,9 +60,9 @@ dnl Set some target options
+ cflags_save="$CFLAGS"
+ ldflags_save="$LDFLAGS"
+ if test -z "$GCC"; then
+-        case $host in 
++        case $host in
+         arm-*-*)
+-                DEBUG="-g -D_ARM_ASSEM_" 
++                DEBUG="-g -D_ARM_ASSEM_"
+                 CFLAGS="-O -D_ARM_ASSEM_"
+                 PROFILE="-p -g -O -D_ARM_ASSEM_" ;;
+         *)
+@@ -61,7 +72,7 @@ if test -z "$GCC"; then
+         esac
+ else
+ 
+-        case $host in 
++        case $host in
+         arm-*-*)
+                 DEBUG="-g -Wall -D__NO_MATH_INLINES -fsigned-char -D_ARM_ASSEM_"
+                 CFLAGS="-O2 -D_ARM_ASSEM_ -fsigned-char"
+@@ -77,20 +88,12 @@ CFLAGS="$CFLAGS $cflags_save -D_REENTRANT"
+ LDFLAGS="$LDFLAGS $ldflags_save"
+ 
+ 
+-# Test whenever ld supports -version-script
+-AC_PROG_LD
+-AC_PROG_LD_GNU
+-
+-# check endianism
+-AC_C_BIGENDIAN
+-
+ dnl --------------------------------------------------
+-dnl Options 
++dnl Options
+ dnl --------------------------------------------------
+ 
+-AC_ARG_ENABLE(
+-   low-accuracy,
+-   [  --enable-low-accuracy   enable 32 bit only multiply operations],
++AC_ARG_ENABLE(low-accuracy,
++   AS_HELP_STRING([--enable-low-accuracy], [enable 32 bit only multiply operations]),
+    CFLAGS="$CFLAGS -D_LOW_ACCURACY_"
+ )
+ 
+@@ -135,19 +138,24 @@ AC_FUNC_ALLOCA
+ AC_FUNC_MEMCMP
+ 
+ AC_MSG_CHECKING(for C99 variable-size arrays)
+-AC_TRY_COMPILE( [], [static int x; char a[++x]; a[sizeof a - 1] = 0; int N; return a[0];],
+-[has_var_arrays=yes;AC_DEFINE([VAR_ARRAYS], [], [Use C99 variable-size arrays])
+-],
+-has_var_arrays=no
++AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]],
++  [[static int x; char a[++x]; a[sizeof a - 1] = 0; int N; return a[0];]] )],
++  [has_var_arrays=yes;AC_DEFINE([VAR_ARRAYS],[],[Use C99 variable-size arrays])],
++  [has_var_arrays=no]
+ )
+ AC_MSG_RESULT($has_var_arrays)
+ 
+ 
+-# do this last after all checks, because Version_script is not generated yet.
++dnl --------------------------------------------------
++dnl Version script (exported symbols control.)
++dnl --------------------------------------------------
++
++SHLIB_VERSION_ARG=""
+ if test "x$lt_cv_prog_gnu_ld" = "xyes"; then
+    SHLIB_VERSION_ARG="-Wl,--version-script=Version_script"
+-   LDFLAGS="$LDFLAGS $SHLIB_VERSION_ARG"
+ fi
++AC_SUBST(SHLIB_VERSION_ARG)
++
+ 
+ dnl --------------------------------------------------
+ dnl Do substitutions
+@@ -159,4 +167,5 @@ AC_SUBST(LIBS)
+ AC_SUBST(DEBUG)
+ AC_SUBST(PROFILE)
+ 
+-AC_OUTPUT(Makefile Version_script vorbisidec.pc)
++AC_CONFIG_FILES([Makefile Version_script vorbisidec.pc])
++AC_OUTPUT
+
+From 00e81d64c029168f7313aafcf135319de552dc1a Mon Sep 17 00:00:00 2001
+From: Ozkan Sezer <sezeroz@gmail.com>
+Date: Mon, 15 Feb 2021 05:10:10 +0300
+Subject: [PATCH 30/37] minor update to configury
+
+---
+ Makefile.am  | 2 +-
+ configure.ac | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index f506adf..de2daf9 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -45,7 +45,7 @@ example:
+ 	$(MAKE) iseeking_example
+ 
+ debug:
+-	$(MAKE) all CFLAGS="@DEBUG@" 
++	$(MAKE) all CFLAGS="@DEBUG@"
+ 
+ profile:
+ 	$(MAKE) all CFLAGS="@PROFILE@"
+diff --git a/configure.ac b/configure.ac
+index a2276a1..a9ba188 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -93,7 +93,7 @@ dnl Options
+ dnl --------------------------------------------------
+ 
+ AC_ARG_ENABLE(low-accuracy,
+-   AS_HELP_STRING([--enable-low-accuracy], [enable 32 bit only multiply operations]),
++   [AS_HELP_STRING([--enable-low-accuracy], [enable 32 bit only multiply operations])],
+    CFLAGS="$CFLAGS -D_LOW_ACCURACY_"
+ )
+ 
+
+From 81f0a5c2f573dd20c6543c7edc2a8dfaa1ed3847 Mon Sep 17 00:00:00 2001
+From: Ozkan Sezer <sezeroz@gmail.com>
+Date: Mon, 15 Feb 2021 05:10:10 +0300
+Subject: [PATCH 31/37] made _v_toupper helper inline
+
+---
+ info.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/info.c b/info.c
+index dd5b7ad..469b482 100644
+--- a/info.c
++++ b/info.c
+@@ -36,7 +36,7 @@ static void _v_readstring(oggpack_buffer *o,char *buf,int bytes){
+   }
+ }
+ 
+-static int _v_toupper(int c) {
++STIN int _v_toupper(int c) {
+   return (c >= 'a' && c <= 'z') ? (c & ~('a' - 'A')) : c;
+ }
+ 
+
+From 13e97f0c56c3e974c5afb30a15b928f887f96ba6 Mon Sep 17 00:00:00 2001
+From: Ozkan Sezer <sezeroz@gmail.com>
+Date: Sun, 28 Mar 2021 11:15:24 +0300
+Subject: [PATCH 32/37] added tremor ov_fopen to header and exports file (was
+ always missing.)
+
+---
+ Version_script.in | 2 +-
+ ivorbisfile.h     | 7 +++----
+ 2 files changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/Version_script.in b/Version_script.in
+index 1a4d6d7..8b7b686 100644
+--- a/Version_script.in
++++ b/Version_script.in
+@@ -1,4 +1,3 @@
+-#
+ # Export file for libvorbisidec
+ #
+ # Only the symbols listed in the global section will be callable from
+@@ -9,6 +8,7 @@
+ {
+ 	global:
+ 		ov_clear;
++		ov_fopen;
+ 		ov_open;
+ 		ov_open_callbacks;
+ 		ov_test;
+diff --git a/ivorbisfile.h b/ivorbisfile.h
+index f6ecb0e..cb82f9c 100644
+--- a/ivorbisfile.h
++++ b/ivorbisfile.h
+@@ -29,11 +29,11 @@ extern "C"
+ #define CHUNKSIZE 65535
+ #define READSIZE  1024
+ /* The function prototypes for the callbacks are basically the same as for
+- * the stdio functions fread, fseek, fclose, ftell. 
++ * the stdio functions fread, fseek, fclose, ftell.
+  * The one difference is that the FILE * arguments have been replaced with
+  * a void * - this is to be used as a pointer to whatever internal data these
+  * functions might need. In the stdio case, it's just a FILE * cast to a void *
+- * 
++ *
+  * If you use other functions, check the docs for these functions and return
+  * the right values. For seek_func(), you *MUST* return -1 if the stream is
+  * unseekable
+@@ -87,6 +87,7 @@ typedef struct OggVorbis_File {
+ } OggVorbis_File;
+ 
+ extern int ov_clear(OggVorbis_File *vf);
++extern int ov_fopen(const char *path,OggVorbis_File *vf);
+ extern int ov_open(FILE *f,OggVorbis_File *vf,const char *initial,long ibytes);
+ extern int ov_open_callbacks(void *datasource, OggVorbis_File *vf,
+ 		const char *initial, long ibytes, ov_callbacks callbacks);
+@@ -127,5 +128,3 @@ extern long ov_read(OggVorbis_File *vf,char *buffer,int length,
+ #endif /* __cplusplus */
+ 
+ #endif
+-
+-
+
+From 1a5d5070ab6ba11f1a9d12dab010e57e637e093d Mon Sep 17 00:00:00 2001
+From: Ozkan Sezer <sezeroz@gmail.com>
+Date: Sun, 28 Mar 2021 11:56:02 +0300
+Subject: [PATCH 33/37] remove unnecessary math.h includes.
+
+---
+ codebook.c   | 3 +--
+ floor0.c     | 2 --
+ floor1.c     | 1 -
+ mapping0.c   | 1 -
+ os.h         | 1 -
+ res012.c     | 1 -
+ sharedbook.c | 2 --
+ vorbisfile.c | 1 -
+ window.c     | 1 -
+ 9 files changed, 1 insertion(+), 12 deletions(-)
+
+diff --git a/codebook.c b/codebook.c
+index 1bbba8f..c0a06ec 100644
+--- a/codebook.c
++++ b/codebook.c
+@@ -17,7 +17,6 @@
+ 
+ #include <stdlib.h>
+ #include <string.h>
+-#include <math.h>
+ #include <ogg/ogg.h>
+ #include "ivorbiscodec.h"
+ #include "codebook.h"
+@@ -168,7 +167,7 @@ STIN long decode_packed_entry_number(codebook *book,
+   int  read=book->dec_maxlength;
+   long lo,hi;
+   long lok = oggpack_look(b,book->dec_firsttablen);
+- 
++
+   if (lok >= 0) {
+     long entry = book->dec_firsttable[lok];
+     if(entry&0x80000000UL){
+diff --git a/floor0.c b/floor0.c
+index 3380df4..c73955d 100644
+--- a/floor0.c
++++ b/floor0.c
+@@ -17,7 +17,6 @@
+ 
+ #include <stdlib.h>
+ #include <string.h>
+-#include <math.h>
+ #include <ogg/ogg.h>
+ #include "ivorbiscodec.h"
+ #include "codec_internal.h"
+@@ -436,4 +435,3 @@ vorbis_func_floor floor0_exportbundle={
+   &floor0_free_look,&floor0_inverse1,&floor0_inverse2
+ };
+ 
+-
+diff --git a/floor1.c b/floor1.c
+index e63ae9f..cecc5d5 100644
+--- a/floor1.c
++++ b/floor1.c
+@@ -17,7 +17,6 @@
+ 
+ #include <stdlib.h>
+ #include <string.h>
+-#include <math.h>
+ #include <ogg/ogg.h>
+ #include "ivorbiscodec.h"
+ #include "codec_internal.h"
+diff --git a/mapping0.c b/mapping0.c
+index 631ab90..f9b506f 100644
+--- a/mapping0.c
++++ b/mapping0.c
+@@ -18,7 +18,6 @@
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <string.h>
+-#include <math.h>
+ #include <ogg/ogg.h>
+ #include "ivorbiscodec.h"
+ #include "mdct.h"
+diff --git a/os.h b/os.h
+index 0af6eee..1087f5a 100644
+--- a/os.h
++++ b/os.h
+@@ -21,7 +21,6 @@
+ #  include "config.h"
+ #endif
+ 
+-#include <math.h>
+ #include <ogg/os_types.h>
+ 
+ #ifndef _V_IFDEFJAIL_H_
+diff --git a/res012.c b/res012.c
+index 5afdf84..4e3a54b 100644
+--- a/res012.c
++++ b/res012.c
+@@ -17,7 +17,6 @@
+ 
+ #include <stdlib.h>
+ #include <string.h>
+-#include <math.h>
+ #include <ogg/ogg.h>
+ #include "ivorbiscodec.h"
+ #include "codec_internal.h"
+diff --git a/sharedbook.c b/sharedbook.c
+index a35aef5..f436f21 100644
+--- a/sharedbook.c
++++ b/sharedbook.c
+@@ -16,7 +16,6 @@
+  ********************************************************************/
+ 
+ #include <stdlib.h>
+-#include <math.h>
+ #include <string.h>
+ #include <ogg/ogg.h>
+ #include "misc.h"
+@@ -444,4 +443,3 @@ int vorbis_book_init_decode(codebook *c,const static_codebook *s){
+   vorbis_book_clear(c);
+   return(-1);
+ }
+-
+diff --git a/vorbisfile.c b/vorbisfile.c
+index afb4f05..f21495b 100644
+--- a/vorbisfile.c
++++ b/vorbisfile.c
+@@ -20,7 +20,6 @@
+ #include <stdio.h>
+ #include <errno.h>
+ #include <string.h>
+-#include <math.h>
+ 
+ #include "ivorbiscodec.h"
+ #include "ivorbisfile.h"
+diff --git a/window.c b/window.c
+index 3f2917f..80da7f3 100644
+--- a/window.c
++++ b/window.c
+@@ -16,7 +16,6 @@
+  ********************************************************************/
+ 
+ #include <stdlib.h>
+-#include <math.h>
+ #include "misc.h"
+ #include "window.h"
+ #include "window_lookup.h"
+
+From d8cf94d9ad5106cd383dc2211d53cc250cdb24aa Mon Sep 17 00:00:00 2001
+From: Ozkan Sezer <sezeroz@gmail.com>
+Date: Mon, 29 Mar 2021 14:28:56 +0300
+Subject: [PATCH 34/37] renamed watcom win32 makefile
+
+---
+ OWMakefile.win32 => Makefile.w32 | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ rename OWMakefile.win32 => Makefile.w32 (100%)
+
+diff --git a/OWMakefile.win32 b/Makefile.w32
+similarity index 100%
+rename from OWMakefile.win32
+rename to Makefile.w32
+
+From f422db7cac7b854604ae6c8df9f9493457dba272 Mon Sep 17 00:00:00 2001
+From: Ozkan Sezer <sezeroz@gmail.com>
+Date: Wed, 31 Mar 2021 03:01:02 +0300
+Subject: [PATCH 35/37] minor configuration update, allow disabling alloca
+ mode.
+
+---
+ configure.ac | 13 ++++++++++---
+ misc.h       |  6 +-----
+ 2 files changed, 11 insertions(+), 8 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index a9ba188..6511f7f 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -97,10 +97,16 @@ AC_ARG_ENABLE(low-accuracy,
+    CFLAGS="$CFLAGS -D_LOW_ACCURACY_"
+ )
+ 
++AC_ARG_ENABLE(alloca,
++   [AS_HELP_STRING([--disable-alloca], [disable alloca and only use variable-length arrays])],,
++   [enable_alloca=yes]
++)
++
+ dnl --------------------------------------------------
+ dnl Check for headers
+ dnl --------------------------------------------------
+ 
++AC_CHECK_HEADERS(sys/types.h)
+ AC_CHECK_HEADER(memory.h,CFLAGS="$CFLAGS -DUSE_MEMORY_H",:)
+ 
+ dnl --------------------------------------------------
+@@ -131,11 +137,12 @@ then
+ fi
+ 
+ dnl --------------------------------------------------
+-dnl Check for library functions
++dnl Stack allocation mode
+ dnl --------------------------------------------------
+ 
+-AC_FUNC_ALLOCA
+-AC_FUNC_MEMCMP
++if test "x$enable_alloca" = "xyes"; then
++  AC_FUNC_ALLOCA
++fi
+ 
+ AC_MSG_CHECKING(for C99 variable-size arrays)
+ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]],
+diff --git a/misc.h b/misc.h
+index 77cb2e2..cdc646d 100644
+--- a/misc.h
++++ b/misc.h
+@@ -37,7 +37,7 @@
+ #ifndef  _LOW_ACCURACY_
+ /* 64 bit multiply */
+ 
+-#if !(defined WIN32 && defined WINCE)
++#ifdef HAVE_SYS_TYPES_H
+ #include <sys/types.h>
+ #endif
+ 
+@@ -239,7 +239,3 @@ STIN ogg_int32_t VFLOAT_ADD(ogg_int32_t a,ogg_int32_t ap,
+ }
+ 
+ #endif
+-
+-
+-
+-
+
+From 22e7b6db5e68ebb4b766cf28b1d27da9ef059b05 Mon Sep 17 00:00:00 2001
+From: Ozkan Sezer <sezeroz@gmail.com>
+Date: Wed, 31 Mar 2021 11:33:10 +0300
+Subject: [PATCH 36/37] minor update to watcom makefiles
+
+---
+ Makefile.os2 | 4 ++--
+ Makefile.w32 | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/Makefile.os2 b/Makefile.os2
+index 2d03f21..6aa6299 100644
+--- a/Makefile.os2
++++ b/Makefile.os2
+@@ -1,7 +1,7 @@
+ # build tremor (libvorbisidec) using OpenWatcom for OS/2 as a static libary
+ #
+ 
+-CFLAGS  = -bt=os2 -bm -fp5 -fpi87 -mf -oeatxh -w4 -ei -zp8
++CFLAGS  = -bt=os2 -bm -fp5 -fpi87 -mf -oeatxh -w4 -ei -j -zp8
+ # -5s  :  Pentium stack calling conventions.
+ # -5r  :  Pentium register calling conventions.
+ CFLAGS += -5s
+@@ -22,6 +22,6 @@ $(LIBNAME): $(OBJ)
+ 	$(COMPILE) -fo=$^@ $<
+ 
+ distclean: clean .symbolic
+-	rm -f *.lib
++	rm -f *.lib *.err
+ clean: .symbolic
+ 	rm -f *.obj
+diff --git a/Makefile.w32 b/Makefile.w32
+index 24d5ddc..7c00679 100644
+--- a/Makefile.w32
++++ b/Makefile.w32
+@@ -1,7 +1,7 @@
+ # build tremor (libvorbisidec) using OpenWatcom for Win32 as a static libary
+ #
+ 
+-CFLAGS  = -bt=nt -bm -fp5 -fpi87 -mf -oeatxh -w4 -ei -zp8
++CFLAGS  = -bt=nt -bm -fp5 -fpi87 -mf -oeatxh -w4 -ei -j -zp8
+ # -5s  :  Pentium stack calling conventions.
+ # -5r  :  Pentium register calling conventions.
+ CFLAGS += -5s
+@@ -22,6 +22,6 @@ $(LIBNAME): $(OBJ)
+ 	$(COMPILE) -fo=$^@ $<
+ 
+ distclean: clean .symbolic
+-	rm -f *.lib
++	rm -f *.lib *.err
+ clean: .symbolic
+ 	rm -f *.obj
+
+From 91decb5f1b11a84a2157a6326d9135b22627024b Mon Sep 17 00:00:00 2001
+From: Ozkan Sezer <sezeroz@gmail.com>
+Date: Wed, 31 Mar 2021 14:25:40 +0300
+Subject: [PATCH 37/37] minor automake tidy-ups.
+
+---
+ Makefile.am        | 30 ++++++++++++++++--------------
+ iseeking_example.c | 14 --------------
+ 2 files changed, 16 insertions(+), 28 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index de2daf9..f9b8532 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -9,15 +9,15 @@ pkgconfig_DATA = vorbisidec.pc
+ lib_LTLIBRARIES = libvorbisidec.la
+ 
+ libvorbisidec_la_SOURCES = mdct.c block.c window.c \
+-                        synthesis.c info.c \
+-                        floor1.c floor0.c vorbisfile.c \
+-                        res012.c mapping0.c registry.c codebook.c \
+-			sharedbook.c \
+-                        codebook.h misc.h mdct_lookup.h\
+-                        os.h mdct.h block.h ivorbisfile.h lsp_lookup.h\
+-                        registry.h window.h window_lookup.h\
+-                        codec_internal.h backends.h \
+-			asm_arm.h ivorbiscodec.h
++	synthesis.c info.c \
++	floor1.c floor0.c vorbisfile.c \
++	res012.c mapping0.c registry.c codebook.c \
++	sharedbook.c \
++	codebook.h misc.h mdct_lookup.h \
++	os.h mdct.h block.h ivorbisfile.h lsp_lookup.h \
++	registry.h window.h window_lookup.h \
++	codec_internal.h backends.h \
++	asm_arm.h ivorbiscodec.h
+ libvorbisidec_la_LDFLAGS = -no-undefined -version-info @V_LIB_CURRENT@:@V_LIB_REVISION@:@V_LIB_AGE@ $(SHLIB_VERSION_ARG)
+ libvorbisidec_la_LIBADD = @OGG_LIBS@
+ 
+@@ -25,22 +25,24 @@ EXTRA_PROGRAMS = ivorbisfile_example iseeking_example
+ CLEANFILES = $(EXTRA_PROGRAMS) $(lib_LTLIBRARIES)
+ 
+ ivorbisfile_example_SOURCES = ivorbisfile_example.c
+-ivorbisfile_example_LDFLAGS = -static 
++ivorbisfile_example_LDFLAGS = -static
+ ivorbisfile_example_LDADD = libvorbisidec.la @OGG_LIBS@
+ 
+ iseeking_example_SOURCES = iseeking_example.c
+-iseeking_example_LDFLAGS = -static 
++iseeking_example_LDFLAGS = -static
+ iseeking_example_LDADD = libvorbisidec.la @OGG_LIBS@
+ 
+ includedir = $(prefix)/include/tremor
+ 
+ include_HEADERS = ivorbiscodec.h ivorbisfile.h config_types.h
+ 
+-EXTRA_DIST = vorbisidec.pc.in \
+-        $(srcdir)/doc/*.html $(srcdir)/win32/VS*/libtremor/*.vcproj
++EXTRA_DIST = vorbisidec.pc.in  \
++	$(srcdir)/win32/VS2005 \
++	$(srcdir)/win32/VS2008 \
++	$(srcdir)/doc/*.html   \
++	$(srcdir)/doc/style.css
+ 
+ example:
+-	-ln -fs . vorbis
+ 	$(MAKE) ivorbisfile_example
+ 	$(MAKE) iseeking_example
+ 
+diff --git a/iseeking_example.c b/iseeking_example.c
+index dc971ba..3e0e1a3 100644
+--- a/iseeking_example.c
++++ b/iseeking_example.c
+@@ -12,7 +12,6 @@
+  ********************************************************************
+ 
+  function: illustrate seeking, and test it too
+- last mod: $Id$
+ 
+  ********************************************************************/
+ 
+@@ -250,16 +249,3 @@ int main(){
+   ov_clear(&ov);
+   return 0;
+ }
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
