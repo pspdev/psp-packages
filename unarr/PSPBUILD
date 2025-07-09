@@ -1,0 +1,38 @@
+pkgname=unarr
+pkgver=1.1.1
+pkgrel=1
+pkgdesc="A decompression library for rar, tar, zip and 7z archives"
+arch=('mips')
+url="https://github.com/selmf/unarr/"
+license=('LGPL-3.0')
+groups=('pspdev-default')
+depends=()
+optdepends=('zlib' 'bzip2' 'liblzma')
+makedepends=()
+source=(
+    "https://github.com/selmf/unarr/releases/download/v1.1.1/${pkgname}-${pkgver}.tar.xz"
+)
+sha256sums=(
+    "328efa04ea996dd38916b1247a8cf176ac29b85caf92174e34d31998de4174d2"
+)
+
+prepare() {
+    cd "${pkgname}-${pkgver}"
+}
+
+build() {
+    cd "${pkgname}-${pkgver}"
+    mkdir -p build
+    cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE="${PSPDEV}/psp/share/pspdev.cmake" -DCMAKE_INSTALL_PREFIX="${pkgdir}/psp" \
+        -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package() {
+    cd "${pkgname}-${pkgver}/build"
+    make --quiet $MAKEFLAGS install
+    cd ..
+    mkdir -m 755 -p "${pkgdir}/psp/share/licenses/${pkgname}"
+    install -m 644 COPYING "${pkgdir}/psp/share/licenses/${pkgname}"
+}
