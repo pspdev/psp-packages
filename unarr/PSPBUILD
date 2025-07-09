@@ -1,7 +1,7 @@
 pkgname=unarr
 pkgver=1.1.1
 pkgrel=1
-pkgdesc="Secure Socket Layer library"
+pkgdesc="A decompression library for rar, tar, zip and 7z archives"
 arch=('mips')
 url="https://github.com/selmf/unarr/"
 license=('LGPL-3.0')
