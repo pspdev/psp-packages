@@ -1,5 +1,5 @@
 pkgname=sdl3
-pkgver=3.2.16
+pkgver=3.2.18
 pkgrel=1
 pkgdesc="a library designed to provide low level access to audio, input, and graphics hardware"
 arch=('mips')
@@ -10,14 +10,23 @@ depends=('libpspvram' 'pspgl')
 makedepends=()
 optdepends=()
 provides=()
-source=("https://github.com/libsdl-org/SDL/releases/download/release-${pkgver}/SDL3-${pkgver}.tar.gz")
-sha256sums=("6340e58879b2d15830c8460d2f589a385c444d1faa2a4828a9626c7322562be8")
+source=(
+    "https://github.com/libsdl-org/SDL/releases/download/release-${pkgver}/SDL3-${pkgver}.tar.gz"
+    "sdl3-audio-fix.patch"
+)
+sha256sums=(
+    "1a775bde924397a8e0c08bfda198926c17be859d0288ad0dec1dea1b2ee04f8f"
+    "SKIP"
+)
 
 prepare() {
     cd "${srcdir}/SDL3-${pkgver}"
     sed -i 's#@SDL_PKGCONFIG_PREFIX@#${PSPDEV}/psp#' cmake/sdl3.pc.in
     sed -i 's#@LIBDIR_FOR_PKG_CONFIG@#${prefix}/lib#' cmake/sdl3.pc.in
     sed -i 's#@INCLUDEDIR_FOR_PKG_CONFIG@#${prefix}\/include#' cmake/sdl3.pc.in
+
+    # This fix will be in 3.2.20, until then we need a patch to make audio work
+    patch -p1 < ../sdl3-audio-fix.patch
 }
 
 build() {
