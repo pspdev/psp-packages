@@ -1,0 +1,27 @@
+pkgname=raylib
+pkgver=5.6dev
+pkgrel=0
+pkgdesc="A simple and easy-to-use library to enjoy videogames programming" arch=('mips')
+url="https://www.raylib.com/"
+license=('zlib')
+groups=('pspdev-default')
+source=("git+https://github.com/raylib4Consoles/raylib.git#branch=raylib4Consoles")
+sha256sums=('SKIP')
+
+
+build() {
+    cd "raylib/src"
+    make PLATFORM=PLATFORM_PSP
+}
+
+package() {
+    cd "raylib/src"
+
+    # install libraylib.a
+    mkdir -m 755 -p "$pkgdir/psp/lib"
+    install -m 644 libraylib.a "$pkgdir/psp/lib"
+
+    # install headers
+    mkdir -m 755 -p "$pkgdir/psp/include"
+    install -m 644 *.h "$pkgdir/psp/include"
+}
