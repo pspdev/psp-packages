@@ -1,13 +1,13 @@
 pkgname=libintrafont
-pkgver=4.0
-pkgrel=4
+pkgver=4.1
+pkgrel=1
 pkgdesc="A bitmap font library using the PSP's internal fonts (firmware pgf and bwfon files)"
 arch=('mips')
 license=('CC-BY-SA-3.0')
 groups=('pspdev-default')
 url="https://github.com/pspdev/libintrafont"
 makedepends=()
-source=("git+https://github.com/pspdev/${pkgname}#commit=b44ad3b599633859b66c8b4426b35b7024c1c6ba")
+source=("git+https://github.com/pspdev/${pkgname}#commit=fd8aabd12dacbfe7b42a387e5beeb1c2a738ba26")
 sha256sums=('SKIP')
 
 build() {
