@@ -24,4 +24,8 @@ package() {
     # install headers
     mkdir -m 755 -p "$pkgdir/psp/include"
     install -m 644 *.h "$pkgdir/psp/include"
-}
+
+    # install license
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 ../LICENSE 
+ }
