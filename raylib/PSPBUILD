@@ -27,5 +27,14 @@ package() {
 
     # install license
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
-    install -m 644 ../LICENSE 
+    install -m 644 ../LICENSE "$pkgdir/psp/share/licenses/$pkgname/" 
+
+    # install pkg-config raylib.pc
+    mkdir -m 755 -p "$pkgdir/psp/lib/pkgconfig"
+    install -m 644 "$startdir/raylib.pc" "$pkgdir/psp/lib/pkgconfig"
+
+    # install raylib-config.cmake so it's findable by CMake
+    mkdir -m 755 -p "$pkgdir/psp/lib/cmake/$pkgname"
+    install -m 644 "$startdir/raylib-config.cmake" "$pkgdir/psp/lib/cmake/$pkgname"
  }
+
