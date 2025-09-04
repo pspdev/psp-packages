@@ -5,7 +5,11 @@ pkgdesc="A simple and easy-to-use library to enjoy videogames programming" arch=
 url="https://www.raylib.com/"
 license=('zlib')
 groups=('pspdev-default')
-source=("git+https://github.com/raylib4Consoles/raylib.git#branch=raylib4Consoles")
+source=(
+    "git+https://github.com/raylib4Consoles/raylib.git#branch=raylib4Consoles"
+    "raylib-config.cmake"
+    "raylib.pc"
+)
 sha256sums=('SKIP')
 depends=('pspgl')
 
@@ -31,10 +35,10 @@ package() {
 
     # install pkg-config raylib.pc
     mkdir -m 755 -p "$pkgdir/psp/lib/pkgconfig"
-    install -m 644 "$startdir/raylib.pc" "$pkgdir/psp/lib/pkgconfig"
+    install -m 644 "$srcdir/raylib.pc" "$pkgdir/psp/lib/pkgconfig"
 
     # install raylib-config.cmake so it's findable by CMake
     mkdir -m 755 -p "$pkgdir/psp/lib/cmake/$pkgname"
-    install -m 644 "$startdir/raylib-config.cmake" "$pkgdir/psp/lib/cmake/$pkgname"
+    install -m 644 "$srcdir/raylib-config.cmake" "$pkgdir/psp/lib/cmake/$pkgname"
  }
 
