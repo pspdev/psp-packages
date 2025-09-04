@@ -7,7 +7,7 @@ license=('zlib')
 groups=('pspdev-default')
 source=("git+https://github.com/raylib4Consoles/raylib.git#branch=raylib4Consoles")
 sha256sums=('SKIP')
-
+depends=('pspgl')
 
 build() {
     cd "raylib/src"
