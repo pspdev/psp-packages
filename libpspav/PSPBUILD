@@ -1,0 +1,32 @@
+pkgname=libpspav
+pkgver=r12
+pkgrel=5
+pkgdesc="Native audio and video playback library for AT3, PMF and MPS formats"
+arch=('mips')
+url="https://github.com/pspdev/libpspav"
+license=('MIT')
+groups=('pspdev-default')
+depends=()
+makedepends=()
+optdepends=()
+source=("git+https://github.com/pspdev/${pkgname}.git#commit=90fd4e9424d903082bc7183983d12ca4ad1a59be")
+sha256sums=('SKIP')
+
+build() {
+    cd "${pkgname}"
+    make
+}
+
+package() {
+    cd "${pkgname}"
+    # make install isn't usable for pspav, so we're installing manually
+    mkdir -m 755 -p "${pkgdir}/psp/lib"
+    install -m 644 "libpspav.a" "${pkgdir}/psp/lib"
+
+    mkdir -m 755 -p "${pkgdir}/psp/include/pspav/"
+    install -m 644 include/* "${pkgdir}/psp/include/pspav"
+
+    mkdir -m 755 -p "${pkgdir}/psp/share/licenses/${pkgname}"
+    install -m 644 LICENSE "${pkgdir}/psp/share/licenses/${pkgname}"
+}
+
