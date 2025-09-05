@@ -10,7 +10,11 @@ source=(
     "raylib-config.cmake"
     "raylib.pc"
 )
-sha256sums=('SKIP')
+sha256sums=(
+    'SKIP'
+    '9e74f51605c8de527099f41e0209117fa07baca69b2bba2521790916176a162d'
+    '692958c2e9deddecc73a9751880a8ea929d8ae3fc1e45e6024d43bff67731688'
+)
 depends=('pspgl')
 
 build() {
