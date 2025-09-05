@@ -1,0 +1,11 @@
+prefix=${PSPDEV}/psp
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: raylib
+Description: raylib is a simple and easy-to-use library to enjoy videogames programming.
+Version: 5.6dev
+Libs: -L${libdir} -lpspge -lpspdisplay -lpspctrl -lraylib -lpng -lz -lglut -lGLU -lGL -lpspvfpu
+Cflags: -I${includedir} -Wall
+

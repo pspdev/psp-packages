@@ -1,0 +1,48 @@
+pkgname=raylib
+pkgver=5.6dev
+pkgrel=0
+pkgdesc="A simple and easy-to-use library to enjoy videogames programming" arch=('mips')
+url="https://www.raylib.com/"
+license=('zlib')
+groups=('pspdev-default')
+source=(
+    "git+https://github.com/raylib4Consoles/raylib.git#branch=raylib4Consoles"
+    "raylib-config.cmake"
+    "raylib.pc"
+)
+sha256sums=(
+    'SKIP'
+    '9e74f51605c8de527099f41e0209117fa07baca69b2bba2521790916176a162d'
+    '692958c2e9deddecc73a9751880a8ea929d8ae3fc1e45e6024d43bff67731688'
+)
+depends=('pspgl')
+
+build() {
+    cd "raylib/src"
+    make PLATFORM=PLATFORM_PSP
+}
+
+package() {
+    cd "raylib/src"
+
+    # install libraylib.a
+    mkdir -m 755 -p "$pkgdir/psp/lib"
+    install -m 644 libraylib.a "$pkgdir/psp/lib"
+
+    # install headers
+    mkdir -m 755 -p "$pkgdir/psp/include"
+    install -m 644 *.h "$pkgdir/psp/include"
+
+    # install license
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 ../LICENSE "$pkgdir/psp/share/licenses/$pkgname/" 
+
+    # install pkg-config raylib.pc
+    mkdir -m 755 -p "$pkgdir/psp/lib/pkgconfig"
+    install -m 644 "$srcdir/raylib.pc" "$pkgdir/psp/lib/pkgconfig"
+
+    # install raylib-config.cmake so it's findable by CMake
+    mkdir -m 755 -p "$pkgdir/psp/lib/cmake/$pkgname"
+    install -m 644 "$srcdir/raylib-config.cmake" "$pkgdir/psp/lib/cmake/$pkgname"
+ }
+
