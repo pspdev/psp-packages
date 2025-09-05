@@ -9,7 +9,7 @@ groups=('pspdev-default')
 depends=()
 makedepends=()
 optdepends=()
-source=("git+https://github.com/pspdev/${pkgname}.git")
+source=("git+https://github.com/pspdev/${pkgname}.git#commit=c3f6a0f4d32c7c9b34e523a37a8b967d3b568dd2")
 sha256sums=('SKIP')
 
 build() {
@@ -19,7 +19,7 @@ build() {
 
 package() {
     cd "${pkgname}"
-    # make install isn't usable for pspgl, so we're installing manually
+    # make install isn't usable for pspftp, so we're installing manually
     mkdir -m 755 -p "${pkgdir}/psp/lib"
     install -m 644 "libpspftp.a" "${pkgdir}/psp/lib"
 
