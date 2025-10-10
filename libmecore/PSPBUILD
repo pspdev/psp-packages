@@ -16,15 +16,21 @@ build() {
   cd "$srcdir/$reponame-${pkgver}"
   mkdir -p build
   cd build
-  cmake .. \
-    -DCMAKE_INSTALL_PREFIX="${pkgdir}/psp" \
-    -DCMAKE_TOOLCHAIN_FILE="$PSPDEV/psp/share/pspdev.cmake"
-  make $MAKEFLAGS
+  cmake ..
 }
 
 package() {
   cd "$srcdir/$reponame-${pkgver}/build"
-  make DESTDIR="" install
+  make DESTDIR="$pkgdir" install
+
+  mv "$pkgdir/${PSPDEV}/"* "$pkgdir"
+  
+  dir="$pkgdir/$PSPDEV"
+  while [ "$dir" != "$pkgdir" ]; do
+    rmdir "$dir" 2>/dev/null || break
+    dir=$(dirname "$dir")
+  done
+
   mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
   install -m 644 ../LICENSE.md "$pkgdir/psp/share/licenses/$pkgname/LICENSE" 2>/dev/null || true
 }
