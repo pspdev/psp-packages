@@ -21,7 +21,7 @@ jobs:
       - name: Generate build list
         id: set-matrix
         run: |
-          echo "build_list=$(./get_depends.py)" >> $GITHUB_OUTPUT
+          echo "build_list=$(./get_build_order.py)" >> $GITHUB_OUTPUT
           cat $GITHUB_OUTPUT
     outputs:
       build_list: ${{ steps.set-matrix.outputs.build_list }}
