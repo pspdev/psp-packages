@@ -11,19 +11,22 @@ set -a
 set -e
 
 # Set global variables
+PKGBUILD_NAME="PSPBUILD"
 GITHUB_REPOSITORY_OWNER="${GITHUB_REPOSITORY_OWNER:-pspdev}"
 GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-pspdev/psp-packages}"
+PACKAGES="$(find . -maxdepth 2 -name "${PKGBUILD_NAME}" | sort)"
+PACKAGE_COUNT="$(echo ${PACKAGES} | wc -w)"
 INDEX_TABLE_CONTENT=""
 
 # Build the html pages
-for PSPBUILD in $(find . -maxdepth 2 -name "PSPBUILD"  | sort); do
-  		# Make sure optional variables are from current PSPBUILD
+for PKGBUILD in ${PACKAGES}; do
+  		# Make sure optional variables are from current PKGBUILD
   		unset groups
     		unset license
       		unset depends
 
-		source "${PSPBUILD}"
-		UPDATED=$(git log -1 --format=%cd --date=short -- "${PSPBUILD}")
+		source "${PKGBUILD}"
+		UPDATED=$(git log -1 --format=%cd --date=short -- "${PKGBUILD}")
 		DOWNLOAD_URL="${pkgname}-${pkgver}-${pkgrel}-${arch}.pkg.tar.gz"
 
 		# Convert lists to strings
