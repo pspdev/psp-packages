@@ -17,20 +17,21 @@ build() {
   mkdir -p build
   cd build
   cmake ..
+  make
 }
 
 package() {
-  cd "$srcdir/$reponame-${pkgver}/build"
-  make DESTDIR="$pkgdir" install
+  cd "$srcdir/$reponame-${pkgver}"
 
-  mv "$pkgdir/${PSPDEV}/"* "$pkgdir"
-  
-  dir="$pkgdir/$PSPDEV"
-  while [ "$dir" != "$pkgdir" ]; do
-    rmdir "$dir" 2>/dev/null || break
-    dir=$(dirname "$dir")
-  done
+  mkdir -p "$pkgdir/psp/lib"
+  install -m 644 build/libme-core.a "$pkgdir/psp/lib/"
 
-  mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
-  install -m 644 ../LICENSE.md "$pkgdir/psp/share/licenses/$pkgname/LICENSE" 2>/dev/null || true
+  mkdir -p "$pkgdir/psp/include/me-core-mapper"
+  install -m 644 *.h "$pkgdir/psp/include/me-core-mapper/"
+
+  mkdir -p "$pkgdir/psp/include/me-core-mapper/kernel"
+  install -m 644 kernel/*.h "$pkgdir/psp/include/me-core-mapper/kernel/"
+
+  mkdir -p "$pkgdir/psp/share/licenses/$pkgname"
+  install -m 644 LICENSE.md "$pkgdir/psp/share/licenses/$pkgname/LICENSE"
 }
