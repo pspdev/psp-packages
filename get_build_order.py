@@ -15,7 +15,7 @@ class Package:
 
     def get_build_order(self) -> str:
         build_order = self.get_recursive_dependencies()
-        build_order.append(self.name)
+        build_order.append(self.get_directory_name())
 
         # Clean up duplicates
         already_seen = []
@@ -31,10 +31,18 @@ class Package:
         return " ".join(build_order)
 
     def get_recursive_dependencies(self) -> list[str]:
-        return_value = self.dependencies_as_strings
+        """
+        Create a list of directory names of the current package and its dependencies in the order the packages in them should be build
+        The packages without dependencies are first in the list, the current package will be at the end
+        :return: List of directory names
+        """
+        return_value = [self.get_directory_name()]
         for dependency in self.dependencies:
             return_value = dependency.get_recursive_dependencies() + return_value;
         return return_value
+
+    def get_directory_name(self) -> str:
+        return os.path.dirname(self.path)
 
 def parse_dependencies_string(value: str) -> list[str]:
     """
