@@ -1,0 +1,32 @@
+pkgname=dbglogger
+pkgver=20240817
+pkgrel=1
+pkgdesc="A simple library that provides basic debug logging over the network (TCP/UDP) or to a local file"
+arch=('mips')
+url="https://github.com/bucanero/dbglogger"
+license=('MIT')
+groups=('pspdev-default')
+depends=()
+makedepends=()
+optdepends=()
+source=("git+https://github.com/bucanero/dbglogger.git#commit=cccfb963aa82b65dd29ec85451d80b92ca4add3f")
+sha256sums=('SKIP')
+
+
+build() {
+    cd "${pkgname}"
+    make -f Makefile.psp --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package() {
+    cd "${pkgname}"
+    mkdir -p "$pkgdir/psp/lib"
+    install -m 644 psp-libdbglogger.a "$pkgdir/psp/lib/libdbglogger.a"
+
+    mkdir -p "$pkgdir/psp/include"
+    install -m 644 include/dbglogger.h "$pkgdir/psp/include"
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
+}
+
