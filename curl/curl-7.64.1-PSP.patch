@@ -1,6 +1,23 @@
-diff -ruN ../orig/curl-7.64.1/include/curl/curl.h curl-7.64.1/include/curl/curl.h
---- ../orig/curl-7.64.1/include/curl/curl.h	2019-03-25 05:42:50
-+++ curl-7.64.1/include/curl/curl.h	2023-03-15 10:56:26
+diff --git a/CMake/FindMbedTLS.cmake b/CMake/FindMbedTLS.cmake
+index a916395..9c52d99 100644
+--- a/CMake/FindMbedTLS.cmake
++++ b/CMake/FindMbedTLS.cmake
+@@ -1,8 +1,8 @@
+ find_path(MBEDTLS_INCLUDE_DIRS mbedtls/ssl.h)
+ 
+-find_library(MBEDTLS_LIBRARY mbedtls)
+-find_library(MBEDX509_LIBRARY mbedx509)
+-find_library(MBEDCRYPTO_LIBRARY mbedcrypto)
++set(MBEDTLS_LIBRARY "mbedtls")
++set(MBEDX509_LIBRARY "mbedx509")
++set(MBEDCRYPTO_LIBRARY "mbedcrypto")
+ 
+ set(MBEDTLS_LIBRARIES "${MBEDTLS_LIBRARY}" "${MBEDX509_LIBRARY}" "${MBEDCRYPTO_LIBRARY}")
+ 
+diff --git a/include/curl/curl.h b/include/curl/curl.h
+index 86a2418..8c24e47 100644
+--- a/include/curl/curl.h
++++ b/include/curl/curl.h
 @@ -51,7 +51,7 @@
  
  #if defined(__FreeBSD__) && (__FreeBSD__ >= 2)
@@ -10,3 +27,19 @@ diff -ruN ../orig/curl-7.64.1/include/curl/curl.h curl-7.64.1/include/curl/curl.
  #endif
  
  /* The include stuff here below is mainly for time_t! */
+diff --git a/libcurl.pc.in b/libcurl.pc.in
+index feea1cd..0ec4512 100644
+--- a/libcurl.pc.in
++++ b/libcurl.pc.in
+@@ -23,9 +23,9 @@
+ # This should most probably benefit from getting a "Requires:" field added
+ # dynamically by configure.
+ #
+-prefix=@prefix@
++prefix=${PSPDEV}/psp
+ exec_prefix=@exec_prefix@
+-libdir=@libdir@
++libdir=${prefix}/lib
+ includedir=@includedir@
+ supported_protocols="@SUPPORT_PROTOCOLS@"
+ supported_features="@SUPPORT_FEATURES@"
