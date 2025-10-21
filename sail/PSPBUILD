@@ -1,0 +1,41 @@
+pkgname=sail
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="SAIL is a high-quality cross-platform image decoding library providing rich APIs, from one-liners to complex use cases with custom I/O sources. It enables a client to load and save static, animated, multi-paged images along with their meta data and ICC profiles"
+arch=('mips')
+url='https://github.com/HappySeaFox/sail'
+license=('MIT')
+groups=('pspdev-default')
+depends=('jpeg' 'libpng' 'giflib')
+makedepends=()
+optdepends=()
+provides=()
+source=(
+	"git+https://github.com/HappySeaFox/sail.git"
+	"psp.patch"
+)
+sha256sums=(
+    "SKIP"
+    "SKIP"
+)
+
+prepare() {
+    cd $pkgname
+    patch -Np2 -i ../psp.patch
+}
+
+build() {
+    cd $pkgname
+    psp-cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE="${PSPDEV}/psp/share/pspdev.cmake" -DCMAKE_INSTALL_PREFIX=/psp \
+        -DBUILD_SHARED_LIBS=OFF "${XTRA_OPTS[@]}" -DCMAKE_BUILD_TYPE=Release \
+        . || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package() {
+    cd $pkgname
+    make --quiet $MAKEFLAGS install
+
+    install -d -m 755 -p "${pkgdir}/psp/share/licenses/${pkgname}"
+    install -m 644 LICENSE.txt "${pkgdir}/psp/share/licenses/${pkgname}"
+}

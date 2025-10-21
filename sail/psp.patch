@@ -1,0 +1,252 @@
+diff '--color=auto' -burN HappySeaFox/sail/CMakeLists.txt jopadan/sail/CMakeLists.txt
+--- HappySeaFox/sail/CMakeLists.txt	2025-10-21 02:11:34.124541444 -0000
++++ jopadan/sail/CMakeLists.txt	2025-10-21 05:48:13.735095983 -0000
+@@ -60,9 +60,11 @@
+ sail_check_include(sys/types.h)
+ sail_check_include(wchar.h)
+ 
+-if (UNIX)
++if (UNIX OR PSP)
+     sail_check_include(dirent.h)
++    if(NOT PSP)
+     sail_check_include(dlfcn.h)
++    endif()
+     sail_check_include(sys/time.h)
+     sail_check_include(unistd.h)
+ endif()
+@@ -93,9 +95,9 @@
+ If an enabled codec fails to find its dependencies, the configuration process fails. \
+ One can also specify not just individual codecs but codec groups by their priority like that: highest-priority;xbm.")
+ set(SAIL_OPENMP_SCHEDULE "dynamic" CACHE STRING "OpenMP scheduling algorithm.")
+-option(BUILD_SHARED_LIBS "Build shared libs. When disabled, sets SAIL_COMBINE_CODECS to ON automatically." ON)
++option(BUILD_SHARED_LIBS "Build shared libs. When disabled, sets SAIL_COMBINE_CODECS to ON automatically." OFF)
+ cmake_dependent_option(SAIL_COMBINE_CODECS "Combine all codecs into a single library. When disabled, all codecs are implemented as \
+-dynamically loaded plugins." OFF "BUILD_SHARED_LIBS" ON)
++dynamically loaded plugins." ON "BUILD_SHARED_LIBS" OFF)
+ option(SAIL_THIRD_PARTY_CODECS_PATH "Enable loading third-party codecs from the ';'-separated paths specified in \
+ the SAIL_THIRD_PARTY_CODECS_PATH environment variable." ON)
+ option(SAIL_THREAD_SAFE "Enable working in multi-threaded environments by locking the internal context with a mutex." ON)
+@@ -129,17 +131,17 @@
+ #
+ set(CMAKE_C_STANDARD 11)
+ set(CMAKE_C_STANDARD_REQUIRED ON)
+-set(CMAKE_C_EXTENSIONS OFF)
++set(CMAKE_C_EXTENSIONS ON)
+ 
+ # Enable strict C++11
+ #
+ set(CMAKE_CXX_STANDARD 11)
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+-set(CMAKE_CXX_EXTENSIONS OFF)
++set(CMAKE_CXX_EXTENSIONS ON)
+ 
+ # Build position-independent targets
+ #
+-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
++set(CMAKE_POSITION_INDEPENDENT_CODE OFF)
+ 
+ # Internal flag used to include SAIL headers locally with "header.h" or <sail/header.h> otherwise
+ #
+diff '--color=auto' -burN HappySeaFox/sail/examples/c/sail-sdl-viewer/CMakeLists.txt jopadan/sail/examples/c/sail-sdl-viewer/CMakeLists.txt
+--- HappySeaFox/sail/examples/c/sail-sdl-viewer/CMakeLists.txt	2025-10-21 02:11:34.129442497 -0000
++++ jopadan/sail/examples/c/sail-sdl-viewer/CMakeLists.txt	2025-10-21 02:13:51.530892711 -0000
+@@ -21,7 +21,7 @@
+     # Some SDL2 configs export SDL2::SDL2, some ${SDL2_LIBRARIES}
+     #
+     if (TARGET SDL2::SDL2)
+-        target_link_libraries(sail-sdl-viewer PRIVATE SDL2::SDL2)
++        target_link_libraries(sail-sdl-viewer PRIVATE SDL2::SDL2 SDL2::SDL2main)
+     else()
+         # Strip whitespaces.
+         #
+diff '--color=auto' -burN HappySeaFox/sail/src/sail/codec.c jopadan/sail/src/sail/codec.c
+--- HappySeaFox/sail/src/sail/codec.c	2025-10-21 02:11:34.168315629 -0000
++++ jopadan/sail/src/sail/codec.c	2025-10-21 02:13:51.638990998 -0000
+@@ -30,7 +30,7 @@
+ 
+ #ifdef SAIL_WIN32
+ #include <windows.h>
+-#else
++#elif defined SAIL_HAVE_DLFCN_H
+ #include <dlfcn.h>
+ #endif
+ 
+@@ -79,7 +79,7 @@
+     SAIL_LOG_ERROR("Failed to find combined %s codec", codec_info->name);
+     SAIL_LOG_AND_RETURN(SAIL_ERROR_CODEC_NOT_FOUND);
+ }
+-#endif
++#else
+ 
+ static sail_status_t load_codec_from_file(const struct sail_codec_info* codec_info, struct sail_codec* codec)
+ {
+@@ -92,13 +92,15 @@
+     {
+         SAIL_LOG_ERROR("Failed to load '%s'. Error: 0x%X", codec_info->path, GetLastError());
+     }
+-#else
++#elif defined SAIL_HAVE_DLFCN_H
+     void* handle = dlopen(codec_info->path, RTLD_LAZY | RTLD_LOCAL);
+ 
+     if (handle == NULL)
+     {
+         SAIL_LOG_ERROR("Failed to load '%s': %s", codec_info->path, dlerror());
+     }
++#else
++    void* handle = NULL;
+ #endif
+ 
+     if (handle == NULL)
+@@ -112,12 +114,13 @@
+ #define SAIL_RESOLVE_FUNC GetProcAddress
+ #define SAIL_RESOLVE_LOG_ERROR(symbol)                                                                                 \
+     SAIL_LOG_ERROR("Failed to resolve '%s' in '%s'. Error: 0x%X", symbol, codec_info->path, GetLastError())
+-#else
++#elif defined SAIL_HAVE_DLFCN_H
+ #define SAIL_RESOLVE_FUNC dlsym
+ #define SAIL_RESOLVE_LOG_ERROR(symbol)                                                                                 \
+     SAIL_LOG_ERROR("Failed to resolve '%s' in '%s': %s", symbol, codec_info->path, dlerror())
+ #endif
+ 
++#ifdef SAIL_RESOLVE_FUNC
+ #define SAIL_RESOLVE(target, handle, symbol, name)                                                                     \
+     {                                                                                                                  \
+         char* full_symbol_name;                                                                                        \
+@@ -152,8 +155,12 @@
+     SAIL_RESOLVE(codec->v8->save_finish, handle, sail_codec_save_finish_v8, codec_info->name);
+ 
+     return SAIL_OK;
++#else
++    SAIL_LOG_ERROR("Failed to look up symbol with no SDL_RESOLVE_FUNC defined");
++    SAIL_LOG_AND_RETURN(SAIL_ERROR_CODEC_SYMBOL_RESOLVE);
++#endif
+ }
+-
++#endif
+ /*
+  * Public functions.
+  */
+@@ -213,8 +220,9 @@
+     }
+     else
+     {
+-        SAIL_TRY_OR_CLEANUP(load_codec_from_file(codec_info, codec_local),
+-                            /* cleanup */ destroy_codec(codec_local));
++        SAIL_LOG_ERROR("Failed to load %s codec without fetch_combinded_codec disabled when SAIL_COMBINE_CODECS is enabled",
++                       codec_info->name);
++        SAIL_LOG_AND_RETURN(SAIL_ERROR_CODEC_NOT_FOUND);
+     }
+ #else
+     SAIL_TRY_OR_CLEANUP(load_codec_from_file(codec_info, codec_local),
+@@ -237,7 +245,7 @@
+     {
+ #ifdef SAIL_WIN32
+         FreeLibrary((HMODULE)codec->handle);
+-#else
++#elif defined SAIL_HAVE_DLFCN_H
+         dlclose(codec->handle);
+ #endif
+     }
+diff '--color=auto' -burN HappySeaFox/sail/src/sail-common/io_common.c jopadan/sail/src/sail-common/io_common.c
+--- HappySeaFox/sail/src/sail-common/io_common.c	2025-10-21 02:11:34.160315629 -0000
++++ jopadan/sail/src/sail-common/io_common.c	2025-10-21 02:13:51.617314588 -0000
+@@ -28,6 +28,57 @@
+ 
+ #include "sail-common.h"
+ 
++
++#ifdef PSP
++#define _GNU_SOURCE
++#include <errno.h>                // errno
++#include <fcntl.h>                // fcntl()
++#include <unistd.h>               // close()
++#include <sys/types.h>
++#include <sys/wait.h>
++#include <errno.h>
++
++pid_t
++waitpid (pid_t pid, int *stat_loc, int options)
++{
++  errno = (ENOSYS);
++  return (pid_t) -1;
++}
++
++int
++dup(int fd1)
++{
++    int fd2 = -1;
++#ifndef F_DUPFD
++    errno = ENOTSUP;
++    return -1;
++#else
++    if(fcntl(fd1, F_GETFL) < 0 || fcntl(fd1, F_DUPFD, fd2) < 0)
++    	return -1;
++#endif
++    return fd2;
++}
++
++int
++dup2(int fd1, int fd2)
++{
++    if (fd1 != fd2) {
++#ifdef F_DUPFD
++        if (fcntl(fd1, F_GETFL) < 0)
++            return -1;
++        if (fcntl(fd2, F_GETFL) >= 0)
++            close(fd2);
++        if (fcntl(fd1, F_DUPFD, fd2) < 0)
++            return -1;
++#else
++        errno = ENOTSUP;
++        return -1;
++#endif
++    }
++    return fd2;
++}
++#endif
++
+ sail_status_t sail_alloc_io(struct sail_io** io)
+ {
+     SAIL_CHECK_PTR(io);
+diff '--color=auto' -burN HappySeaFox/sail/src/sail-common/log.c jopadan/sail/src/sail-common/log.c
+--- HappySeaFox/sail/src/sail-common/log.c	2025-10-21 02:11:34.161315629 -0000
++++ jopadan/sail/src/sail-common/log.c	2025-10-21 02:13:51.621314588 -0000
+@@ -23,6 +23,11 @@
+     SOFTWARE.
+ */
+ 
++#include <stdarg.h>
++#include <stdbool.h>
++#include <stdio.h>
++#include <string.h>
++
+ #ifdef SAIL_COLORED_OUTPUT
+ #ifdef SAIL_WIN32
+ #include <windows.h>
+@@ -33,14 +38,13 @@
+ #else
+ #include <unistd.h>
+ #define SAIL_ISATTY isatty
++#ifdef PSP
++#define SAIL_FILENO __sfileno
++#else
+ #define SAIL_FILENO fileno
+ #endif
+ #endif
+-
+-#include <stdarg.h>
+-#include <stdbool.h>
+-#include <stdio.h>
+-#include <string.h>
++#endif
+ 
+ #include "sail-common.h"
+ 
+diff '--color=auto' -burN HappySeaFox/sail/tests/munit/CMakeLists.txt jopadan/sail/tests/munit/CMakeLists.txt
+--- HappySeaFox/sail/tests/munit/CMakeLists.txt	2025-10-21 02:11:34.182999938 -0000
++++ jopadan/sail/tests/munit/CMakeLists.txt	2025-10-21 02:13:51.685581180 -0000
+@@ -8,3 +8,4 @@
+ # Definitions, includes, link
+ #
+ target_include_directories(sail-munit PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
++target_link_libraries(sail-munit PUBLIC -lc -lg -lm)
