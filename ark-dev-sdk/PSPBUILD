@@ -11,7 +11,7 @@ conflicts=('kubridge')
 provides=('kubridge')
 source=(
   "git+https://github.com/PSP-Arkfive/ark-dev-sdk.git#commit=1fe932ad60a0efa94f650d6157c6aa1566808d56"
-  "https://www.gnu.org/licenses/gpl-3.0.txt"
+  "gpl-3.0.txt"
 )
 sha256sums=(
   'SKIP'
