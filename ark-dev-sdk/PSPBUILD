@@ -27,9 +27,9 @@ build() {
 package () {
   cd $pkgname
 
-  mkdir -m 755 -p "$pkgdir/psp"
-  cp -r include "$pkgdir/psp/"
-  cp -r libs "$pkgdir/psp/"
+  mkdir -m 755 -p "$pkgdir/psp/sdk"
+  cp -r include "$pkgdir/psp/sdk/include"
+  cp -r libs "$pkgdir/psp/sdk/lib"
 
   mkdir -m 755 -p "$pkgdir/share/$pkgname"
   cp -r build-tools "$pkgdir/share/$pkgname/"
