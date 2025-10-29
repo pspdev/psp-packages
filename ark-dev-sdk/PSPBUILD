@@ -1,0 +1,40 @@
+pkgname=ark-dev-sdk
+pkgver=20251001
+pkgrel=1
+pkgdesc="Development libraries, sources and headers for ARK"
+arch=('mips')
+license=('GPL-3.0-only' 'MIT')
+groups=()
+url="https://github.com/PSP-Arkfive/ark-dev-sdk/"
+depends=('libpng')
+makedepends=()
+conflicts=('kubridge')
+provides=('kubridge')
+source=(
+  "git+https://github.com/PSP-Arkfive/ark-dev-sdk.git#commit=1fe932ad60a0efa94f650d6157c6aa1566808d56"
+  "gpl-3.0.txt"
+)
+sha256sums=(
+  'SKIP'
+  '3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986'
+)
+
+build() {
+  cd $pkgname
+  make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package () {
+  cd $pkgname
+
+  mkdir -m 755 -p "$pkgdir/psp/sdk"
+  cp -r include "$pkgdir/psp/sdk/include"
+  cp -r libs "$pkgdir/psp/sdk/lib"
+
+  mkdir -m 755 -p "$pkgdir/share/$pkgname"
+  cp -r build-tools "$pkgdir/share/$pkgname/"
+
+  mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname/iplsdk"
+  install -m 644 "../gpl-3.0.txt" "$pkgdir/psp/share/licenses/$pkgname"
+  install -m 644 "src/iplsdk/LICENSE" "$pkgdir/psp/share/licenses/$pkgname/iplsdk"
+}
