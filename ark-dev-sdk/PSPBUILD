@@ -6,6 +6,7 @@ arch=('mips')
 license=('GPL-3.0-only' 'MIT')
 groups=()
 url="https://github.com/PSP-Arkfive/ark-dev-sdk/"
+depends=('libpng')
 makedepends=()
 conflicts=('kubridge')
 provides=('kubridge')
