@@ -11,7 +11,7 @@ makedepends=()
 conflicts=('kubridge')
 provides=('kubridge')
 source=(
-  "git+https://github.com/PSP-Arkfive/ark-dev-sdk.git#commit=01732de1a043fde12a5d429318d5337bd6f57a79"
+  "git+https://github.com/PSP-Arkfive/ark-dev-sdk.git#commit=47f606d0b3bf475eb72a3bd459dbf72e772bd77f"
   "gpl-3.0.txt"
 )
 sha256sums=(
