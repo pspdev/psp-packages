@@ -1,5 +1,5 @@
 pkgname=ark-dev-sdk
-pkgver=20251030
+pkgver=20251101
 pkgrel=1
 pkgdesc="Development libraries, sources and headers for ARK"
 arch=('mips')
@@ -11,7 +11,7 @@ makedepends=()
 conflicts=('kubridge')
 provides=('kubridge')
 source=(
-  "git+https://github.com/PSP-Arkfive/ark-dev-sdk.git#commit=47f606d0b3bf475eb72a3bd459dbf72e772bd77f"
+  "git+https://github.com/PSP-Arkfive/ark-dev-sdk.git#commit=255a6f52790c332217596e806aef0b5bc896755d"
   "gpl-3.0.txt"
 )
 sha256sums=(
