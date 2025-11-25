@@ -11,7 +11,7 @@ makedepends=()
 optdepends=()
 provides=()
 source=(
-	"git+https://github.com/HappySeaFox/sail.git"
+	"git+https://github.com/HappySeaFox/sail.git#commit=204038b11d7c9c3a313025b153375004fd8768db"
 	"psp.patch"
 )
 sha256sums=(
@@ -26,7 +26,7 @@ prepare() {
 
 build() {
     cd $pkgname
-    psp-cmake -DBUILD_SHARED_LIBS=OFF "${XTRA_OPTS[@]}" -DCMAKE_BUILD_TYPE=Release || { exit 1; }
+    psp-cmake -DBUILD_SHARED_LIBS=OFF "${XTRA_OPTS[@]}" -DSAIL_BUILD_APPS=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_TYPE=Release --install-prefix="${pkgdir}/psp" || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 
