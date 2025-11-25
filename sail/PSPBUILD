@@ -22,6 +22,7 @@ sha256sums=(
 prepare() {
     cd $pkgname
     patch -Np2 -i ../psp.patch
+    sed -i 's#@CMAKE_INSTALL_PREFIX@#${PSPDEV}/psp#' src/*/pkgconfig/*.pc.in src/bindings/sail-c++/pkgconfig/sail-c++.pc.in
 }
 
 build() {

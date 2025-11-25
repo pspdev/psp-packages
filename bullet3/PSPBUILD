@@ -16,6 +16,7 @@ prepare() {
     cd $pkgname
     git submodule update --init --recursive
     patch -Np1 -i ../psp.patch
+    sed -i 's#@PREFIX@#${PSPDEV}/psp#' bullet.pc.cmake
 }
 
 build() {
