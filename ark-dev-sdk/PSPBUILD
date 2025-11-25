@@ -1,10 +1,10 @@
 pkgname=ark-dev-sdk
 pkgver=20251101
-pkgrel=1
+pkgrel=2
 pkgdesc="Development libraries, sources and headers for ARK"
 arch=('mips')
-license=('GPL-3.0-only' 'MIT')
-groups=()
+license=('GPL-3.0-only AND MIT')
+groups=('pspdev-default')
 url="https://github.com/PSP-Arkfive/ark-dev-sdk/"
 depends=('libpng')
 makedepends=()
@@ -33,6 +33,7 @@ package () {
 
   mkdir -m 755 -p "$pkgdir/share/$pkgname"
   cp -r build-tools "$pkgdir/share/$pkgname/"
+  rm "$pkgdir/share/ark-dev-sdk/build-tools/CMakeLists.txt"
 
   mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname/iplsdk"
   install -m 644 "../gpl-3.0.txt" "$pkgdir/psp/share/licenses/$pkgname"
