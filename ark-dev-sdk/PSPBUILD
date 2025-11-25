@@ -33,6 +33,7 @@ package () {
 
   mkdir -m 755 -p "$pkgdir/share/$pkgname"
   cp -r build-tools "$pkgdir/share/$pkgname/"
+  rm "$pkgdir/share/ark-dev-sdk/build-tools/CMakeLists.txt"
 
   mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname/iplsdk"
   install -m 644 "../gpl-3.0.txt" "$pkgdir/psp/share/licenses/$pkgname"
