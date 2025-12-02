@@ -1,8 +1,8 @@
 pkgname=jsoncpp
 pkgver=1.9.6
-pkgrel=1
+pkgrel=2
 pkgdesc="a C++ library for interacting with JSON"
-arch=('mips')
+arch=(any)
 license=('Unlicense')
 groups=('pspdev-default')
 url="https://github.com/open-source-parsers/jsoncpp"

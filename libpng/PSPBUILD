@@ -1,8 +1,8 @@
 pkgname=libpng
 pkgver=1.6.43
-pkgrel=8
+pkgrel=9
 pkgdesc="libpng is the official PNG reference library"
-arch=('mips')
+arch=(any)
 url="http://libpng.org/pub/png/libpng.html"
 license=('libpng-2.0')
 groups=('pspdev-default')

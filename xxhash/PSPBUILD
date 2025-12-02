@@ -1,8 +1,8 @@
 pkgname=xxhash
 pkgver=0.8.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Extremely fast non-cryptographic hash algorithm"
-arch=('mips')
+arch=(any)
 url="https://xxhash.com/"
 license=('BSD-2-Clause')
 groups=('pspdev-default')

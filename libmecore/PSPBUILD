@@ -1,9 +1,9 @@
 pkgname=libmecore
 reponame=psp-media-engine-custom-core
 pkgver=1.0.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Customized ME Core library for PSP"
-arch=('mips')
+arch=(any)
 url="https://github.com/mcidclan/psp-media-engine-custom-core"
 license=('MIT')
 groups=('pspdev-default')

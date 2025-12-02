@@ -1,8 +1,8 @@
 pkgname=libxmp-lite
 pkgver=4.6.0
-pkgrel=3
+pkgrel=4
 pkgdesc="Libxmp is a library that renders module files to PCM data"
-arch=('mips')
+arch=(any)
 url="https://github.com/libxmp/libxmp"
 license=('MIT')
 groups=('pspdev-default')

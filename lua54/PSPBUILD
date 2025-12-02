@@ -1,8 +1,8 @@
 pkgname=lua54
 pkgver=5.4.6
-pkgrel=2
+pkgrel=3
 pkgdesc="a powerful, efficient, lightweight, embeddable scripting language (version 5.4)"
-arch=('mips')
+arch=(any)
 url="https://lua.org"
 license=('MIT')
 groups=('pspdev-default')

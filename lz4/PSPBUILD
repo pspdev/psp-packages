@@ -1,8 +1,8 @@
 pkgname=lz4
 pkgver=1.9.4
-pkgrel=2
+pkgrel=3
 pkgdesc="Extremely Fast Compression algorithm"
-arch=('mips')
+arch=(any)
 url="https://lz4.org/"
 license=('BSD-2-Clause')
 groups=('pspdev-default')

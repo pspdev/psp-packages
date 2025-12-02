@@ -1,8 +1,8 @@
 pkgname=ark-dev-sdk
 pkgver=20251101
-pkgrel=2
+pkgrel=3
 pkgdesc="Development libraries, sources and headers for ARK"
-arch=('mips')
+arch=(any)
 license=('GPL-3.0-only AND MIT')
 groups=('pspdev-default')
 url="https://github.com/PSP-Arkfive/ark-dev-sdk/"

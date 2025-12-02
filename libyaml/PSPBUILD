@@ -1,8 +1,8 @@
 pkgname=libyaml
 pkgver=0.2.5
-pkgrel=3
+pkgrel=4
 pkgdesc="LibYAML is a YAML parser and emitter library"
-arch=('mips')
+arch=(any)
 url="https://pyyaml.org/wiki/LibYAML"
 license=('MIT')
 groups=('pspdev-default')

@@ -1,7 +1,8 @@
 pkgname=raylib
 pkgver=5.6dev
-pkgrel=0
-pkgdesc="A simple and easy-to-use library to enjoy videogames programming" arch=('mips')
+pkgrel=2
+pkgdesc="A simple and easy-to-use library to enjoy videogames programming"
+arch=(any)
 url="https://www.raylib.com/"
 license=('zlib')
 groups=('pspdev-default')
