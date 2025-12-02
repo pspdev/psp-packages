@@ -1,8 +1,8 @@
 pkgname=leptonica
 pkgver=1.84.1
-pkgrel=4
+pkgrel=5
 pkgdesc="An open source C library for efficient image processing and image analysis operations"
-arch=('mips')
+arch=(any)
 url="http://www.leptonica.org/"
 license=('BSD-2-Clause')
 depends=('zlib' 'libpng' 'jpeg')

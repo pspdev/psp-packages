@@ -1,8 +1,8 @@
 pkgname=lua53
 pkgver=5.3.6
-pkgrel=2
+pkgrel=3
 pkgdesc="a powerful, efficient, lightweight, embeddable scripting language (version 5.3)"
-arch=('mips')
+arch=(any)
 url="https://lua.org"
 license=('MIT')
 depends=()

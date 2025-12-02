@@ -1,8 +1,8 @@
 pkgname=sdl2-image
 pkgver=2.8.6
-pkgrel=6
+pkgrel=7
 pkgdesc="a simple library to load images of various formats as SDL surfaces"
-arch=('mips')
+arch=(any)
 url="https://wiki.libsdl.org/SDL2_image/FrontPage"
 license=('Zlib')
 groups=('pspdev-default')

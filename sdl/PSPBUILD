@@ -1,8 +1,8 @@
 pkgname=sdl
 pkgver=1.2.15
-pkgrel=6
+pkgrel=7
 pkgdesc="a library designed to provide low level access to audio, input, and graphics hardware"
-arch=('mips')
+arch=(any)
 url="https://www.libsdl.org/download-1.2.php"
 license=('LGPL-2.1-only')
 groups=('pspdev-default')

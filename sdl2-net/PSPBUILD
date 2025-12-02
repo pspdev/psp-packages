@@ -1,8 +1,8 @@
 pkgname=sdl2-net
 pkgver=2.2.0
-pkgrel=5
+pkgrel=6
 pkgdesc="a wrapper over TCP/IP sockets"
-arch=('mips')
+arch=(any)
 url="https://wiki.libsdl.org/SDL2_net/FrontPage"
 license=('Zlib')
 groups=('pspdev-default')

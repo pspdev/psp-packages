@@ -1,8 +1,8 @@
 pkgname=oslib
 pkgver=1.4.0
-pkgrel=1
+pkgrel=2
 pkgdesc="OldSchool Library (OSLib) is a lightweight and versatile C++ library designed to provide functionality and tools commonly used in classic game development and retro programming project"
-arch=('mips')
+arch=(any)
 url="https://github.com/dogo/oslib"
 license=('GPL-2.0-only')
 groups=('pspdev-default')

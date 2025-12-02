@@ -1,8 +1,8 @@
 pkgname=libpspvram
 pkgver=r11.885fd3f
-pkgrel=3
+pkgrel=4
 pkgdesc="Dynamic VRAM allocation manager for the PSP"
-arch=('mips')
+arch=(any)
 url="https://github.com/albe/libpspvram"
 license=('MIT')
 groups=('pspdev-default')

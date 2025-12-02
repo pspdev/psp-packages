@@ -1,8 +1,8 @@
 pkgname=unarr
 pkgver=1.1.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A decompression library for rar, tar, zip and 7z archives"
-arch=('mips')
+arch=(any)
 url="https://github.com/selmf/unarr/"
 license=('LGPL-3.0')
 groups=('pspdev-default')

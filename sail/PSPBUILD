@@ -1,8 +1,8 @@
 pkgname=sail
 pkgver=1.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="SAIL is a high-quality cross-platform image decoding library providing rich APIs, from one-liners to complex use cases with custom I/O sources. It enables a client to load and save static, animated, multi-paged images along with their meta data and ICC profiles"
-arch=('mips')
+arch=(any)
 url='https://github.com/HappySeaFox/sail'
 license=('MIT')
 groups=('pspdev-default')

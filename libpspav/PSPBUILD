@@ -1,8 +1,8 @@
 pkgname=libpspav
 pkgver=r12
-pkgrel=5
+pkgrel=6
 pkgdesc="Native audio and video playback library for AT3, PMF and MPS formats"
-arch=('mips')
+arch=(any)
 url="https://github.com/pspdev/libpspav"
 license=('MIT')
 groups=('pspdev-default')

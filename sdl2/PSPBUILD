@@ -1,8 +1,8 @@
 pkgname=sdl2
 pkgver=2.32.8
-pkgrel=1
+pkgrel=2
 pkgdesc="a library designed to provide low level access to audio, input, and graphics hardware"
-arch=('mips')
+arch=(any)
 url="https://wiki.libsdl.org/SDL2/FrontPage"
 license=('Zlib')
 groups=('pspdev-default')
