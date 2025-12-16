@@ -1,6 +1,6 @@
 pkgname=physfs
 pkgver=3.2.0
-pkgrel=5
+pkgrel=6
 pkgdesc="PhysicsFS; a portable, flexible file i/o abstraction."
 arch=(any)
 url="https://icculus.org/physfs/"
@@ -34,7 +34,8 @@ build() {
     mkdir pspbuild
     cd pspbuild
     psp-cmake .. -Wno-dev -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DPHYSFS_BUILD_TEST=Off \
-        -DPHYSFS_ARCHIVE_SLB=Off -DPHYSFS_BUILD_SHARED=Off -DPHYSFS_BUILD_DOCS=Off -DPHYSFS_ARCHIVE_ISO9660=Off || { exit 1; }
+        -DPHYSFS_ARCHIVE_SLB=Off -DPHYSFS_BUILD_SHARED=Off -DPHYSFS_BUILD_DOCS=Off -DPHYSFS_ARCHIVE_ISO9660=Off \
+        -DCMAKE_POLICY_VERSION_MINIMUM=3.5 || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 
