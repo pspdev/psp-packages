@@ -1,6 +1,6 @@
 pkgname=dumb
 pkgver=2.0.3
-pkgrel=5
+pkgrel=6
 pkgdesc="Dynamic Universal Music Bibliotheque - DUMB - Module/tracker based music format parser and player library"
 arch=(any)
 url="https://github.com/kode54/dumb"
@@ -24,7 +24,8 @@ build() {
     mkdir -p build
     cd build
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
-        -DCMAKE_BUILD_TYPE=Release -DBUILD_ALLEGRO4=OFF -DBUILD_EXAMPLES=OFF -DCMAKE_C_FLAGS="-G0 -DDUMB_OFF_T_CUSTOM=\"long long\"" "${XTRA_OPTS[@]}" .. || { exit 1; }
+        -DCMAKE_BUILD_TYPE=Release -DBUILD_ALLEGRO4=OFF -DBUILD_EXAMPLES=OFF -DCMAKE_C_FLAGS="-G0 -DDUMB_OFF_T_CUSTOM=\"long long\"" \
+        -DCMAKE_POLICY_VERSION_MINIMUM=3.5 "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 
