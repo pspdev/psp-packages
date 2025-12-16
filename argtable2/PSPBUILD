@@ -1,6 +1,6 @@
 pkgname=argtable2
 pkgver=13
-pkgrel=7
+pkgrel=8
 pkgdesc="Argtable is an ANSI C library for parsing GNU style command line options with a minimum of fuss"
 arch=(any)
 url="http://argtable.sourceforge.net/"
@@ -24,7 +24,7 @@ build() {
     mkdir -p build
     cd build
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
-        -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS="-D__GNU_LIBRARY__" "${XTRA_OPTS[@]}" .. || { exit 1; }
+        -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS="-D__GNU_LIBRARY__" "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 
