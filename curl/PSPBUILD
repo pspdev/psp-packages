@@ -1,6 +1,6 @@
 pkgname=curl
 pkgver=7.64.1
-pkgrel=11
+pkgrel=12
 pkgdesc="A library for transferring data with URL syntax"
 arch=(any)
 url="https://curl.se/"
@@ -29,7 +29,7 @@ build() {
     cd build
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DCMAKE_USE_MBEDTLS=1 -DUSE_UNIX_SOCKETS=0 \
         -DENABLE_IPV6=0 -DENABLE_THREADED_RESOLVER=0 -DBUILD_CURL_EXE=OFF -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release \
-        "${XTRA_OPTS[@]}" .. || { exit 1; }
+        -DCMAKE_POLICY_VERSION_MINIMUM=3.5 "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 
