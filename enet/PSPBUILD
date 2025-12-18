@@ -1,8 +1,8 @@
 pkgname=enet
 pkgver=1.3.18
-pkgrel=3
+pkgrel=4
 pkgdesc="ENet reliable UDP networking library"
-arch=('mips')
+arch=(any)
 url="http://enet.bespin.org/"
 license=('MIT')
 groups=('pspdev-default')

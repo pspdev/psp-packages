@@ -1,0 +1,42 @@
+pkgname=oslib
+pkgver=1.4.0
+pkgrel=2
+pkgdesc="OldSchool Library (OSLib) is a lightweight and versatile C++ library designed to provide functionality and tools commonly used in classic game development and retro programming project"
+arch=(any)
+url="https://github.com/dogo/oslib"
+license=('GPL-2.0-only')
+groups=('pspdev-default')
+depends=('libmikmod' 'libpspmath' 'zlib' 'libpng' 'jpeg' 'giflib')
+makedepends=()
+optdepends=()
+source=("git+https://github.com/dogo/oslib.git#commit=b29f43a14881be52c6847b1c8f91088cee5087fb")
+sha256sums=('SKIP')
+
+prepare() {
+    cd $pkgname
+    git submodule update --init --recursive
+}
+
+build() {
+    cd $pkgname 
+    psp-cmake -DCMAKE_BUILD_TYPE=Release . "${XTRA_OPTS[@]}" || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package() {
+    cd $pkgname
+    make --quiet DESTDIR="${pkgdir}" ${MAKEFLAGS} install
+    install -d -m 755 -p "${pkgdir}/psp"
+    mv "${pkgdir}/${PSPDEV}/psp/lib" "${pkgdir}/psp/"
+    mv "${pkgdir}/${PSPDEV}/psp/include" "${pkgdir}/psp/"
+
+    install -d -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"
+
+    cd "$pkgdir/${PSPDEV}/psp"
+    while [ "${PWD}" != "${pkgdir}" ]; do
+        OLDPWD="${PWD}"
+        cd ..
+        rmdir "${OLDPWD}"
+    done
+}

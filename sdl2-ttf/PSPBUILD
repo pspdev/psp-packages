@@ -1,8 +1,8 @@
 pkgname=sdl2-ttf
 pkgver=2.20.2
-pkgrel=6
+pkgrel=7
 pkgdesc="a companion library to SDL2 for working with TrueType (tm) fonts"
-arch=('mips')
+arch=(any)
 url="https://wiki.libsdl.org/SDL2_ttf/FrontPage"
 license=('Zlib')
 groups=('pspdev-default')

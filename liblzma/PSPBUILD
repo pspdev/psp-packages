@@ -1,8 +1,8 @@
 pkgname=liblzma
 pkgver=5.2.10
-pkgrel=2
+pkgrel=3
 pkgdesc="LZMA provides a general-purpose data-compression library"
-arch=('mips')
+arch=(any)
 url="https://github.com/tukaani-project/xz/"
 license=('public domain')
 depends=()

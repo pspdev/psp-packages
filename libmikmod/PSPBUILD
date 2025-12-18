@@ -1,8 +1,8 @@
 pkgname=libmikmod
 pkgver=3.3.11.1
-pkgrel=7
+pkgrel=8
 pkgdesc="a portable sound library capable of playing samples as well as module files"
-arch=('mips')
+arch=(any)
 url="http://mikmod.sourceforge.net/"
 license=('LGPL-2.1-only')
 groups=('pspdev-default')

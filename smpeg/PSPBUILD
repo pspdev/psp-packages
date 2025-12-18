@@ -1,8 +1,8 @@
 pkgname=smpeg
 pkgver=0.4.5
-pkgrel=4
+pkgrel=5
 pkgdesc="a free MPEG1 video player library with sound support"
-arch=('mips')
+arch=(any)
 url="https://github.com/fungos/smpeg-psp/"
 license=('LGPL-2.0-only')
 groups=('pspdev-default')

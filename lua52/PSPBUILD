@@ -1,8 +1,8 @@
 pkgname=lua52
 pkgver=5.2.4
-pkgrel=1
+pkgrel=2
 pkgdesc="a powerful, efficient, lightweight, embeddable scripting language (version 5.2)"
-arch=('mips')
+arch=(any)
 url="https://lua.org"
 license=('MIT')
 depends=()

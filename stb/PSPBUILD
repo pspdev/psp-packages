@@ -1,8 +1,8 @@
 pkgname=stb
 pkgver=20241015git
-pkgrel=2
+pkgrel=3
 pkgdesc="a collection of single-file public domain libraries for C/C++"
-arch=('any')
+arch=(any)
 url="https://github.com/nothings/stb"
 license=('custom:Public-Domain or MIT')
 groups=('pspdev-default')

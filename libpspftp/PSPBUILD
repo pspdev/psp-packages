@@ -1,8 +1,8 @@
 pkgname=libpspftp
 pkgver=r12
-pkgrel=5
+pkgrel=6
 pkgdesc="FTP server and client library for PSP"
-arch=('mips')
+arch=(any)
 url="https://github.com/pspdev/libpspftp"
 license=('MIT')
 groups=('pspdev-default')

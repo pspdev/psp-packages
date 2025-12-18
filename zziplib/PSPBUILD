@@ -1,8 +1,8 @@
 pkgname=zziplib
 pkgver=0.13.76
-pkgrel=4
+pkgrel=5
 pkgdesc="provides read access to zipped files in a zip-archive"
-arch=('mips')
+arch=(any)
 url="http://zziplib.sourceforge.net/"
 license=('Zlib')
 groups=('pspdev-default')
