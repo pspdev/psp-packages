@@ -1,6 +1,6 @@
 pkgname=libpspvram
 pkgver=r11.885fd3f
-pkgrel=4
+pkgrel=5
 pkgdesc="Dynamic VRAM allocation manager for the PSP"
 arch=(any)
 url="https://github.com/albe/libpspvram"
@@ -23,7 +23,7 @@ build() {
     mkdir -p build
     cd build
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp \
-        -DCMAKE_BUILD_TYPE=Release "${XTRA_OPTS[@]}" .. || { exit 1; }
+        -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_VERSION_MINIMUM=3.5 "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 
