@@ -1,0 +1,36 @@
+pkgname=minilzo
+pkgver=2.09
+pkgrel=1
+pkgdesc="mini subset of the LZO real-time data compression library"
+arch=(any)
+url="https://github.com/yuhaoth/minilzo"
+license=('GPL-2')
+groups=('pspdev-default')
+depends=()
+makedepends=()
+optdepends=()
+source=('git+https://github.com/yuhaoth/minilzo.git#commit=b088e80336ef11c5a29ec949a950d4f0fec9ec05')
+sha256sums=('SKIP')
+
+
+build() {
+    cd "$pkgname"
+    mkdir -p build/psp
+    cd build/psp
+    psp-gcc -c -o minilzo.o ../minilzo.c
+    psp-ar rcs libminilzo.a minilzo.o
+}
+
+package() {
+    cd "$pkgname"
+    
+    mkdir -m 755 -p "${pkgdir}/psp/lib"
+    install -m 644 "build/psp/libminilzo.a" "${pkgdir}/psp/lib"
+
+    mkdir -m 755 -p "${pkgdir}/psp/include/"
+    install -m 644 *.h "${pkgdir}/psp/include/"
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"
+}
+
