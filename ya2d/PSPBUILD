@@ -1,0 +1,28 @@
+pkgname=ya2d
+pkgver=20251217
+pkgrel=3
+pkgdesc=" Yet Another 2D library (for PSP) "
+arch=('mips')
+url="https://github.com/xerpi/ya2d/"
+license=('GPL-2.1')
+groups=()
+depends=('libpng')
+makedepends=()
+optdepends=()
+provides=()
+source=('git+https://github.com/xerpi/ya2d.git#commit=5ffa93da65f4ceb526bdbba6c31dd42ccc1b38f3')
+sha256sums=('SKIP')
+
+build() {
+    cd "ya2d/libya2d"
+    make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package() {
+    cd "ya2d/libya2d"
+    make --quiet DESTDIR="${pkgdir}" $MAKEFLAGS install
+
+    cd ..
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 LICENSE.txt "$pkgdir/psp/share/licenses/$pkgname"
+}
