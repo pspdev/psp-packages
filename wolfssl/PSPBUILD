@@ -1,8 +1,8 @@
 pkgname=wolfssl
 pkgver=5.7.0
-pkgrel=4
+pkgrel=5
 pkgdesc="The wolfSSL library is a small, fast, portable implementation of TLS/SSL for embedded devices to the cloud. wolfSSL supports up to TLS 1.3!"
-arch=('mips')
+arch=(any)
 url="www.wolfssl.com"
 license=('GPL-2.0-only')
 groups=('pspdev-default')

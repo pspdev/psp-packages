@@ -1,8 +1,8 @@
 pkgname=dbglogger
 pkgver=20240817
-pkgrel=1
+pkgrel=2
 pkgdesc="A simple library that provides basic debug logging over the network (TCP/UDP) or to a local file"
-arch=('mips')
+arch=(any)
 url="https://github.com/bucanero/dbglogger"
 license=('MIT')
 groups=('pspdev-default')

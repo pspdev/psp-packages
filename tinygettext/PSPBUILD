@@ -1,8 +1,8 @@
 pkgname=tinygettext
 pkgver=20240715
-pkgrel=2
+pkgrel=3
 pkgdesc="a simple gettext replacement that works directly on .po files"
-arch=('mips')
+arch=(any)
 license=('Zlib')
 groups=('pspdev-default')
 url="https://github.com/tinygettext/tinygettext"

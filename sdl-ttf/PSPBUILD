@@ -1,8 +1,8 @@
 pkgname=sdl-ttf
 pkgver=2.0.11
-pkgrel=7
+pkgrel=8
 pkgdesc="a companion library to SDL for working with TrueType (tm) fonts"
-arch=('mips')
+arch=(any)
 url="https://www.libsdl.org/projects/old/SDL_ttf/release-1.2.html"
 license=('Zlib')
 groups=('pspdev-default')

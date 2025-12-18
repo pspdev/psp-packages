@@ -1,8 +1,8 @@
 pkgname=flac
 pkgver=1.4.3
-pkgrel=2
+pkgrel=3
 pkgdesc="Free Lossless Audio Codec"
-arch=('mips')
+arch=(any)
 url="https://xiph.org/flac/"
 license=('BSD-3-Clause')
 groups=('pspdev-default')

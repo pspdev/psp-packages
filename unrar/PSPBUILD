@@ -1,8 +1,8 @@
 pkgname=unrar
 pkgver=5.90.0
-pkgrel=1
+pkgrel=2
 pkgdesc="UnRAR is a library which provides file extraction from RAR archives."
-arch=('mips')
+arch=(any)
 license=('custom')
 groups=('pspdev-default')
 url="https://github.com/bucanero/libunrar-ps3"
