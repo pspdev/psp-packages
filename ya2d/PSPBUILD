@@ -1,7 +1,7 @@
 pkgname=ya2d
 pkgver=20251217
-pkgrel=3
-pkgdesc=" Yet Another 2D library (for PSP) "
+pkgrel=1
+pkgdesc="Yet Another 2D library (for PSP)"
 arch=('mips')
 url="https://github.com/xerpi/ya2d/"
 license=('GPL-2.1')
