@@ -1,6 +1,6 @@
 pkgname=lz4
 pkgver=1.9.4
-pkgrel=3
+pkgrel=4
 pkgdesc="Extremely Fast Compression algorithm"
 arch=(any)
 url="https://lz4.org/"
@@ -27,7 +27,7 @@ build() {
     cd build/psp
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
         -DBUILD_STATIC_LIBS=ON -DLZ4_POSITION_INDEPENDENT_LIB=OFF -DLZ4_BUILD_CLI=OFF -DLZ4_BUILD_LEGACY_LZ4C=OFF \
-        -DCMAKE_BUILD_TYPE=Release "${XTRA_OPTS[@]}" ../cmake || { exit 1; }
+        -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_VERSION_MINIMUM=3.5 "${XTRA_OPTS[@]}" ../cmake || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 

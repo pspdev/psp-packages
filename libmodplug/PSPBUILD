@@ -1,6 +1,6 @@
 pkgname=libmodplug
 pkgver=0.8.8.5
-pkgrel=5
+pkgrel=6
 pkgdesc="libmodplug - the library which was part of the Modplug-xmms project"
 arch=(any)
 url="http://modplug-xmms.sf.net/"
@@ -29,7 +29,7 @@ build() {
     cd libmodplug
     mkdir pspbuild
     cd pspbuild
-    psp-cmake .. -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DCMAKE_BUILD_TYPE=Release
+    psp-cmake .. -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DCMAKE_BUILD_TYPE=Release
     make
 }
 

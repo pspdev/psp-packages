@@ -1,6 +1,6 @@
 pkgname=sqlite
 pkgver=3.7.4
-pkgrel=6
+pkgrel=7
 pkgdesc="SQLite is a C-language library that implements a small, fast, self-contained, high-reliability, full-featured, SQL database engine"
 arch=(any)
 url="https://www.sqlite.org/"
@@ -29,6 +29,7 @@ prepare() {
 
 build() {
     cd "${pkgname}-version-${pkgver}"
+    BUILD_CFLAGS="-std=c17" \
     LDFLAGS="-L$(psp-config --pspsdk-path)/lib -lc -lpspuser" \
     CFLAGS="-G0 -O2 -DSQLITE_OS_OTHER=1 -DSQLITE_OS_PSP=1 -I$(psp-config --pspsdk-path)/include" \
     ./configure --host=psp --prefix="/psp" --disable-readline --disable-tcl --disable-threadsafe --disable-amalgamation

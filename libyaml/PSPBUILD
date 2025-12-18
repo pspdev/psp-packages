@@ -1,6 +1,6 @@
 pkgname=libyaml
 pkgver=0.2.5
-pkgrel=4
+pkgrel=5
 pkgdesc="LibYAML is a YAML parser and emitter library"
 arch=(any)
 url="https://pyyaml.org/wiki/LibYAML"
@@ -17,7 +17,7 @@ build() {
     mkdir -p build
     cd build
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
-        -DCMAKE_BUILD_TYPE=Release "${XTRA_OPTS[@]}" .. || { exit 1; }
+        -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_VERSION_MINIMUM=3.5 "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 

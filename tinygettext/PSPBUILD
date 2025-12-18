@@ -1,6 +1,6 @@
 pkgname=tinygettext
 pkgver=20240715
-pkgrel=3
+pkgrel=4
 pkgdesc="a simple gettext replacement that works directly on .po files"
 arch=(any)
 license=('Zlib')
@@ -24,7 +24,8 @@ build() {
   mkdir -p build
   cd build
   cmake -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
-        -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF -DTINYGETTEXT_WITH_SDL=ON -DCMAKE_INSTALL_LIBDIR=${pkgdir}/psp/lib "${XTRA_OPTS[@]}" .. || { exit 1; }
+        -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF -DTINYGETTEXT_WITH_SDL=ON -DCMAKE_INSTALL_LIBDIR=${pkgdir}/psp/lib \
+        -DCMAKE_POLICY_VERSION_MINIMUM=3.5 "${XTRA_OPTS[@]}" .. || { exit 1; }
   make --quiet $MAKEFLAGS || { exit 1; }
 }
 
