@@ -15,6 +15,7 @@ build() {
     mkdir -p build
     cd build
     cmake -Wno-dev -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake \
+        -DPK_ENABLE_THREADS=OFF -DPK_BUILD_WITH_UNITY=OFF -DPK_BUILD_STATIC_MAIN=ON \
         -DPK_BUILD_STATIC_LIB=ON -DPK_BUILD_SHARED_LIB=OFF "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
