@@ -44,7 +44,7 @@ jobs:
         for f in ${{ matrix.packages }}; do
         chown -R build:build $f
         cd $f
-        sudo -u build PATH=${PATH} PSPDEV=${PSPDEV} LIBMAKEPKG_LINT_PACKAGE_DOTFILES_SH=0 ${PSPDEV}/bin/psp-makepkg --noconfirm
+        sudo -u build PATH=${PATH} PSPDEV=${PSPDEV} LIBMAKEPKG_LINT_PACKAGE_DOTFILES_SH=0 ${PSPDEV}/bin/psp-makepkg --noconfirm --noprogressbar
         sudo -u build PATH=${PATH} PSPDEV=${PSPDEV} ${PSPDEV}/bin/psp-pacman -U --noconfirm *.pkg.tar.gz --overwrite '*'
         cd ..
         done
