@@ -1,6 +1,6 @@
 pkgname=sdl2-mixer
 pkgver=2.8.0
-pkgrel=3
+pkgrel=4
 pkgdesc="An audio mixer library based on the SDL2 library"
 arch=(any)
 url="https://wiki.libsdl.org/SDL2_mixer/FrontPage"

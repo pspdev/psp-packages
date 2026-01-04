@@ -1,6 +1,6 @@
 pkgname=sdl3-ttf
 pkgver=3.2.2
-pkgrel=2
+pkgrel=3
 pkgdesc="A companion library to SDL3 for working with TrueType (tm) fonts"
 arch=(any)
 url="https://wiki.libsdl.org/SDL3_ttf/FrontPage"

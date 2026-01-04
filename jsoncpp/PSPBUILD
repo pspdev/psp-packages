@@ -1,6 +1,6 @@
 pkgname=jsoncpp
 pkgver=1.9.6
-pkgrel=2
+pkgrel=3
 pkgdesc="A C++ library for interacting with JSON"
 arch=(any)
 license=('Unlicense')

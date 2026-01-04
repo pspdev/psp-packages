@@ -1,6 +1,6 @@
 pkgname=zziplib
 pkgver=0.13.76
-pkgrel=6
+pkgrel=7
 pkgdesc="Provides read access to zipped files in a zip-archive"
 arch=(any)
 url="http://zziplib.sourceforge.net/"

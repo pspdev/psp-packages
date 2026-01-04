@@ -1,6 +1,6 @@
 pkgname=sdl-net
 pkgver=1.2.9
-pkgrel=4
+pkgrel=6
 pkgdesc="A wrapper over TCP/IP sockets"
 arch=(any)
 url="https://www.libsdl.org/projects/old/SDL_net/release-1.2.html"

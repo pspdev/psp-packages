@@ -1,6 +1,6 @@
 pkgname=libmikmod
 pkgver=3.3.11.1
-pkgrel=9
+pkgrel=10
 pkgdesc="A portable sound library capable of playing samples as well as module files"
 arch=(any)
 url="http://mikmod.sourceforge.net/"

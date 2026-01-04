@@ -1,6 +1,6 @@
 pkgname=sdl-ttf
 pkgver=2.0.11
-pkgrel=8
+pkgrel=9
 pkgdesc="A companion library to SDL for working with TrueType (tm) fonts"
 arch=(any)
 url="https://www.libsdl.org/projects/old/SDL_ttf/release-1.2.html"

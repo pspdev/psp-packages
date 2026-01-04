@@ -1,6 +1,6 @@
 pkgname=pspirkeyb
 pkgver=r1
-pkgrel=5
+pkgrel=6
 pkgdesc="A library for using IRDA keyboards with Playstation Portable"
 arch=(any)
 url="https://github.com/pspdev/pspirkeyb"

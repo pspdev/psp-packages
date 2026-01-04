@@ -1,6 +1,6 @@
 pkgname=sdl2-ttf
 pkgver=2.20.2
-pkgrel=7
+pkgrel=8
 pkgdesc="A companion library to SDL2 for working with TrueType (tm) fonts"
 arch=(any)
 url="https://wiki.libsdl.org/SDL2_ttf/FrontPage"

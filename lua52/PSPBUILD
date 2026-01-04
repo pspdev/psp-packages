@@ -1,6 +1,6 @@
 pkgname=lua52
 pkgver=5.2.4
-pkgrel=2
+pkgrel=3
 pkgdesc="A powerful, efficient, lightweight, embeddable scripting language (version 5.2)"
 arch=(any)
 url="https://lua.org"

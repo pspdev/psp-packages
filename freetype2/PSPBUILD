@@ -1,6 +1,6 @@
 pkgname=freetype2
 pkgver=2.11.0
-pkgrel=8
+pkgrel=9
 pkgdesc="A freely available software library to render fonts"
 arch=(any)
 url="https://www.freetype.org/"

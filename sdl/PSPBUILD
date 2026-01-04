@@ -1,6 +1,6 @@
 pkgname=sdl
 pkgver=1.2.15
-pkgrel=7
+pkgrel=8
 pkgdesc="A library designed to provide low level access to audio, input, and graphics hardware"
 arch=(any)
 url="https://www.libsdl.org/download-1.2.php"
