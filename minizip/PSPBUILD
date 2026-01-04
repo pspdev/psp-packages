@@ -1,7 +1,7 @@
 pkgname=minizip
 pkgver=3.0.4
 pkgrel=6
-pkgdesc="fork of the popular zip manipulation library found in the zlib distribution"
+pkgdesc="Fork of the popular zip manipulation library found in the zlib distribution"
 arch=(any)
 url="https://github.com/zlib-ng/minizip-ng"
 license=('Zlib')

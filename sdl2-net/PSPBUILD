@@ -1,7 +1,7 @@
 pkgname=sdl2-net
 pkgver=2.2.0
 pkgrel=6
-pkgdesc="a wrapper over TCP/IP sockets"
+pkgdesc="A wrapper over TCP/IP sockets"
 arch=(any)
 url="https://wiki.libsdl.org/SDL2_net/FrontPage"
 license=('Zlib')

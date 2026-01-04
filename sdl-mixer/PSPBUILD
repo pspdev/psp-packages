@@ -1,7 +1,7 @@
 pkgname=sdl-mixer
 pkgver=1.2.14
 pkgrel=9
-pkgdesc="an audio mixer library based on the SDL library"
+pkgdesc="An audio mixer library based on the SDL library"
 arch=(any)
 url="https://www.libsdl.org/projects/old/SDL_mixer/release-1.2.html"
 license=('Zlib')

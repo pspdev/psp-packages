@@ -1,7 +1,7 @@
 pkgname=sdl3-image
 pkgver=3.2.4
 pkgrel=2
-pkgdesc="a simple library to load images of various formats as SDL surfaces"
+pkgdesc="A simple library to load images of various formats as SDL surfaces"
 arch=(any)
 url="https://wiki.libsdl.org/SDL3_image/FrontPage"
 license=('Zlib')
