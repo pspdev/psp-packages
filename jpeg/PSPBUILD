@@ -1,7 +1,7 @@
 pkgname=jpeg
 pkgver=3.0.3
-pkgrel=6
-pkgdesc="a free library for JPEG image compression"
+pkgrel=7
+pkgdesc="A free library for JPEG image compression"
 arch=(any)
 url="https://ijg.org/"
 license=('custom')

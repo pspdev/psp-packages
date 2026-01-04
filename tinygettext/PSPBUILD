@@ -1,7 +1,7 @@
 pkgname=tinygettext
 pkgver=20240715
-pkgrel=4
-pkgdesc="a simple gettext replacement that works directly on .po files"
+pkgrel=5
+pkgdesc="A simple gettext replacement that works directly on .po files"
 arch=(any)
 license=('Zlib')
 groups=('pspdev-default')

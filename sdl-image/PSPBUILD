@@ -1,7 +1,7 @@
 pkgname=sdl-image
 pkgver=1.2.13
-pkgrel=7
-pkgdesc="a simple library to load images of various formats as SDL2 surfaces"
+pkgrel=8
+pkgdesc="A simple library to load images of various formats as SDL2 surfaces"
 arch=(any)
 url="https://www.libsdl.org/projects/old/SDL_image/release-1.2.html"
 license=('Zlib')
