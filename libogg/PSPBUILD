@@ -1,5 +1,5 @@
 pkgname=libogg
-pkgver=1.3.5
+pkgver=1.3.6
 pkgrel=8
 pkgdesc="Library for the multimedia container format, and the native file and stream format ogg"
 arch=(any)
@@ -10,7 +10,7 @@ depends=()
 makedepends=()
 optdepends=()
 source=("https://github.com/xiph/ogg/archive/v${pkgver}.tar.gz")
-sha256sums=('f6f1b04cfa4e98b70ffe775d5e302d9c6b98541f05159af6de2d6617817ed7d6')
+sha256sums=('95b643da661155d79db9de2fca55daed3a8d491039829def246aacb3d9201c81')
 
 prepare() {
     cd "ogg-${pkgver}"
