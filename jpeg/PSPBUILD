@@ -1,6 +1,6 @@
 pkgname=jpeg
-pkgver=3.0.3
-pkgrel=7
+pkgver=3.1.3
+pkgrel=1
 pkgdesc="A free library for JPEG image compression"
 arch=(any)
 url="https://ijg.org/"
@@ -10,7 +10,7 @@ depends=()
 makedepends=()
 optdepends=()
 source=("https://github.com/libjpeg-turbo/libjpeg-turbo/archive/${pkgver}.tar.gz")
-sha256sums=('a649205a90e39a548863a3614a9576a3fb4465f8e8e66d54999f127957c25b21')
+sha256sums=('3a13a5ba767dc8264bc40b185e41368a80d5d5f945944d1dbaa4b2fb0099f4e5')
 
 prepare() {
     cd "libjpeg-turbo-${pkgver}/release"

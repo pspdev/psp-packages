@@ -1,6 +1,6 @@
 pkgname=flac
-pkgver=1.4.3
-pkgrel=3
+pkgver=1.5.0
+pkgrel=1
 pkgdesc="Free Lossless Audio Codec"
 arch=(any)
 url="https://xiph.org/flac/"
@@ -10,7 +10,7 @@ depends=('libogg')
 makedepends=()
 optdepends=()
 source=("https://github.com/xiph/flac/releases/download/${pkgver}/flac-${pkgver}.tar.xz")
-sha256sums=('6c58e69cd22348f441b861092b825e591d0b822e106de6eb0ee4d05d27205b70')
+sha256sums=('f2c1c76592a82ffff8413ba3c4a1299b6c7ab06c734dee03fd88630485c2b920')
 
 prepare() {
     cd "${pkgname}-${pkgver}/src/libFLAC"

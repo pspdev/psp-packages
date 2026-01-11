@@ -1,6 +1,6 @@
 pkgname=libxmp
-pkgver=4.5.0
-pkgrel=7
+pkgver=4.6.3
+pkgrel=1
 pkgdesc="Libxmp is a library that renders module files to PCM data"
 arch=(any)
 url="https://github.com/libxmp/libxmp"
@@ -9,11 +9,11 @@ groups=('pspdev-default')
 depends=()
 makedepends=()
 optdepends=()
-source=("git+https://github.com/libxmp/libxmp.git#commit=b1766e972cebebaaf21f738ee6c26bed95c1e9ed")
+source=("https://github.com/libxmp/libxmp/releases/download/${pkgname}-${pkgver}/${pkgname}-${pkgver}.tar.gz")
 sha256sums=('SKIP')
 
 prepare() {
-    cd "$pkgname"
+    cd "${pkgname}-${pkgver}"
     sed -i 's#@prefix@#${PSPDEV}/psp#' libxmp.pc.in
     sed -i 's#@exec_prefix@#${prefix}#' libxmp.pc.in
     sed -i 's#@libdir@#${prefix}/lib#' libxmp.pc.in
@@ -21,7 +21,7 @@ prepare() {
 }
 
 build() {
-    cd "$pkgname"
+    cd "${pkgname}-${pkgver}"
     mkdir -p build
     cd build
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED=OFF \
@@ -30,12 +30,12 @@ build() {
 }
 
 package() {
-    cd "$pkgname/build"
+    cd "${pkgname}-${pkgver}/build"
     make --quiet $MAKEFLAGS install
     cd ..
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
-    install -m 644 docs/COPYING.LIB "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 docs/COPYING "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 docs/CREDITS "$pkgdir/psp/share/licenses/$pkgname"
 }
 

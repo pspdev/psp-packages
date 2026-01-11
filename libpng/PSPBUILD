@@ -1,6 +1,6 @@
 pkgname=libpng
-pkgver=1.6.43
-pkgrel=9
+pkgver=1.6.53
+pkgrel=1
 pkgdesc="libpng is the official PNG reference library"
 arch=(any)
 url="http://libpng.org/pub/png/libpng.html"
@@ -10,7 +10,7 @@ depends=('zlib')
 makedepends=()
 optdepends=()
 source=("https://github.com/pnggroup/libpng/archive/v${pkgver}.tar.gz")
-sha256sums=('fecc95b46cf05e8e3fc8a414750e0ba5aad00d89e9fdf175e94ff041caf1a03a')
+sha256sums=('b20cee717e11416d2f96ccc7d184f63730ca8cb2f03bfd0c4ed77fbc909c0bff')
 
 prepare() {
     cd "$pkgname-${pkgver}"
