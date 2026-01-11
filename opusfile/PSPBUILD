@@ -1,0 +1,37 @@
+pkgname=opusfile
+pkgver=0.12
+pkgrel=1
+pkgdesc="The opusfile library provides seeking, decode, and playback of Opus streams in the Ogg container."
+arch=(any)
+url="https://opus-codec.org/"
+license=('BSD-3-Clause')
+groups=('pspdev-default')
+depends=()
+makedepends=()
+optdepends=()
+source=("https://downloads.xiph.org/releases/opus/opusfile-${pkgver}.tar.gz")
+sha256sums=('118d8601c12dd6a44f52423e68ca9083cc9f2bfe72da7a8c1acb22a80ae3550b')
+depends=('libogg' 'opus')
+
+prepare() {
+    cd "${pkgname}-${pkgver}"
+    patch -p1 < ../../${pkgname}-${pkgver}-PSP.patch
+    sed -i 's#@prefix@#${PSPDEV}/psp#' opusfile.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' opusfile.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' opusfile.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' opusfile.pc.in
+}
+
+build() {
+    cd "${pkgname}-${pkgver}"
+    ./configure --host=psp --prefix=${pkgdir}/psp --disable-doc --disable-examples --disable-http --disable-shared --enable-static --enable-fixed-point
+    make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package() {
+    cd "${pkgname}-${pkgver}"
+    make --quiet $MAKEFLAGS install
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 COPYING "$pkgdir/psp/share/licenses/$pkgname"
+}
