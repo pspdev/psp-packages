@@ -9,11 +9,11 @@ groups=('pspdev-default')
 depends=()
 makedepends=()
 optdepends=()
-source=("https://downloads.xiph.org/releases/opus/opus-${pkgver}.tar.gz")
+source=("https://downloads.xiph.org/releases/opus/${pkgname}-${pkgver}.tar.gz")
 sha256sums=('b7637334527201fdfd6dd6a02e67aceffb0e5e60155bbd89175647a80301c92c')
 
 prepare() {
-    cd "opus-${pkgver}"
+    cd "${pkgname}-${pkgver}"
     sed -i 's#@prefix@#${PSPDEV}/psp#' opus.pc.in
     sed -i 's#@exec_prefix@#${prefix}#' opus.pc.in
     sed -i 's#@libdir@#${prefix}/lib#' opus.pc.in
@@ -21,7 +21,7 @@ prepare() {
 }
 
 build() {
-    cd "opus-${pkgver}"
+    cd "${pkgname}-${pkgver}"
     mkdir -p build
     cd build
     cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp \
@@ -30,7 +30,7 @@ build() {
 }
 
 package() {
-    cd "opus-${pkgver}/build"
+    cd "${pkgname}-${pkgver}/build"
     make --quiet $MAKEFLAGS install
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"

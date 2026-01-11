@@ -9,7 +9,7 @@ groups=('pspdev-default')
 depends=()
 makedepends=()
 optdepends=()
-source=("https://downloads.xiph.org/releases/opus/opusfile-${pkgver}.tar.gz")
+source=("https://downloads.xiph.org/releases/opus/${pkgname}-${pkgver}.tar.gz")
 sha256sums=('118d8601c12dd6a44f52423e68ca9083cc9f2bfe72da7a8c1acb22a80ae3550b')
 depends=('libogg' 'opus')
 
