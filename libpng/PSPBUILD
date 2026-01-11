@@ -1,6 +1,6 @@
 pkgname=libpng
 pkgver=1.6.53
-pkgrel=9
+pkgrel=1
 pkgdesc="libpng is the official PNG reference library"
 arch=(any)
 url="http://libpng.org/pub/png/libpng.html"

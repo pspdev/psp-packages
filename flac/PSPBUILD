@@ -1,6 +1,6 @@
 pkgname=flac
 pkgver=1.5.0
-pkgrel=3
+pkgrel=1
 pkgdesc="Free Lossless Audio Codec"
 arch=(any)
 url="https://xiph.org/flac/"
