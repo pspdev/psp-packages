@@ -8,10 +8,10 @@ groups=('pspdev-default')
 url="https://github.com/PSP-Arkfive/ark-dev-sdk/"
 depends=('libpng')
 makedepends=()
-conflicts=('kubridge')
-provides=('kubridge')
+conflicts=('kubridge' 'libpspexploit')
+provides=('kubridge' 'libpspexploit')
 source=(
-  "git+https://github.com/PSP-Arkfive/ark-dev-sdk.git#commit=5c61b79866009b6fc2a8ee63801eed9ce0610c9c"
+  "git+https://github.com/PSP-Arkfive/ark-dev-sdk.git#commit=9648ac530a7e31d10169ce2d8c482a4e907aade4"
   "gpl-3.0.txt"
 )
 sha256sums=(
