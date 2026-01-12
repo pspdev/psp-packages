@@ -12,14 +12,6 @@ optdepends=()
 source=("https://downloads.xiph.org/releases/opus/${pkgname}-${pkgver}.tar.gz")
 sha256sums=('b7637334527201fdfd6dd6a02e67aceffb0e5e60155bbd89175647a80301c92c')
 
-prepare() {
-    cd "${pkgname}-${pkgver}"
-    sed -i 's#@prefix@#${PSPDEV}/psp#' opus.pc.in
-    sed -i 's#@exec_prefix@#${prefix}#' opus.pc.in
-    sed -i 's#@libdir@#${prefix}/lib#' opus.pc.in
-    sed -i 's#@includedir@#${prefix}/include#' opus.pc.in
-}
-
 build() {
     cd "${pkgname}-${pkgver}"
     mkdir -p build
@@ -35,4 +27,6 @@ package() {
 
     mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
     install -m 644 ../COPYING "$pkgdir/psp/share/licenses/$pkgname"
+
+    sed -i "s#$pkgdir#\${PSPDEV}#g" "$pkgdir/psp/lib/pkgconfig/opus.pc"
 }
