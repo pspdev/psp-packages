@@ -1,0 +1,32 @@
+pkgname=opus
+pkgver=1.6
+pkgrel=1
+pkgdesc="Opus is a totally open, royalty-free, highly versatile audio codec."
+arch=(any)
+url="https://opus-codec.org/"
+license=('BSD-3-Clause')
+groups=('pspdev-default')
+depends=()
+makedepends=()
+optdepends=()
+source=("https://downloads.xiph.org/releases/opus/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('b7637334527201fdfd6dd6a02e67aceffb0e5e60155bbd89175647a80301c92c')
+
+build() {
+    cd "${pkgname}-${pkgver}"
+    mkdir -p build
+    cd build
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp \
+        "${XTRA_OPTS[@]}" .. || { exit 1; }
+    make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package() {
+    cd "${pkgname}-${pkgver}/build"
+    make --quiet $MAKEFLAGS install
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 ../COPYING "$pkgdir/psp/share/licenses/$pkgname"
+
+    sed -i "s#$pkgdir#\${PSPDEV}#g" "$pkgdir/psp/lib/pkgconfig/opus.pc"
+}
