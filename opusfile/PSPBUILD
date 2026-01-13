@@ -16,10 +16,10 @@ depends=('libogg' 'opus')
 prepare() {
     cd "${pkgname}-${pkgver}"
     patch -p1 < ../../${pkgname}-${pkgver}-PSP.patch
-    sed -i 's#@prefix@#${PSPDEV}/psp#' opusfile.pc.in
-    sed -i 's#@exec_prefix@#${prefix}#' opusfile.pc.in
-    sed -i 's#@libdir@#${prefix}/lib#' opusfile.pc.in
-    sed -i 's#@includedir@#${prefix}/include#' opusfile.pc.in
+    sed -i 's#@prefix@#${PSPDEV}/psp#' opusfile.pc.in opusurl.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' opusfile.pc.in opusurl.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' opusfile.pc.in opusurl.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' opusfile.pc.in opusurl.pc.in
 }
 
 build() {
