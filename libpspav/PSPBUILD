@@ -1,6 +1,6 @@
 pkgname=libpspav
-pkgver=r12
-pkgrel=6
+pkgver=r13
+pkgrel=7
 pkgdesc="Native audio and video playback library for AT3, PMF and MPS formats"
 arch=(any)
 url="https://github.com/pspdev/libpspav"
