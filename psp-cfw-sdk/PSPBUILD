@@ -1,17 +1,17 @@
-pkgname=ark-dev-sdk
-pkgver=20252212
-pkgrel=3
-pkgdesc="Development libraries, sources and headers for ARK"
+pkgname=psp-cfw-sdk
+pkgver=20261501
+pkgrel=1
+pkgdesc="Development libraries, sources and headers for PSP CFW"
 arch=(any)
 license=('GPL-3.0-only AND MIT')
 groups=('pspdev-default')
-url="https://github.com/PSP-Arkfive/ark-dev-sdk/"
+url="https://github.com/pspdev/psp-cfw-sdk"
 depends=('libpng' 'lz4' 'minilzo')
 makedepends=()
-conflicts=('kubridge' 'libpspexploit')
-provides=('kubridge' 'libpspexploit')
+conflicts=('kubridge' 'libpspexploit' 'ark-dev-sdk')
+provides=('kubridge' 'libpspexploit' 'ark-dev-sdk')
 source=(
-  "git+https://github.com/PSP-Arkfive/ark-dev-sdk.git#commit=9648ac530a7e31d10169ce2d8c482a4e907aade4"
+  "git+https://github.com/pspdev/psp-cfw-sdk.git#commit=d322ee29ff31e8d4f4ec7b28447d096a3514a614"
   "gpl-3.0.txt"
 )
 sha256sums=(
@@ -33,7 +33,7 @@ package () {
 
   mkdir -m 755 -p "$pkgdir/share/$pkgname"
   cp -r build-tools "$pkgdir/share/$pkgname/"
-  rm "$pkgdir/share/ark-dev-sdk/build-tools/CMakeLists.txt"
+  rm "$pkgdir/share/psp-cfw-sdk/build-tools/CMakeLists.txt"
 
   mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname/iplsdk"
   install -m 644 "../gpl-3.0.txt" "$pkgdir/psp/share/licenses/$pkgname"
