@@ -1,6 +1,6 @@
 pkgname=psp-cfw-sdk
 pkgver=20261601
-pkgrel=2
+pkgrel=1
 pkgdesc="Development libraries, sources and headers for PSP CFW"
 arch=(any)
 license=('GPL-3.0-only AND MIT')
