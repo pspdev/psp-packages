@@ -1,5 +1,5 @@
 pkgname=psp-cfw-sdk
-pkgver=20261501
+pkgver=20261601
 pkgrel=1
 pkgdesc="Development libraries, sources and headers for PSP CFW"
 arch=(any)
@@ -11,7 +11,7 @@ makedepends=()
 conflicts=('kubridge' 'libpspexploit' 'ark-dev-sdk')
 provides=('kubridge' 'libpspexploit' 'ark-dev-sdk')
 source=(
-  "git+https://github.com/pspdev/psp-cfw-sdk.git#commit=d322ee29ff31e8d4f4ec7b28447d096a3514a614"
+  "git+https://github.com/pspdev/psp-cfw-sdk.git#commit=0ad55d6711cd87347688a83b215307079e15fa18"
   "gpl-3.0.txt"
 )
 sha256sums=(
