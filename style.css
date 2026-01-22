@@ -1,24 +1,63 @@
 body {
     font-family: sans-serif;
+    color: #e6e1e8;
+    background-color: #27262b;
 }
 
 table {
     border-collapse: collapse;
     font-size: 0.9em;
+    width: 100%;
+    border: 2px solid;
 }
 
 table tbody tr {
-    border-bottom: 1px solid #dddddd;
+    border-bottom: 2px solid #dddddd;
 }
 
 table th, td {
     padding: 12px 15px;
+    border: 2px solid #222222;
+    border-collapse: collapse;
+    text-align: left;
 }
 
 table tbody tr:nth-of-type(even) {
-    background-color: #f3f3f3;
+    background-color: #27262b;
 }
 
-table tbody tr:nth-of-type(uneven) {
-    background-color: #009879;
+table tbody tr:nth-of-type(odd) {
+    background-color: #444444;
+}
+
+a {
+    color: rgb(93.8194444444, 161.0416666667, 251.1805555556);
+    text-decoration: underline;
+    text-decoration-color: #44434d;
+    text-underline-offset: 2px;
+}
+
+a::hover {
+    text-decoration-color: rgba(93.8194444444, 161.0416666667, 251.1805555556, 0.45);
+}
+
+li {
+    padding: 3px;
+}
+
+pre {
+    background-color: #0d1117;
+    font-size: 16px;
+}
+
+table.pkgmeta {
+    width: fit-content;
+}
+
+table.pkgmeta tbody tr:nth-of-type(odd), table.pkgmeta tbody tr:nth-of-type(odd){
+    background-color: #27262b;
+}
+
+table.pkgmeta tbody td:nth-of-type(odd){
+    background-color: #444444;
 }
