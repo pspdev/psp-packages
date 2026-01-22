@@ -52,6 +52,23 @@ for PKGBUILD in ${PACKAGES}; do
 			DEPS="${DEPS}</ul>"
 		fi
 
+		# List sources
+		if [ ! -n "${source[*]}" ]; then
+			SOURCES="No sources"
+		else
+			SOURCES="<ul>"
+			for src in "${source[@]}"; do
+				if [[ $src == http* ]] || [[ $src == ftp* ]] then
+					SOURCES="${SOURCES}<li><a href=\"${src}\">${src}</a></li>"
+				elif [[ $src == git* ]]; then
+					SOURCES="${SOURCES}<li>${src}</li>"
+				else
+					SOURCES="${SOURCES}<li><a href=\"https://github.com/pspdev/psp-packages/blob/master/${pkgname}/${src}\">${src}</a></li>"
+				fi
+			done
+			SOURCES="${SOURCES}</ul>"
+		fi
+
 		# List content of files
 		if [ -f "${FILENAME}" ]; then
 			CONTENT="<ul>"
