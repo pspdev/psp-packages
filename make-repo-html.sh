@@ -26,22 +26,41 @@ function createSourceLink() {
 		if [[ ${BASE_URL} == *.git ]]; then
 			BASE_URL="$(echo "${BASE_URL}" | rev | cut -d'.' -f2- | rev)"
 		fi
-		if [[ ${1} != "*github.com/*" ]] && [[ ${1} != "*gilab*" ]]; then
-			echo "${1}"
-		elif [[ ${1} == *#commit=* ]]; then
-			COMMIT="$(echo $1 | cut -d'=' -f2)"
-			URL="${BASE_URL}/tree/${COMMIT}"
-			echo "<a href=\"${URL}\">${BASE_URL}</a>"
-		elif [[ ${1} == *#branch=* ]]; then
-			BRANCH="$(echo $1 | cut -d'=' -f2)"
-			URL="${BASE_URL}/tree/${BRANCH}"
-			echo "<a href=\"${URL}\">${BASE_URL}</a>"
-		elif [[ ${1} == *#tag=* ]]; then
-			TAG="$(echo $1 | cut -d'=' -f2)"
-			URL="${BASE_URL}/tree/${TAG}"
-			echo "<a href=\"${URL}\">${BASE_URL}</a>"
+		if [[ ${1} == *github.com/* ]] || [[ ${1} == *gilab* ]]; then
+			if [[ ${1} == *#commit=* ]]; then
+				COMMIT="$(echo $1 | cut -d'=' -f2)"
+				URL="${BASE_URL}/tree/${COMMIT}"
+				echo "<a href=\"${URL}\">${BASE_URL}</a>"
+			elif [[ ${1} == *#branch=* ]]; then
+				BRANCH="$(echo $1 | cut -d'=' -f2)"
+				URL="${BASE_URL}/tree/${BRANCH}"
+				echo "<a href=\"${URL}\">${BASE_URL}</a>"
+			elif [[ ${1} == *#tag=* ]]; then
+				TAG="$(echo $1 | cut -d'=' -f2)"
+				URL="${BASE_URL}/tree/${TAG}"
+				echo "<a href=\"${URL}\">${BASE_URL}</a>"
+			else
+				echo "<a href=\"${BASE_URL}\">${BASE_URL}</a>"
+			fi
+		elif [[ ${1} == *git.code.sf.net/* ]]; then
+			BASE_URL="$(echo "${BASE_URL}" | sed 's/git.code.sf/sourceforge/')"
+			if [[ ${1} == *#commit=* ]]; then
+				COMMIT="$(echo $1 | cut -d'=' -f2)"
+				URL="${BASE_URL}/ci/${COMMIT}/tree"
+				echo "<a href=\"${URL}\">${BASE_URL}</a>"
+			elif [[ ${1} == *#branch=* ]]; then
+				BRANCH="$(echo $1 | cut -d'=' -f2)"
+				URL="${BASE_URL}/ci/${BRANCH}/tree"
+				echo "<a href=\"${URL}\">${BASE_URL}</a>"
+			elif [[ ${1} == *#tag=* ]]; then
+				TAG="$(echo $1 | cut -d'=' -f2)"
+				URL="${BASE_URL}/ci/${TAG}/tree"
+				echo "<a href=\"${URL}\">${BASE_URL}</a>"
+			else
+				echo "<a href=\"${BASE_URL}\">${BASE_URL}</a>"
+			fi
 		else
-			echo "<a href=\"${BASE_URL}\">${BASE_URL}</a>"
+			echo "${1}"
 		fi
 	elif [[ ${1} == http?://* ]] || [[ ${1} == ftp?://* ]]; then
 			echo "<a href=\"${1}\">${1}</a>"
