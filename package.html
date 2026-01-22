@@ -6,28 +6,39 @@
     </head>
     <body>
         <p><h1>${GITHUB_REPOSITORY_OWNER}&#39;s package index</h1></p>
-        <p><h2>${pkgname} ${pkgver}-${pkgrel}</h2></p>
-        
-        <p>
-            <b>Architecture:</b> ${ARCH}</br>
-            <b>Description:</b> ${pkgdesc}</br>
-            <b>Upstream URL:</b> <a href="${url}">${url}</a></br>
-            <b>License:</b> ${LICENSE}</br>
-            <b>Groups:</b> ${GROUP_LIST}</br>
-            <b>Last Updated:</b> ${UPDATED}</br>
-            <b>Package Size:</b> ${PKGSIZE}</br>
-            <b>Installed Size:</b> ${INSTSIZE}</br>
-            <b>Download:</b> <a href="${DOWNLOAD_URL}">${DOWNLOAD_URL}</a></br>
-        </p>
+        <h2>Package: ${pkgname}</h2>
+        <h2>Version: ${pkgver}-${pkgrel}</h2>
+        <table class="pkgmeta">
+            <tr><td>Architecture:</td><td>${ARCH}</td></tr>
+            <tr><td>Description:</td><td> ${pkgdesc}</br>
+            <tr><td>Homepage URL:</td><td> <a href="${url}">${url}</a></td></tr>
+            <tr><td>License:</td><td> ${LICENSE}</td></tr>
+            <tr><td>Groups:</td><td> ${GROUP_LIST}</td></tr>
+            <tr><td>Last Updated:</td><td> ${UPDATED}</td></tr>
+            <tr><td>Package Size:</td><td> ${PKGSIZE}</td></tr>
+            <tr><td>Installed Size:</td><td> ${INSTSIZE}</td></tr>
+            <tr><td>Download:</td><td> <a href="${DOWNLOAD_URL}">${DOWNLOAD_URL}</a></td></tr>
+        </table>
 
-        <p><h3>Dependencies</h3></p>
-        <p>${DEPS}</p>
+        <table>
+            <tr>
+                <th><h3>Sources</h3></th>
+                <th><h3>Dependencies</h3></th>
+            </tr>
+            <tr>
+                <td>${SOURCES}</td>
+                <td>${DEPS}</td>
+            </tr>
+        </table>
 
-        <p><h3>Sources</h3></p>
-        <p>${SOURCES}</p>
-
-        <p><h3>Contents</h3></p>
-        <p>${CONTENT}</p>
+        <table>
+            <tr>
+                <th><h3>Contents</h3></th>
+            </tr>
+            <tr>
+                <td>${CONTENT}</td>
+            </tr>
+        </table>
 
         <p><a href="index.html">Back to index</a></p>
 
