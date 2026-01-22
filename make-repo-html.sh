@@ -34,7 +34,7 @@ function createSourceLink() {
 		else
 			echo "<a href=\"${BASE_URL}\">${BASE_URL}</a>"
 		fi
-	elif [[ ${1} == http?://* ]] || [[ ${1} == ftp?://* ]];; then
+	elif [[ ${1} == http?://* ]] || [[ ${1} == ftp?://* ]]; then
 			echo "<a href=\"${1}\">${1}</a>"
 	else
 		echo "<a href=\"https://github.com/${GITHUB_REPOSITORY}/blob/master/${pkgname}/${1}\">${1}</a>"
