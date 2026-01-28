@@ -1,6 +1,6 @@
 pkgname=sdl3
-pkgver=3.2.20
-pkgrel=3
+pkgver=3.4.0
+pkgrel=1
 pkgdesc="A library designed to provide low level access to audio, input, and graphics hardware"
 arch=(any)
 url="https://wiki.libsdl.org/SDL3/FrontPage"
@@ -12,9 +12,11 @@ optdepends=()
 provides=()
 source=(
     "https://github.com/libsdl-org/SDL/releases/download/release-${pkgver}/SDL3-${pkgver}.tar.gz"
+    "14913.patch"
 )
 sha256sums=(
-    "467600ae090dd28616fa37369faf4e3143198ff1da37729b552137e47f751a67"
+    "082cbf5f429e0d80820f68dc2b507a94d4cc1b4e70817b119bbb8ec6a69584b8"
+    "559ab3dec2580b132cd843c67551b1ed1b5bf133d572a03dd54da9694b933f4a"
 )
 
 prepare() {
@@ -22,6 +24,8 @@ prepare() {
     sed -i 's#@SDL_PKGCONFIG_PREFIX@#${PSPDEV}/psp#' cmake/sdl3.pc.in
     sed -i 's#@LIBDIR_FOR_PKG_CONFIG@#${prefix}/lib#' cmake/sdl3.pc.in
     sed -i 's#@INCLUDEDIR_FOR_PKG_CONFIG@#${prefix}\/include#' cmake/sdl3.pc.in
+
+    patch -p1 < ../14913.patch || { exit 1; }
 }
 
 build() {
