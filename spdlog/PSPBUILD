@@ -1,0 +1,41 @@
+pkgname=spdlog
+pkgver=1.17.0
+pkgrel=1
+pkgdesc="Very fast, header only, C++ logging library"
+arch=(any)
+url="https://github.com/gabime/spdlog"
+license=(MIT)
+depends=(fmt)
+makedepends=()
+provides=(spdlog libspdlog.so)
+conflicts=()
+source=("https://github.com/gabime/spdlog/archive/refs/tags/v1.17.0.zip"
+        "spdlog-psp.patch")
+sha256sums=('b11912a82d149792fef33fabd0503b13d54aeac25c1464755461d4108ea71fc2'
+            '6b13c3e5d47534375750e203020db95c9bd98b4778912c61c72409aa7eb6a2f1')
+
+prepare() {
+  cd "$pkgname-$pkgver"
+  patch -p1 < ../spdlog-psp.patch
+}
+
+build() {
+  cmake -B build -S "$pkgname-$pkgver" -Wno-dev \
+    -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/psp \
+    -DSPDLOG_BUILD_BENCH=OFF \
+    -DSPDLOG_BUILD_EXAMPLE=OFF \
+    -DSPDLOG_BUILD_TESTS=OFF \
+    -DSPDLOG_BUILD_SHARED=OFF \
+    -DSPDLOG_FMT_EXTERNAL=ON \
+    -DSPDLOG_NO_THREAD_ID=ON \
+    -DSPDLOG_NO_ATOMIC_LEVELS=ON \
+    -DSPDLOG_NO_EXCEPTIONS=ON
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+  install -Dm644 $pkgname-$pkgver/LICENSE -t "$pkgdir/psp/share/licenses/$pkgname/"
+}
