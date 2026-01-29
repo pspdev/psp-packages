@@ -1,0 +1,39 @@
+pkgname=fmt
+pkgver=12.1.0
+pkgrel=1
+pkgdesc="Open-source formatting library for C++"
+arch=('any')
+url="https://fmt.dev/"
+license=('MIT')
+depends=()
+makedepends=()
+#provides=("fmt" 'libfmt.so')
+conflicts=()
+source=("https://github.com/fmtlib/fmt/archive/refs/tags/12.1.0.zip"
+        "fmt-psp.patch")
+sha256sums=("e6a2b43c6ec4779fb53b15b705f7c20b4eb9d5ae35784d610ac6daec30737019"
+            "75aa63ff07bcb7dcf4275033c13f16a7a01d4024f3ff61b27b20f03dd233f200")
+
+prepare() {
+    cd "$pkgname-$pkgver"
+    patch -p1 < ../fmt-psp.patch
+}
+
+build() {
+	cmake -S $pkgname-$pkgver -B build \
+        -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake \
+		-DBUILD_SHARED_LIBS=OFF \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/psp \
+        -DFMT_DOC=OFF \
+        -DFMT_TEST=OFF \
+        -DFMT_FUZZ=OFF \
+        -DFMT_OS=OFF \
+		-Wno-dev
+	cmake --build build
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+	install -Dm644 -t "$pkgdir"/psp/share/licenses/$pkgname $pkgname-$pkgver/LICENSE
+}

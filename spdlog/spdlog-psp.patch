@@ -1,0 +1,68 @@
+diff --git a/include/spdlog/details/os-inl.h b/include/spdlog/details/os-inl.h
+index 92dfe12..f3b10cb 100644
+--- a/include/spdlog/details/os-inl.h
++++ b/include/spdlog/details/os-inl.h
+@@ -218,8 +218,12 @@ SPDLOG_INLINE size_t filesize(FILE *f) {
+ // OpenBSD and AIX doesn't compile with :: before the fileno(..)
+ #if defined(__OpenBSD__) || defined(_AIX)
+     int fd = fileno(f);
+-#else
++#elif !defined(__PSP__)
+     int fd = ::fileno(f);
++#else
++fseek(f, 0, SEEK_END);
++long size = ftell(f);
++return static_cast<size_t>(size >= 0 ? size : 0);
+ #endif
+ // 64 bits(but not in osx, linux/musl or cygwin, where fstat64 is deprecated)
+ #if ((defined(__linux__) && defined(__GLIBC__)) || defined(__sun) || defined(_AIX)) && \
+@@ -228,7 +232,7 @@ SPDLOG_INLINE size_t filesize(FILE *f) {
+     if (::fstat64(fd, &st) == 0) {
+         return static_cast<size_t>(st.st_size);
+     }
+-#else  // other unix or linux 32 bits or cygwin
++#elif !defined(__PSP__)  // other unix or linux 32 bits or cygwin
+     struct stat st;
+     if (::fstat(fd, &st) == 0) {
+         return static_cast<size_t>(st.st_size);
+@@ -263,7 +267,11 @@ SPDLOG_INLINE int utc_minutes_offset(const std::tm &tm) {
+ #else
+ // On unix simply use tm_gmtoff
+ SPDLOG_INLINE int utc_minutes_offset(const std::tm &tm) {
++    #ifdef __PSP__
++    return 0;
++    #else
+     return static_cast<int>(tm.tm_gmtoff / 60);
++    #endif
+ }
+ #endif  // _WIN32
+ #endif  // SPDLOG_NO_TZ_OFFSET
+@@ -396,9 +404,14 @@ SPDLOG_INLINE bool is_color_terminal() SPDLOG_NOEXCEPT {
+ SPDLOG_INLINE bool in_terminal(FILE *file) SPDLOG_NOEXCEPT {
+ #ifdef _WIN32
+     return ::_isatty(_fileno(file)) != 0;
++#else
++#ifdef __PSP__
++    (void)file;
++    return false;
+ #else
+     return ::isatty(fileno(file)) != 0;
+ #endif
++#endif
+ }
+ 
+ #if (defined(SPDLOG_WCHAR_TO_UTF8_SUPPORT) || defined(SPDLOG_WCHAR_FILENAMES)) && defined(_WIN32)
+@@ -548,9 +561,13 @@ std::string SPDLOG_INLINE getenv(const char *field) {
+ SPDLOG_INLINE bool fsync(FILE *fp) {
+ #ifdef _WIN32
+     return FlushFileBuffers(reinterpret_cast<HANDLE>(_get_osfhandle(_fileno(fp)))) != 0;
++#else
++#ifdef __PSP__
++    return true;
+ #else
+     return ::fsync(fileno(fp)) == 0;
+ #endif
++#endif
+ }
+ 
+ // Do non-locking fwrite if possible by the os or use the regular locking fwrite

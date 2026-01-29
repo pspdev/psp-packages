@@ -1,0 +1,24 @@
+diff --git a/include/fmt/format-inl.h b/include/fmt/format-inl.h
+index 945cb91..5d892d3 100644
+--- a/include/fmt/format-inl.h
++++ b/include/fmt/format-inl.h
+@@ -1677,7 +1677,9 @@ class file_print_buffer<F, enable_if_t<has_flockfile<F>::value>>
+ 
+  public:
+   explicit file_print_buffer(F* f) : buffer(grow, size_t()), file_(f) {
++#ifndef __PSP__
+     flockfile(f);
++#endif
+     file_.init_buffer();
+     auto buf = file_.get_write_buffer();
+     set(buf.data, buf.size);
+@@ -1686,7 +1688,9 @@ class file_print_buffer<F, enable_if_t<has_flockfile<F>::value>>
+     file_.advance_write_buffer(size());
+     bool flush = file_.needs_flush();
+     F* f = file_;    // Make funlockfile depend on the template parameter F
++#ifndef __PSP__
+     funlockfile(f);  // for the system API detection to work.
++#endif
+     if (flush) fflush(file_);
+   }
+ };
