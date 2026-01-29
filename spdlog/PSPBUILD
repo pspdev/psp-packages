@@ -12,7 +12,7 @@ conflicts=()
 source=("https://github.com/gabime/spdlog/archive/refs/tags/v1.17.0.zip"
         "spdlog-psp.patch")
 sha256sums=('b11912a82d149792fef33fabd0503b13d54aeac25c1464755461d4108ea71fc2'
-            '6b13c3e5d47534375750e203020db95c9bd98b4778912c61c72409aa7eb6a2f1')
+            '19c3ca85f22d845e96a6b97e653ef17426ab55dd2d73fabbd3396a597689cacb')
 
 prepare() {
   cd "$pkgname-$pkgver"
