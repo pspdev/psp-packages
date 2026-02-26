@@ -1,0 +1,26 @@
+From 7b636134241823607e590a0c37ccde9d378e472e Mon Sep 17 00:00:00 2001
+From: Wouter Wijsman <wouter@gridscale.io>
+Date: Wed, 25 Feb 2026 16:35:17 +0100
+Subject: [PATCH] PSP: Fix crash when rendering solid, shaded or lcd text
+
+---
+ SDL_ttf.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/SDL_ttf.c b/SDL_ttf.c
+index d5ca963b..eee878ca 100644
+--- a/SDL_ttf.c
++++ b/SDL_ttf.c
+@@ -139,6 +139,12 @@ int TTF_SetScript(int script) /* hb_script_t */
+ /* Default: round glyph width to 4 bytes to copy them faster */
+ #define HAVE_BLIT_GLYPH_32
+ 
++// The Playstation Portable doesn't work with either HAVE_BLIT_GLYPH setting
++#if defined (__PSP__)
++#    undef HAVE_BLIT_GLYPH_64
++#    undef HAVE_BLIT_GLYPH_32
++#endif
++
+ /* Use Duff's device to unroll loops */
+ //#define USE_DUFFS_LOOP
+ 
