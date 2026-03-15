@@ -1,6 +1,6 @@
 pkgname=libmecore
 reponame=psp-media-engine-custom-core
-pkgver=1.0.0
+pkgver=2.0.1
 pkgrel=3
 pkgdesc="Customized ME Core library for PSP"
 arch=(any)
@@ -10,7 +10,7 @@ groups=('pspdev-default')
 depends=()
 makedepends=()
 source=("https://github.com/mcidclan/$reponame/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('5383f4e54163c72d260055858f92345f2f773d19008d54fb403e7e9838d3a8f1')
+sha256sums=('7fdec101ffa8370c57e642199f85971ddd918dab4047dc94ecbfcac2785df06f')
 
 build() {
   cd "$srcdir/$reponame-${pkgver}"
