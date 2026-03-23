@@ -10,7 +10,7 @@ makedepends=()
 provides=()
 conflicts=()
 source=("https://github.com/USCiLab/cereal/archive/refs/tags/v1.3.2.zip")
-sha256sums=(SKIP)
+sha256sums=(e72c3fa8fe3d531247773e346e6824a4744cc6472a25cf9b30599cd52146e2ae)
 
 build() {
   cmake -B build -S "$pkgname-$pkgver" -Wno-dev \
@@ -20,7 +20,6 @@ build() {
     -DSKIP_PERFORMANCE_COMPARISON=ON \
     -DBUILD_DOC=OFF \
     -DBUILD_SANDBOX=OFF \
-    -DSKIP_PORTABILITY_TESTS=ON \
     -DBUILD_TESTS=OFF
   cmake --build build
 }
