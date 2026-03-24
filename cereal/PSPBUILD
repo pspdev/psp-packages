@@ -1,0 +1,30 @@
+pkgname=cereal
+pkgver=1.3.2
+pkgrel=1
+pkgdesc="A C++11 library for serialization"
+arch=(any)
+url="https://github.com/USCiLab/cereal"
+license=('BSD-3-Clause')
+depends=()
+makedepends=()
+provides=()
+conflicts=()
+source=("https://github.com/USCiLab/cereal/archive/refs/tags/v1.3.2.zip")
+sha256sums=(e72c3fa8fe3d531247773e346e6824a4744cc6472a25cf9b30599cd52146e2ae)
+
+build() {
+  cmake -B build -S "$pkgname-$pkgver" -Wno-dev \
+    -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/psp \
+    -DSKIP_PERFORMANCE_COMPARISON=ON \
+    -DBUILD_DOC=OFF \
+    -DBUILD_SANDBOX=OFF \
+    -DBUILD_TESTS=OFF
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+  install -Dm644 $pkgname-$pkgver/LICENSE -t "$pkgdir/psp/share/licenses/$pkgname/"
+}
