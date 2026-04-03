@@ -6,7 +6,7 @@ arch=(any)
 url="https://github.com/pspdev/libpspav"
 license=('MIT')
 groups=('pspdev-default')
-depends=()
+depends=('libpspvram')
 makedepends=()
 optdepends=()
 source=("git+https://github.com/pspdev/${pkgname}.git#commit=0f170820a2b2fd51df5c189fa1e5fde5a131520d")
