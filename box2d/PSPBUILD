@@ -1,0 +1,33 @@
+pkgname=box2d
+pkgver=3.1.1
+pkgrel=1
+pkgdesc="Box2D is a 2D physics engine for games"
+arch=(any)
+url="https://github.com/erincatto/box2d"
+license=('MIT')
+depends=()
+makedepends=()
+provides=()
+conflicts=()
+source=("https://github.com/erincatto/box2d/archive/refs/tags/v3.1.1.zip")
+sha256sums=(7c88bef902a118a2933c21027918fea455237a1310e5422daf4640d22ba9a446)
+
+build() {
+  cmake -B build -S "$pkgname-$pkgver" -Wno-dev \
+    -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/psp \
+    -DBOX2D_BUILD_DOCS=OFF \
+    -DGLFW_BUILD_WAYLAND=OFF \
+    -DBOX2D_SAMPLES=OFF \
+    -DBOX2D_BENCHMARKS=OFF \
+    -DBOX2D_PROFILE=OFF \
+    -DBOX2D_VALIDATE=OFF \
+    -DBOX2D_UNIT_TESTS=OFF
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+  install -Dm644 $pkgname-$pkgver/LICENSE -t "$pkgdir/psp/share/licenses/$pkgname/"
+}
