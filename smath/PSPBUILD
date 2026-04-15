@@ -1,0 +1,35 @@
+pkgname=smath
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="Single-file linear algebra library for C++23"
+arch=(any)
+url="https://github.com/slendidev/smath"
+license=('Apache-2.0')
+groups=('pspdev-default')
+depends=()
+makedepends=()
+optdepends=()
+provides=()
+source=("https://github.com/slendidev/smath/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('f2786f92937ee139fe62317b432a613f595ddb758ada5c16337b1518e074f351')
+
+build() {
+    cmake -S "$pkgname-$pkgver" -B build \
+        -DCMAKE_TOOLCHAIN_FILE="$PSPDEV/psp/share/pspdev.cmake" \
+        -DCMAKE_INSTALL_PREFIX=/psp \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DSMATH_BUILD_EXAMPLES=OFF \
+        -DSMATH_BUILD_TESTS=OFF \
+        -DSMATH_BUILD_MODULES=OFF \
+        -DSMATH_ENABLE_LEGACY_HEADER=OFF \
+        -DSMATH_INSTALL_INTEROP_HEADERS=OFF \
+        -Wno-dev
+
+    cmake --build build
+}
+
+package() {
+    DESTDIR="$pkgdir" cmake --install build
+
+    install -Dm644 "$pkgname-$pkgver/LICENSE.txt" "$pkgdir/psp/share/licenses/$pkgname/LICENSE.txt"
+}
