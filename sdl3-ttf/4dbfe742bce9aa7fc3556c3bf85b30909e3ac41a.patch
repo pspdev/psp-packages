@@ -1,0 +1,26 @@
+From 4dbfe742bce9aa7fc3556c3bf85b30909e3ac41a Mon Sep 17 00:00:00 2001
+From: Sam Lantinga <slouken@libsdl.org>
+Date: Wed, 23 Apr 2025 12:16:33 -0700
+Subject: [PATCH] Clamp the atlas texture size to the maximum size
+
+Fixes https://github.com/libsdl-org/SDL_ttf/issues/548
+---
+ src/SDL_renderer_textengine.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/SDL_renderer_textengine.c b/src/SDL_renderer_textengine.c
+index d8c0c6d2..12653034 100644
+--- a/src/SDL_renderer_textengine.c
++++ b/src/SDL_renderer_textengine.c
+@@ -880,7 +880,11 @@ TTF_TextEngine *TTF_CreateRendererTextEngineWithProperties(SDL_PropertiesID prop
+         return NULL;
+     }
+ 
++    int max_atlas_texture_size = (int)SDL_GetNumberProperty(SDL_GetRendererProperties(renderer), SDL_PROP_RENDERER_MAX_TEXTURE_SIZE_NUMBER, 0);
+     int atlas_texture_size = (int)SDL_GetNumberProperty(props, TTF_PROP_RENDERER_TEXT_ENGINE_ATLAS_TEXTURE_SIZE, 1024);
++    if (max_atlas_texture_size && atlas_texture_size > max_atlas_texture_size) {
++        atlas_texture_size = max_atlas_texture_size;
++    }
+     if (atlas_texture_size <= 0) {
+         SDL_SetError("Failed to create renderer text engine: Invalid texture atlas size.");
+         return NULL;
