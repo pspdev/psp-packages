@@ -10,7 +10,7 @@ depends=()
 optdepends=()
 makedepends=()
 source=(
-    "https://github.com/Mbed-TLS/mbedtls/releases/download/${pkgname}-${pkgver}.tar.bz2"
+    "https://github.com/Mbed-TLS/mbedtls/releases/download/${pkgname}-${pkgver}/${pkgname}-${pkgver}.tar.bz2"
     "${pkgname}-${pkgver}-PSP.patch"
 )
 sha256sums=(
