@@ -1,0 +1,54 @@
+pkgname=sdl3_gfx
+pkgver=r21.0bbee98
+pkgrel=1
+epoch=
+pkgdesc="Graphics drawing primitives and other support functions wrapped up in an add-on, C-based library for the Simple Direct Media (SDL) cross-platform API layer. "
+arch=('any')
+url="https://github.com/sabdul-khabir/SDL3_gfx"
+license=('Zlib')
+groups=()
+depends=(sdl3)
+provides=("${pkgname%-git}")
+conflicts=("${pkgname%-git}")
+replaces=()
+backup=()
+options=()
+install=
+changelog=
+source=("${pkgname%-git}::git+https://github.com/sabdul-khabir/SDL3_gfx.git#commit=0bbee988bb0caa3e98a9d78c7a2d106925c8275a"
+        "cmake-module.patch::https://patch-diff.githubusercontent.com/raw/sabdul-khabir/SDL3_gfx/pull/22.patch"
+        "psp.patch")
+noextract=()
+sha256sums=('SKIP'
+            'e0d3a84262a4892554277184429205b91e8e1f2f2d0fe31150504f9c5a427fc8'
+            'a53b5251727170ae04de51bd5098c7b4d36507e1a71a2952ab5cd78a04cef0d3')
+validpgpkeys=()
+
+pkgver() {
+        cd "$srcdir/${pkgname%-git}"
+        printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+
+        # patch sdl3-gfx.pc.in
+        sed -i 's/@CMAKE_INSTALL_PREFIX@/${PSPDEV}\/psp/g' ./sdl3-gfx.pc.in
+}
+
+prepare() {
+        cd "$srcdir/${pkgname%-git}"
+        git apply "$srcdir/cmake-module.patch"
+        git apply "$srcdir/psp.patch"
+}
+
+build() {
+        cmake -S "$srcdir/${pkgname%-git}" -B build \
+                -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake \
+                -DCMAKE_INSTALL_PREFIX=/psp \
+                -DCMAKE_BUILD_TYPE=Release \
+                -DBUILD_SHARED_LIBS=OFF
+
+        cmake --build build
+}
+
+package() {
+        DESTDIR="$pkgdir" cmake --install build
+        install -Dm644 -t "$pkgdir"/psp/share/licenses/$pkgname ${pkgname%-git}/COPYING
+}
