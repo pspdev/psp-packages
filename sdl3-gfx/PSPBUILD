@@ -1,12 +1,12 @@
-pkgname=sdl3_gfx
+pkgname=sdl3-gfx
 pkgver=r21.0bbee98
 pkgrel=1
 epoch=
-pkgdesc="Graphics drawing primitives and other support functions wrapped up in an add-on, C-based library for the Simple Direct Media (SDL) cross-platform API layer. "
+pkgdesc="Graphics drawing primitives and other support functions wrapped up in an add-on, C-based library for the Simple Direct Media (SDL) cross-platform API layer"
 arch=('any')
 url="https://github.com/sabdul-khabir/SDL3_gfx"
 license=('Zlib')
-groups=()
+groups=(pspdev-default)
 depends=(sdl3)
 provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")
@@ -30,6 +30,8 @@ pkgver() {
 
         # patch sdl3-gfx.pc.in
         sed -i 's/@CMAKE_INSTALL_PREFIX@/${PSPDEV}\/psp/g' ./sdl3-gfx.pc.in
+        sed -i 's/@CMAKE_INSTALL_FULL_LIBDIR@/${PSPDEV}\/psp\/lib/g' ./sdl3-gfx.pc.in
+        sed -i 's/@CMAKE_INSTALL_FULL_INCLUDEDIR@/${PSPDEV}\/psp\/include/g' ./sdl3-gfx.pc.in
 }
 
 prepare() {
