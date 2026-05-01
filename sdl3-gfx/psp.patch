@@ -1,0 +1,16 @@
+diff --git a/SDL3_gfxPrimitives.c b/SDL3_gfxPrimitives.c
+index 1726d24..b28f986 100644
+--- a/SDL3_gfxPrimitives.c
++++ b/SDL3_gfxPrimitives.c
+@@ -2678,9 +2678,9 @@ bool aapolygonRGBA(SDL_Renderer * renderer, const float * vx, const float * vy,
+ 
+ \returns Returns 0 if a==b, a negative number if a<b or a positive number if a>b.
+ */
+-Sint32 _gfxPrimitivesCompareInt(const void *a, const void *b)
++int _gfxPrimitivesCompareInt(const void *a, const void *b)
+ {
+-	return (*(const Sint32 *) a) - (*(const Sint32 *) b);
++	return (*(const int *) a) - (*(const int *) b);
+ }
+ 
+ /*!
