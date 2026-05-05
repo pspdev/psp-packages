@@ -1,15 +1,15 @@
 pkgname=bullet3
-pkgver=3.2.5
-pkgrel=2
+pkgver=3.27
+pkgrel=3
 pkgdesc="Bullet Physics SDK: real-time collision detection and multi-physics simulation for VR, games, visual effects, robotics, machine learning etc."
 arch=(any)
-url="https://github.com/bulletphysics/bullet3"
+url="https://github.com/stezkmil/bullet3"
 license=('Zlib')
 groups=('pspdev-default')
 depends=()
 makedepends=()
 optdepends=()
-source=("git+https://github.com/bulletphysics/bullet3.git#commit=2c204c49e56ed15ec5fcfa71d199ab6d6570b3f5" "psp.patch")
+source=("git+https://github.com/stezkmil/bullet3.git#commit=ac50c4167581a3731a79455be073ac44100f91f2" "psp.patch")
 sha256sums=("SKIP" "SKIP")
 
 prepare() {
