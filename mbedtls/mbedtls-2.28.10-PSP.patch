@@ -39,7 +39,7 @@ diff -Nru mbedtls-2.28.10-orig/library/entropy_poll.c mbedtls-2.28.10-psp/librar
      ret = getrandom_wrapper(output, len, 0);
 diff -Nru mbedtls-2.28.10-orig/library/net_sockets.c mbedtls-2.28.10-psp/library/net_sockets.c
 --- mbedtls-2.28.10-orig/library/net_sockets.c	2025-03-24 08:49:00
-+++ mbedtls-2.28.10-psp/library/net_sockets.c	2026-04-27 10:50:31
++++ mbedtls-2.28.10-psp/library/net_sockets.c	2026-05-07 11:01:36
 @@ -21,7 +21,7 @@
  
  #if !defined(unix) && !defined(__unix__) && !defined(__unix) && \
@@ -163,6 +163,15 @@ diff -Nru mbedtls-2.28.10-orig/library/net_sockets.c mbedtls-2.28.10-psp/library
  }
  
  #if (defined(_WIN32) || defined(_WIN32_WCE)) && !defined(EFIX64) && \
+@@ -330,7 +415,7 @@
+ 
+ #if defined(__socklen_t_defined) || defined(_SOCKLEN_T) ||  \
+     defined(_SOCKLEN_T_DECLARED) || defined(__DEFINED_socklen_t) || \
+-    defined(socklen_t) || (defined(_POSIX_VERSION) && _POSIX_VERSION >= 200112L)
++    defined(socklen_t) || (defined(_POSIX_VERSION) && _POSIX_VERSION >= 200112L) || defined(PSP)
+     socklen_t n = (socklen_t) sizeof(client_addr);
+     socklen_t type_len = (socklen_t) sizeof(type);
+ #else
 @@ -411,6 +496,7 @@
              }
  
