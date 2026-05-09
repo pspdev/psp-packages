@@ -21,6 +21,19 @@ sha256sums=(
 prepare() {
     cd "${pkgname}-${pkgver}"
     patch -p1 < ../${pkgname}-${pkgver}-PSP.patch || { exit 1; }
+
+    cd pkgconfig
+    sed -i 's#@prefix@#${PSPDEV}/psp#' mbedcrypto.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' mbedcrypto.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' mbedcrypto.pc.in
+
+    sed -i 's#@prefix@#${PSPDEV}/psp#' mbedtls.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' mbedtls.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' mbedtls.pc.in
+
+    sed -i 's#@prefix@#${PSPDEV}/psp#' mbedx509.pc.in
+    sed -i 's#@libdir@#${prefix}/lib#' mbedx509.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' mbedx509.pc.in
 }
 
 build() {
