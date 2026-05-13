@@ -1,5 +1,5 @@
 pkgname=libpspav
-pkgver=r14
+pkgver=r15
 pkgrel=1
 pkgdesc="Native audio and video playback library for MP3, AT3, PMF and MPS formats"
 arch=(any)
@@ -9,7 +9,7 @@ groups=('pspdev-default')
 depends=('libpspvram')
 makedepends=()
 optdepends=()
-source=("git+https://github.com/pspdev/${pkgname}.git#commit=0f170820a2b2fd51df5c189fa1e5fde5a131520d")
+source=("git+https://github.com/pspdev/${pkgname}.git#commit=6dd1f9fb535614c708b57cc2d3d46dd8656a49f7")
 sha256sums=('SKIP')
 
 build() {

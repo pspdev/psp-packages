@@ -1,5 +1,5 @@
 pkgname=ya2d
-pkgver=20260512
+pkgver=20260513
 pkgrel=1
 pkgdesc="Yet Another 2D library (for PSP)"
 arch=('mips')
@@ -10,7 +10,7 @@ depends=('libpng' 'libpspmath' 'libpspvram')
 makedepends=()
 optdepends=()
 provides=()
-source=('git+https://github.com/xerpi/ya2d.git#commit=f8ec13a67d384482315fc4f82d5f86945cf9f357')
+source=('git+https://github.com/xerpi/ya2d.git#commit=8f972b230cdebe6f6ab9480ec9ba5ecc51275352')
 sha256sums=('SKIP')
 
 build() {
