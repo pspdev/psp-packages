@@ -1,5 +1,5 @@
 pkgname=sdl3-mixer
-pkgver=3.2.0
+pkgver=3.2.4
 pkgrel=1
 pkgdesc="An audio mixer library based on the SDL3 library"
 arch=(any)
@@ -13,7 +13,7 @@ source=(
     "https://github.com/libsdl-org/SDL_mixer/releases/download/release-${pkgver}/SDL3_mixer-${pkgver}.tar.gz"
 )
 sha256sums=(
-    "1f86fae7226d58f2ad210ca4d9e06488db722230032803423d83bad6d35fc395"
+    "182a07c745375e113dc740d43964ff21b0be29f29f59876c4dbc4db3d32f6901"
 )
 
 prepare() {
