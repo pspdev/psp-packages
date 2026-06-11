@@ -1,12 +1,11 @@
 pkgname=sdl3-gfx
 pkgver=r21.0bbee98
-pkgrel=1
-epoch=
+pkgrel=2
 pkgdesc="Graphics drawing primitives and other support functions wrapped up in an add-on, C-based library for the Simple Direct Media (SDL) cross-platform API layer"
 arch=('any')
 url="https://github.com/sabdul-khabir/SDL3_gfx"
 license=('Zlib')
-groups=(pspdev-default)
+groups=(psp-libraries)
 depends=(sdl3)
 provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")

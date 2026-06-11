@@ -1,10 +1,10 @@
 pkgname=libeigen
 pkgver=3.4.0
-pkgrel=4
+pkgrel=5
 url="http://eigen.tuxfamily.org"
 source=("https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-$pkgver.tar.gz")
 license=('MPL-2.0 AND BSD-3-Clause AND LGPL-2.1-only AND LGPL-2.1-or-later')
-groups=('pspdev-default')
+groups=('psp-libraries')
 depends=()
 makedepends=()
 pkgdesc="C++ template library for linear algebra: matrices, vectors, numerical solvers, and related algorithms"

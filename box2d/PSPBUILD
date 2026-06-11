@@ -1,10 +1,11 @@
 pkgname=box2d
 pkgver=3.1.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Box2D is a 2D physics engine for games"
 arch=(any)
 url="https://github.com/erincatto/box2d"
 license=('MIT')
+groups=('psp-libraries')
 depends=()
 makedepends=()
 provides=()

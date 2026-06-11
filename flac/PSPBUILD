@@ -1,11 +1,11 @@
 pkgname=flac
 pkgver=1.5.0
-pkgrel=1
+pkgrel=3
 pkgdesc="Free Lossless Audio Codec"
 arch=(any)
 url="https://xiph.org/flac/"
 license=('BSD-3-Clause')
-groups=('pspdev-default')
+groups=('psp-libraries')
 depends=('libogg')
 makedepends=()
 optdepends=()

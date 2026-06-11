@@ -1,11 +1,11 @@
 pkgname=pspgl
 pkgver=r12
-pkgrel=6
+pkgrel=7
 pkgdesc="OpenGL-ESish library for PSP"
 arch=(any)
 url="https://github.com/pspdev/pspgl"
 license=('BSD-3-Clause')
-groups=('pspdev-default')
+groups=('psp-libraries')
 depends=()
 makedepends=()
 optdepends=()

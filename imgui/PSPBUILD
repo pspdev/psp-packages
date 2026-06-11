@@ -1,11 +1,11 @@
 pkgname=imgui
 pkgver="1.92.5"
-pkgrel=1
+pkgrel=2
 pkgdesc="Dear ImGui: Bloat-free Graphical User interface for C++ with minimal dependencies (docking branch)"
 arch=(any)
 url="https://github.com/adriensalon/imgui_psp"
 license=("MIT")
-groups=("pspdev-default")
+groups=("psp-libraries")
 depends=()
 makedepends=()
 optdepends=()

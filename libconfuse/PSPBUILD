@@ -1,11 +1,11 @@
 pkgname=libconfuse
 pkgver=3.3
-pkgrel=5
+pkgrel=6
 pkgdesc="Small configuration file parser library for C"
 arch=(any)
 url="https://github.com/libconfuse/libconfuse/"
 license=('MIT')
-groups=('pspdev-default')
+groups=('psp-libraries')
 depends=()
 makedepends=()
 optdepends=()

@@ -1,11 +1,11 @@
 pkgname=angelscript
 pkgver=2.28.2
-pkgrel=6
+pkgrel=7
 pkgdesc="A game-oriented interpreted compiled scripting language library"
 arch=(any)
 url="http://angelcode.com/angelscript/"
 license=('Zlib')
-groups=('pspdev-default')
+groups=('psp-libraries')
 depends=()
 makedepends=()
 optdepends=()

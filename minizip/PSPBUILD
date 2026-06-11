@@ -1,11 +1,11 @@
 pkgname=minizip
 pkgver=3.0.4
-pkgrel=7
+pkgrel=8
 pkgdesc="Fork of the popular zip manipulation library found in the zlib distribution"
 arch=(any)
 url="https://github.com/zlib-ng/minizip-ng"
 license=('Zlib')
-groups=('pspdev-default')
+groups=('psp-libraries')
 depends=('zlib' 'bzip2')
 makedepends=()
 optdepends=()

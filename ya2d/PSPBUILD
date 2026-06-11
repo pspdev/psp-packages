@@ -1,11 +1,11 @@
 pkgname=ya2d
 pkgver=20260513
-pkgrel=2
+pkgrel=3
 pkgdesc="Yet Another 2D library (for PSP)"
 arch=(any)
 url="https://github.com/xerpi/ya2d/"
 license=('GPL-2.1')
-groups=()
+groups=('psp-libraries')
 depends=('libpng' 'libpspmath' 'libpspvram' 'libpspav')
 makedepends=()
 optdepends=()

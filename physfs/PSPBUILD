@@ -1,11 +1,11 @@
 pkgname=physfs
 pkgver=3.2.0
-pkgrel=6
+pkgrel=7
 pkgdesc="PhysicsFS; a portable, flexible file i/o abstraction."
 arch=(any)
 url="https://icculus.org/physfs/"
 license=('Zlib')
-groups=('pspdev-default')
+groups=('psp-libraries')
 depends=()
 makedepends=()
 optdepends=()

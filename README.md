@@ -22,7 +22,7 @@ Installing all available libraries can be done with:
 
 ```
 psp-pacman -Sy
-psp-pacman -S pspdev-default
+psp-pacman -S psp-libraries
 ```
 
 Updating libraries can be done with:

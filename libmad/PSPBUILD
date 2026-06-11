@@ -1,11 +1,11 @@
 pkgname=libmad
 pkgver=0.15.1
-pkgrel=6
+pkgrel=7
 pkgdesc="MPEG audio decoder library for PSP"
 arch=(any)
 url="https://www.underbit.com/products/mad"
 license=('GPL-2.0-only')
-groups=('pspdev-default')
+groups=('psp-libraries')
 depends=()
 makedepends=()
 optdepends=()

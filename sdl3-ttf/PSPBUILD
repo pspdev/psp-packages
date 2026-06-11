@@ -1,11 +1,11 @@
 pkgname=sdl3-ttf
 pkgver=3.2.2
-pkgrel=4
+pkgrel=5
 pkgdesc="A companion library to SDL3 for working with TrueType (tm) fonts"
 arch=(any)
 url="https://wiki.libsdl.org/SDL3_ttf/FrontPage"
 license=('Zlib')
-groups=('pspdev-default')
+groups=('psp-libraries')
 depends=('sdl3' 'harfbuzz')
 makedepends=()
 optdepends=()
