@@ -1,11 +1,11 @@
 pkgname=libpspmath
 pkgver=r4.eb44107
-pkgrel=2
+pkgrel=3
 pkgdesc="Import of mrmrice's libpspmath vfpu library for psp homebrew"
 arch=(any)
 url="https://github.com/tufty/libpspmath"
 license=('BSD-3-Clause')
-groups=('pspdev-default')
+groups=('psp-libraries')
 depends=()
 makedepends=()
 optdepends=()

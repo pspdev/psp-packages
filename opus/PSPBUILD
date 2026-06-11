@@ -1,11 +1,11 @@
 pkgname=opus
 pkgver=1.6.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Opus is a totally open, royalty-free, highly versatile audio codec."
 arch=(any)
 url="https://opus-codec.org/"
 license=('BSD-3-Clause')
-groups=('pspdev-default')
+groups=('psp-libraries')
 depends=()
 makedepends=()
 optdepends=()

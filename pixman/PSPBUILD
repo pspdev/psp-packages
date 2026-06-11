@@ -1,11 +1,11 @@
 pkgname=pixman
 pkgver=0.40.0
-pkgrel=6
+pkgrel=7
 pkgdesc="Pixman is a low-level software library for pixel manipulation"
 arch=(any)
 url="http://pixman.org/"
 license=('MIT')
-groups=('pspdev-default')
+groups=('psp-libraries')
 depends=('libpng')
 makedepends=()
 optdepends=()

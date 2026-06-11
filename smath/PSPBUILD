@@ -1,11 +1,11 @@
 pkgname=smath
 pkgver=1.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Single-file linear algebra library for C++23"
 arch=(any)
 url="https://github.com/slendidev/smath"
 license=('Apache-2.0')
-groups=('pspdev-default')
+groups=('psp-libraries')
 depends=()
 makedepends=()
 optdepends=()

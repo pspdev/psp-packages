@@ -1,11 +1,11 @@
 pkgname=libpspav
 pkgver=r15
-pkgrel=1
+pkgrel=2
 pkgdesc="Native audio and video playback library for MP3, AT3, PMF and MPS formats"
 arch=(any)
 url="https://github.com/pspdev/libpspav"
 license=('MIT')
-groups=('pspdev-default')
+groups=('psp-libraries')
 depends=('libpspvram')
 makedepends=()
 optdepends=()

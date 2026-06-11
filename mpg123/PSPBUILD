@@ -1,11 +1,11 @@
 pkgname=mpg123
 pkgver=1.32.10
-pkgrel=4
+pkgrel=5
 pkgdesc="MPEG audio decoder library"
 arch=(any)
 url="http://www.mpg123.org/"
 license=('LGPL-2.1-only')
-groups=('pspdev-default')
+groups=('psp-libraries')
 depends=()
 makedepends=()
 optdepends=()

@@ -1,11 +1,11 @@
 pkgname=minilzo
 pkgver=2.09
-pkgrel=1
+pkgrel=2
 pkgdesc="Mini subset of the LZO real-time data compression library"
 arch=(any)
 url="https://github.com/yuhaoth/minilzo"
 license=('GPL-2.0-only')
-groups=('pspdev-default')
+groups=('psp-libraries')
 depends=()
 makedepends=()
 optdepends=()

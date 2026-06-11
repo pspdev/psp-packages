@@ -1,11 +1,11 @@
 pkgname=dumb
 pkgver=2.0.3
-pkgrel=6
+pkgrel=7
 pkgdesc="Dynamic Universal Music Bibliotheque - DUMB - Module/tracker based music format parser and player library"
 arch=(any)
 url="https://github.com/kode54/dumb"
 license=('custom')
-groups=('pspdev-default')
+groups=('psp-libraries')
 depends=()
 makedepends=()
 optdepends=()

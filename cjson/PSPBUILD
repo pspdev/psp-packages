@@ -1,11 +1,11 @@
 pkgname=cjson
 pkgver=1.7.16
-pkgrel=5
+pkgrel=6
 pkgdesc="Ultralightweight JSON parser in ANSI C."
 arch=(any)
 url="https://github.com/DaveGamble/cJSON/"
 license=('MIT')
-groups=('pspdev-default')
+groups=('psp-libraries')
 depends=()
 makedepends=()
 optdepends=()

@@ -1,11 +1,11 @@
 pkgname=lua54
 pkgver=5.4.6
-pkgrel=4
+pkgrel=5
 pkgdesc="A powerful, efficient, lightweight, embeddable scripting language (version 5.4)"
 arch=(any)
 url="https://lua.org"
 license=('MIT')
-groups=('pspdev-default')
+groups=('psp-libraries')
 depends=()
 makedepends=()
 optdepends=()

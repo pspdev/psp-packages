@@ -1,11 +1,11 @@
 pkgname=opusfile
 pkgver=0.12
-pkgrel=1
+pkgrel=2
 pkgdesc="The opusfile library provides seeking, decode, and playback of Opus streams in the Ogg container."
 arch=(any)
 url="https://opus-codec.org/"
 license=('BSD-3-Clause')
-groups=('pspdev-default')
+groups=('psp-libraries')
 depends=()
 makedepends=()
 optdepends=()

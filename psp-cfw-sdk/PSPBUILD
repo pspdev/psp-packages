@@ -1,10 +1,10 @@
 pkgname=psp-cfw-sdk
 pkgver=20260525
-pkgrel=1
+pkgrel=2
 pkgdesc="Development libraries, sources and headers for PSP CFW"
 arch=(any)
 license=('GPL-3.0-only AND MIT')
-groups=('pspdev-default')
+groups=('psp-libraries')
 url="https://github.com/pspdev/psp-cfw-sdk"
 depends=('libpng' 'lz4' 'minilzo')
 makedepends=()

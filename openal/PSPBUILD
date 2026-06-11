@@ -1,10 +1,10 @@
 pkgname=openal
 pkgver=1.6.372.2
-pkgrel=3
+pkgrel=4
 pkgdesc="A cross-platform 3D audio API"
 arch=(any)
 license=('LGPL-2.0-only')
-groups=('pspdev-default')
+groups=('psp-libraries')
 url="https://openal-soft.org/"
 makedepends=()
 source=("https://github.com/illteteka/openal-soft-psp/archive/refs/tags/${pkgver}.tar.gz")

@@ -1,11 +1,11 @@
 pkgname=sdl-gfx
 pkgver=2.0.26
-pkgrel=5
+pkgrel=6
 pkgdesc="SDL graphics drawing primitives and other support functions"
 arch=(any)
 url="https://www.ferzkopp.net/wordpress/2016/01/02/sdl_gfx-sdl2_gfx/"
 license=('Zlib')
-groups=('pspdev-default')
+groups=('psp-libraries')
 depends=('sdl' 'freetype2')
 makedepends=()
 optdepends=()

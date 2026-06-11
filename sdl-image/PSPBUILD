@@ -1,11 +1,11 @@
 pkgname=sdl-image
 pkgver=1.2.13
-pkgrel=8
+pkgrel=9
 pkgdesc="A simple library to load images of various formats as SDL2 surfaces"
 arch=(any)
 url="https://www.libsdl.org/projects/old/SDL_image/release-1.2.html"
 license=('Zlib')
-groups=('pspdev-default')
+groups=('psp-libraries')
 depends=('sdl' 'libpng' 'jpeg')
 makedepends=()
 optdepends=()

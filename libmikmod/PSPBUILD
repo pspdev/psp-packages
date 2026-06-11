@@ -1,11 +1,11 @@
 pkgname=libmikmod
 pkgver=3.3.11.1
-pkgrel=10
+pkgrel=11
 pkgdesc="A portable sound library capable of playing samples as well as module files"
 arch=(any)
 url="http://mikmod.sourceforge.net/"
 license=('LGPL-2.1-only')
-groups=('pspdev-default')
+groups=('psp-libraries')
 depends=()
 makedepends=()
 optdepends=()

@@ -1,12 +1,12 @@
 pkgname=harfbuzz
 pkgver=8.5.0
-pkgrel=4
+pkgrel=5
 pkgdesc="OpenType text shaping engine"
 arch=(any)
 url="https://harfbuzz.github.io/"
 license=('MIT')
 depends=('freetype2')
-groups=('pspdev-default')
+groups=('psp-libraries')
 makedepends=()
 optdepends=()
 source=(

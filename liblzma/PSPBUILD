@@ -1,12 +1,12 @@
 pkgname=liblzma
 pkgver=5.2.10
-pkgrel=3
+pkgrel=4
 pkgdesc="LZMA provides a general-purpose data-compression library"
 arch=(any)
 url="https://github.com/tukaani-project/xz/"
 license=('public domain')
 depends=()
-groups=('pspdev-default')
+groups=('psp-libraries')
 makedepends=()
 optdepends=()
 source=(

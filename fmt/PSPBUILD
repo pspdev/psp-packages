@@ -1,10 +1,11 @@
 pkgname=fmt
 pkgver=12.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Open-source formatting library for C++"
 arch=('any')
 url="https://fmt.dev/"
 license=('MIT')
+groups=('psp-libraries')
 depends=()
 makedepends=()
 provides=()

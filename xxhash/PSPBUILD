@@ -1,11 +1,11 @@
 pkgname=xxhash
 pkgver=0.8.2
-pkgrel=3
+pkgrel=4
 pkgdesc="Extremely fast non-cryptographic hash algorithm"
 arch=(any)
 url="https://xxhash.com/"
 license=('BSD-2-Clause')
-groups=('pspdev-default')
+groups=('psp-libraries')
 depends=()
 makedepends=()
 optdepends=()
