@@ -1,0 +1,36 @@
+pkgname=tinyxml2
+pkgver=11.0.0
+pkgrel=1
+pkgdesc="A simple, small, efficient, C++ XML parser that can be easily integrated into other programs."
+arch=(any)
+license=('Zlib')
+groups=('psp-libraries')
+url="https://github.com/leethomason/tinyxml2"
+depends=()
+optdepends=()
+makedepends=()
+source=("https://github.com/leethomason/tinyxml2/archive/refs/tags/${pkgver}.tar.gz")
+sha256sums=('5556deb5081fb246ee92afae73efd943c889cef0cafea92b0b82422d6a18f289')
+
+prepare() {
+    cd "${pkgname}-${pkgver}"
+    sed -i 's#@CMAKE_INSTALL_PREFIX@#${PSPDEV}/psp#g' cmake/tinyxml2.pc.in
+}
+
+build() {
+  cd "${pkgname}-${pkgver}"
+  mkdir -p build
+  cd build
+  cmake -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
+        -DCMAKE_BUILD_TYPE=Release -Dtinyxml2_BUILD_TESTING=OFF -DCMAKE_POLICY_VERSION_MINIMUM=3.5 "${XTRA_OPTS[@]}" .. || { exit 1; }
+  make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package () {
+  cd "${pkgname}-${pkgver}/build"
+  make --quiet $MAKEFLAGS install
+  cd ..
+
+  mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+  install -m 644 LICENSE.txt "$pkgdir/psp/share/licenses/$pkgname"
+}
