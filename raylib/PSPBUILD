@@ -1,13 +1,13 @@
 pkgname=raylib
 pkgver=5.6dev
-pkgrel=3
+pkgrel=4
 pkgdesc="A simple and easy-to-use library to enjoy videogames programming"
 arch=(any)
 url="https://www.raylib.com/"
 license=('zlib')
 groups=('psp-libraries')
 source=(
-    "git+https://github.com/raylib4Consoles/raylib.git#branch=raylib4Consoles"
+    "git+https://github.com/raylib4Consoles/raylib.git#commit=f1cfd6da839f521e5a6fd84c9783540f8403b203"
     "raylib-config.cmake"
     "raylib.pc"
 )
