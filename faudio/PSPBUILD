@@ -1,0 +1,38 @@
+pkgname=faudio
+pkgver=26.06
+pkgrel=1
+pkgdesc="Accuracy-focused XAudio reimplementation for open platforms."
+arch=(any)
+license=('BSD')
+groups=('psp-libraries')
+url="https://fna-xna.github.io/"
+depends=('sdl2')
+optdepends=()
+makedepends=()
+source=("https://github.com/FNA-XNA/FAudio/archive/refs/tags/${pkgver}.tar.gz")
+sha256sums=('f58d6777f90a3650b16ee78b3b5ad65c1c0f2d6e59ef54aa62b20939efbb945e')
+
+prepare() {
+    cd "FAudio-${pkgver}"
+    sed -i 's#@CMAKE_INSTALL_PREFIX@#${PSPDEV}/psp#g' cmake/FAudio.pc.in
+    sed -i 's#@FAUDIO_PKGCONF_LIBDIR@#${PSPDEV}/psp/lib#g' cmake/FAudio.pc.in
+    sed -i 's#@FAUDIO_PKGCONF_INCLUDEDIR@#${PSPDEV}/psp/include#g' cmake/FAudio.pc.in
+}
+
+build() {
+  cd "FAudio-${pkgver}"
+  mkdir -p build
+  cd build
+  cmake -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DBUILD_SHARED_LIBS=OFF \
+        -DCMAKE_BUILD_TYPE=Release -DBUILD_SDL3=OFF -DCMAKE_C_FLAGS="-Wno-incompatible-pointer-types" "${XTRA_OPTS[@]}" .. || { exit 1; }
+  make --quiet $MAKEFLAGS || { exit 1; }
+}
+
+package () {
+  cd "FAudio-${pkgver}/build"
+  make --quiet $MAKEFLAGS install
+  cd ..
+
+  mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+  install -m 644 LICENSE "$pkgdir/psp/share/licenses/$pkgname"
+}
