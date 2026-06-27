@@ -1,6 +1,6 @@
 pkgname=curl
-pkgver=7.64.1
-pkgrel=13
+pkgver=8.21.0
+pkgrel=1
 pkgdesc="A library for transferring data with URL syntax"
 arch=(any)
 url="https://curl.se/"
@@ -11,25 +11,26 @@ optdepends=()
 makedepends=()
 source=(
     "https://curl.haxx.se/download/${pkgname}-${pkgver}.tar.gz"
-    "${pkgname}-${pkgver}-PSP.patch"
 )
 sha256sums=(
-    "432d3f466644b9416bc5b649d344116a753aeaa520c8beaf024a90cba9d3d35d"
-    "SKIP"
+    "d9b327997999045a24cda50f3983e69e51c516bd8be6ef9842fc7f99135e33bb"
 )
 
 prepare() {
     cd "${pkgname}-${pkgver}"
-    patch -p1 < ../${pkgname}-${pkgver}-PSP.patch || { exit 1; }
+    sed -i 's#@prefix@#${PSPDEV}/psp#' libcurl.pc.in
+    sed -i 's#@exec_prefix@#${prefix}#' libcurl.pc.in
+    sed -i 's#@includedir@#${prefix}/include#' libcurl.pc.in
 }
 
 build() {
     cd "$pkgname-$pkgver"
     mkdir -p build
     cd build
-    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp -DCMAKE_USE_MBEDTLS=1 -DUSE_UNIX_SOCKETS=0 \
-        -DENABLE_IPV6=0 -DENABLE_THREADED_RESOLVER=0 -DBUILD_CURL_EXE=OFF -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_POLICY_VERSION_MINIMUM=3.5 "${XTRA_OPTS[@]}" .. || { exit 1; }
+    cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$PSPDEV/psp/share/pspdev.cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/psp \
+        -DCURL_USE_MBEDTLS=1 -DENABLE_UNIX_SOCKETS=0 -DENABLE_IPV6=0 -DENABLE_THREADED_RESOLVER=0 -DBUILD_CURL_EXE=OFF \
+        -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release -DCURL_USE_OPENSSL=OFF -DCURL_USE_LIBPSL=OFF \
+        "${XTRA_OPTS[@]}" .. || { exit 1; }
     make --quiet $MAKEFLAGS || { exit 1; }
 }
 
