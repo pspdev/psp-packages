@@ -1,6 +1,6 @@
 pkgname=mbedtls
-pkgver=2.28.10
-pkgrel=2
+pkgver=4.1.0
+pkgrel=1
 pkgdesc="Secure Socket Layer library"
 arch=(any)
 url="https://www.trustedfirmware.org/projects/mbed-tls/"
@@ -14,7 +14,7 @@ source=(
     "${pkgname}-${pkgver}-PSP.patch"
 )
 sha256sums=(
-    "19e5b81fdac0fe22009b9e2bdcd52d7dcafbf62bc67fc59cf0a76b5b5540d149"
+    "377a09cf8eb81b5fb2707045e5522d5489d3309fed5006c9874e60558fc81d10"
     "SKIP"
 )
 
