@@ -1,0 +1,40 @@
+pkgname=miniz
+pkgver=3.1.2
+pkgrel=1
+pkgdesc="Single C source file zlib-replacement library with ZIP archive support"
+arch=(any)
+url="https://github.com/richgel999/miniz"
+license=('MIT')
+groups=('psp-libraries')
+depends=()
+makedepends=()
+optdepends=()
+source=("https://github.com/richgel999/miniz/archive/refs/tags/${pkgver}.tar.gz")
+sha256sums=('98468f8924934b723276680f85238b6c78bf1f8b49b4459cc9b7214a20e2e9fb')
+
+prepare() {
+    cd "${pkgname}-${pkgver}"
+    sed -i 's#@CMAKE_INSTALL_PREFIX@#${PSPDEV}/psp#' miniz.pc.in
+}
+
+build() {
+    cmake -S "${pkgname}-${pkgver}" -B build \
+        -DCMAKE_TOOLCHAIN_FILE="$PSPDEV/psp/share/pspdev.cmake" \
+        -DCMAKE_INSTALL_PREFIX=/psp \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DBUILD_SHARED_LIBS=OFF \
+        -DBUILD_EXAMPLES=OFF \
+        -DBUILD_TESTS=OFF \
+        -DINSTALL_PROJECT=ON \
+        "${XTRA_OPTS[@]}" \
+        -Wno-dev
+
+    cmake --build build
+}
+
+package() {
+    DESTDIR="$pkgdir" cmake --install build
+
+    mkdir -m 755 -p "$pkgdir/psp/share/licenses/$pkgname"
+    install -m 644 "${pkgname}-${pkgver}/LICENSE" "$pkgdir/psp/share/licenses/$pkgname/LICENSE"
+}
