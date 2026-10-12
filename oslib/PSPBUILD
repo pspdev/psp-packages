@@ -1,5 +1,5 @@
 pkgname=oslib
-pkgver=1.5.1
+pkgver=1.5.2
 pkgrel=1
 pkgdesc="OldSchool Library (OSLib) is a lightweight and versatile C++ library designed to provide functionality and tools commonly used in classic game development and retro programming project"
 arch=(any)
@@ -9,7 +9,7 @@ groups=('psp-libraries')
 depends=('libmikmod' 'libpspmath' 'zlib' 'libpng' 'jpeg' 'giflib')
 makedepends=()
 optdepends=()
-source=("git+https://github.com/dogo/oslib.git#commit=1b952cce5d3f0d757400eefcaf26708aa58e51be")
+source=("git+https://github.com/dogo/oslib.git#commit=ef2744e38909cc9c34aa9b2f0fa793df74350760")
 sha256sums=('SKIP')
 
 prepare() {
