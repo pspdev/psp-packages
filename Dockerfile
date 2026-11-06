@@ -10,7 +10,7 @@ RUN psp-pacman -Sy && \
 # Second stage of Dockerfile
 FROM alpine:latest
 
-ENV PSPDEV /usr/local/pspdev
-ENV PATH $PATH:${PSPDEV}/bin
+ENV PSPDEV="/usr/local/pspdev"
+ENV PATH="$PATH:${PSPDEV}/bin"
 
 COPY --from=0 ${PSPDEV} ${PSPDEV}
