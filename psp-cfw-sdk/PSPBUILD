@@ -11,7 +11,7 @@ makedepends=()
 conflicts=('kubridge' 'libpspexploit' 'ark-dev-sdk')
 provides=('kubridge' 'libpspexploit' 'ark-dev-sdk')
 source=(
-  "git+https://github.com/pspdev/psp-cfw-sdk.git#commit=e60b09b0501a3466edc9a2b69825768fa11257bb"
+  "git+https://github.com/pspdev/psp-cfw-sdk.git#commit=12c16163d14c0b7b4c9a5ee604f799886a2a4afc"
   "gpl-3.0.txt"
 )
 sha256sums=(
